@@ -1,0 +1,32 @@
+{
+  "name": "@vue-storefront/<% INTEGRATION %>-api",
+  "version": "2.4.1",
+  "private": true,
+  "sideEffects": false,
+  "server": "server/index.js",
+  "main": "lib/index.cjs.js",
+  "module": "lib/index.es.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "build": "rimraf lib server && rollup -c",
+    "dev": "rollup -c -w",
+    "precommit": "lint-staged",
+    "prepublish": "yarn build",
+    "test": "jest",
+    "update:check": "ncu",
+    "update:update": "ncu -u"
+  },
+  "dependencies": {
+    "@vue-storefront/core": "~2.4.1"
+  },
+  "devDependencies": {
+    "rollup-plugin-typescript2": "^0.30.0",
+    "@rollup/plugin-node-resolve": "^13.0.0"
+  },
+  "files": [
+    "lib/**/*"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}
