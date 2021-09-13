@@ -1,5 +1,5 @@
 import { CheckoutGetters } from '@vue-storefront/core';
-import type { ShippingMethod } from '@vue-storefront/<% INTEGRATION %>-api/src/types';
+import type { ShippingMethod } from '@vue-storefront/prestashop-api/src/types';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getShippingMethodId(method: ShippingMethod): string {

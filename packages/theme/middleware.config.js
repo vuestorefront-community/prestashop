@@ -1,7 +1,7 @@
 module.exports = {
   integrations: {
-    <% INTEGRATION %>: {
-      location: '@vue-storefront/<% INTEGRATION %>-api/server',
+    prestashop: {
+      location: '@vue-storefront/prestashop-api/server',
       configuration: {}
     }
   }

@@ -1,5 +1,5 @@
 {
-  "name": "ecommerce-<% INTEGRATION %>-integration",
+  "name": "ecommerce-prestashop-integration",
   "private": true,
   "license": "MIT",
   "engines": {

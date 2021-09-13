@@ -45,11 +45,11 @@ export default {
       // @core-development-only-end
       useRawSource: {
         dev: [
-          '@vue-storefront/<% INTEGRATION %>',
+          '@vue-storefront/prestashop',
           '@vue-storefront/core'
         ],
         prod: [
-          '@vue-storefront/<% INTEGRATION %>',
+          '@vue-storefront/prestashop',
           '@vue-storefront/core'
         ]
       }
@@ -58,8 +58,8 @@ export default {
     ['@vue-storefront/nuxt-theme', {
       generate: {
         replace: {
-          apiClient: '@vue-storefront/<% INTEGRATION %>-api',
-          composables: '@vue-storefront/<% INTEGRATION %>'
+          apiClient: '@vue-storefront/prestashop-api',
+          composables: '@vue-storefront/prestashop'
         }
       }
     }],
@@ -67,7 +67,7 @@ export default {
     /* project-only-start
     ['@vue-storefront/nuxt-theme'],
     project-only-end */
-    ['@vue-storefront/<% INTEGRATION %>/nuxt', {}]
+    ['@vue-storefront/prestashop/nuxt', {}]
   ],
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
