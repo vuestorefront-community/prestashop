@@ -2,7 +2,11 @@ module.exports = {
   integrations: {
     prestashop: {
       location: '@vue-storefront/prestashop-api/server',
-      configuration: {}
+      configuration: {
+        api: {
+          url: 'https://rest.binshops.com'
+        }
+      }
     }
   }
 };
