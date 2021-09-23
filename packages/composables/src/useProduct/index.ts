@@ -11,9 +11,9 @@ import type {
 const params: UseProductFactoryParams<Product, SearchParams> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   productsSearch: async (context: Context, params) => {
-    console.log('Mocked: useProduct.productsSearch');
+    const data = await context.$prestashop.api.getProduct(params);
 
-    return {};
+    return data.psdata;
   }
 };
 

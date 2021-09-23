@@ -3,6 +3,7 @@ import type { Setttings, Endpoints } from './types';
 import axios from 'axios';
 
 import { bootstrap } from './api/bootstrap';
+import { getProduct } from './api/getProduct';
 
 const onCreate = (settings) => {
   const client = axios.create({
@@ -18,7 +19,8 @@ const onCreate = (settings) => {
 const { createApiClient } = apiClientFactory<Setttings, Endpoints>({
   onCreate,
   api: {
-    bootstrap
+    bootstrap,
+    getProduct
   }
 });
 
