@@ -4,9 +4,9 @@
       v-for="(category, index) in categories"
       :key="index"
       class="nav-item"
-      v-e2e="`app-header-url_${category}`"
-      :label="category"
-      :link="localePath(`/c/${category}`)"
+      v-e2e="`app-header-url_${category.slug}`"
+      :label="category.label"
+      :link="localePath(`/c/${category.slug}`)"
     />
   </div>
   <SfModal v-else :visible="isMobileMenuOpen">
@@ -14,11 +14,11 @@
       v-for="(category, index) in categories"
       :key="index"
       class="nav-item"
-      v-e2e="`app-header-url_${category}`"
+      v-e2e="`app-header-url_${category.slug}`"
     >
       <template #mobile-navigation-item>
         <SfMenuItem
-          :label="category"
+          :label="category.label"
           class="sf-header-navigation-item__menu-item"
           :link="localePath(`/c/${category}`)"
           @click.native="toggleMobileMenu"
@@ -31,6 +31,9 @@
 <script>
 import { SfMenuItem, SfModal } from '@storefront-ui/vue';
 import { useUiState } from '~/composables';
+import {
+  useBootstrap
+} from '@vue-storefront/prestashop';
 
 export default {
   name: 'HeaderNavigation',
@@ -45,8 +48,12 @@ export default {
     }
   },
   setup() {
+    const {
+      menuItems: menuItems
+    } = useBootstrap();
+
     const { isMobileMenuOpen, toggleMobileMenu } = useUiState();
-    const categories = ['women', 'men'];
+    const categories = menuItems;
 
     return {
       categories,
