@@ -1,6 +1,9 @@
 import { apiClientFactory } from '@vue-storefront/core';
 import type { Setttings, Endpoints } from './types';
 import axios from 'axios';
+
+import { bootstrap } from './api/bootstrap';
+
 const onCreate = (settings) => {
   const client = axios.create({
     baseURL: settings.api.url
@@ -15,7 +18,7 @@ const onCreate = (settings) => {
 const { createApiClient } = apiClientFactory<Setttings, Endpoints>({
   onCreate,
   api: {
-
+    bootstrap
   }
 });
 
