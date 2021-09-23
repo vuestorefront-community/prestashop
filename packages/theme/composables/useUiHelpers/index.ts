@@ -1,12 +1,46 @@
+import { getCurrentInstance } from '@vue/composition-api';
 
+const getContext = () => {
+  const vm = getCurrentInstance();
+  return vm.$root as any;
+};
+
+const nonFilters = ['page', 'sort', 'term', 'itemsPerPage'];
+
+const reduceFilters = (query) => (prev, curr) => {
+  const makeArray = Array.isArray(query[curr]) || nonFilters.includes(curr);
+
+  return {
+    ...prev,
+    [curr]: makeArray ? query[curr] : [query[curr]]
+  };
+};
+
+const getFiltersDataFromUrl = (context, onlyFilters) => {
+  const { query } = context.$router.history.current;
+
+  return Object.keys(query)
+    .filter(f => onlyFilters ? !nonFilters.includes(f) : nonFilters.includes(f))
+    .reduce(reduceFilters(query), {});
+};
+
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const useUiHelpers = () => {
+  const context = getContext();
+
   const getFacetsFromURL = () => {
-    console.warn('[VSF] please implement useUiHelpers.getFacets.');
+    const { query, params } = context.$router.history.current;
+    const categorySlug = Object.keys(params).reduce((prev, curr) => params[curr] || prev, params.slug_1);
 
     return {
-      categorySlug: null,
-      page: 1
-    } as any;
+      rootCatSlug: params.slug_1,
+      categorySlug,
+      page: parseInt(query.page, 10) || 1,
+      sort: query.sort || 'latest',
+      filters: getFiltersDataFromUrl(context, true),
+      itemsPerPage: parseInt(query.itemsPerPage, 12) || 20,
+      term: query.term
+    };
   };
 
   // eslint-disable-next-line
