@@ -18,7 +18,7 @@ export const useBootstrap = () => {
 
     try {
       loading.value = true;
-      result.value = await context.$prestashop.api.getBootstrap();
+      result.value = await context.$prestashop.api.bootstrap();
       error.value.boot = null;
     } catch (err) {
       error.value.boot = err;
