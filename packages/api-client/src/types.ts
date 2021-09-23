@@ -1,3 +1,5 @@
+import { AgnosticMediaGalleryItem } from '@vue-storefront/core';
+
 export type TODO = unknown;
 
 export type Setttings = TODO;
@@ -25,6 +27,23 @@ export type OrderItem = TODO;
 export type PasswordResetResult = TODO;
 
 export type Product = TODO;
+
+export type PsProduct = {
+    id: string;
+    name: string;
+    slug: string;
+    regularPrice: number;
+    discountPrice: number;
+    coverImageSmall: string;
+    coverImageMedium: string;
+    coverImageLarge: string;
+    images: AgnosticMediaGalleryItem[];
+    description: any;
+    shortDescription: any;
+    brand: string;
+    category: string;
+    productInfo: any;
+}
 
 export type ProductFilter = TODO;
 

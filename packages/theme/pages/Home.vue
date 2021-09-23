@@ -33,7 +33,7 @@
 
     <LazyHydrate when-visible>
       <div class="similar-products">
-        <SfHeading title="Match with it" :level="3"/>
+        <SfHeading title="Featured Products" :level="3"/>
         <nuxt-link :to="localePath('/c/women')" class="smartphone-only">See all</nuxt-link>
       </div>
     </LazyHydrate>
@@ -56,19 +56,16 @@
           </template>
           <SfCarouselItem class="carousel__item" v-for="(product, i) in products" :key="i">
             <SfProductCard
-              :title="product.title"
-              :image="product.image"
-              :regular-price="product.price.regular"
-              :max-rating="product.rating.max"
-              :score-rating="product.rating.score"
+              :title="productGetters.getName(product)"
+              :image="productGetters.getCoverImage(product)"
+              :regular-price="$n(productGetters.getPrice(product).regular, 'currency')"
+              :special-price="$n(productGetters.getPrice(product).regular, 'currency') === $n(productGetters.getPrice(product).special, 'currency')? '': $n(productGetters.getPrice(product).special, 'currency')"
               :show-add-to-cart-button="true"
-              :is-on-wishlist="product.isInWishlist"
-              :link="localePath({ name: 'home' })"
+              :link="localePath(`/p/${productGetters.getId(product)}/${productGetters.getSlug(product)}`)"
               class="carousel__item__product"
-              @click:wishlist="toggleWishlist(i)"
             />
           </SfCarouselItem>
-        </SfCarousel>
+      </SfCarousel>
     </LazyHydrate>
 
     <LazyHydrate when-visible>
@@ -95,6 +92,7 @@ import {
   SfSection,
   SfCarousel,
   SfProductCard,
+  SfLoader,
   SfImage,
   SfBannerGrid,
   SfHeading,
@@ -104,9 +102,38 @@ import {
 import InstagramFeed from '~/components/InstagramFeed.vue';
 import LazyHydrate from 'vue-lazy-hydration';
 import cacheControl from './../helpers/cacheControl';
+import { onSSR } from '@vue-storefront/core';
+import {
+  computed
+} from '@vue/composition-api';
+
+import {
+  useProduct,
+  productGetters
+} from '@vue-storefront/prestashop';
 
 export default {
   name: 'Home',
+  setup() {
+    const {
+      products: featureProducts,
+      search: productsSearch,
+      loading: productsLoading
+    } = useProduct('relatedProducts');
+
+    onSSR(async () => {
+      await productsSearch({ featured: true });
+      console.log(featureProducts);
+    });
+
+    return {
+      productGetters,
+      productsLoading,
+      products: computed(() =>
+        productGetters.getFeaturedProductsFiltered(featureProducts.value)
+      )
+    };
+  },
   middleware: cacheControl({
     'max-age': 60,
     'stale-when-revalidate': 5
@@ -119,6 +146,7 @@ export default {
     SfSection,
     SfCarousel,
     SfProductCard,
+    SfLoader,
     SfImage,
     SfBannerGrid,
     SfHeading,
@@ -192,71 +220,8 @@ export default {
           class: 'sf-banner--slim',
           link: this.$config.theme.home.bannerD.link
         }
-      ],
-      products: [
-        {
-          title: 'Cream Beach Bag',
-          image: '/homepage/productA.webp',
-          price: { regular: '50.00 $' },
-          rating: { max: 5, score: 4 },
-          isInWishlist: true
-        },
-        {
-          title: 'Cream Beach Bag',
-          image: '/homepage/productB.webp',
-          price: { regular: '50.00 $' },
-          rating: { max: 5, score: 4 },
-          isInWishlist: false
-        },
-        {
-          title: 'Cream Beach Bag',
-          image: '/homepage/productC.webp',
-          price: { regular: '50.00 $' },
-          rating: { max: 5, score: 4 },
-          isInWishlist: false
-        },
-        {
-          title: 'Cream Beach Bag',
-          image: '/homepage/productA.webp',
-          price: { regular: '50.00 $' },
-          rating: { max: 5, score: 4 },
-          isInWishlist: false
-        },
-        {
-          title: 'Cream Beach Bag',
-          image: '/homepage/productB.webp',
-          price: { regular: '50.00 $' },
-          rating: { max: 5, score: 4 },
-          isInWishlist: false
-        },
-        {
-          title: 'Cream Beach Bag',
-          image: '/homepage/productC.webp',
-          price: { regular: '50.00 $' },
-          rating: { max: 5, score: 4 },
-          isInWishlist: false
-        },
-        {
-          title: 'Cream Beach Bag',
-          image: '/homepage/productA.webp',
-          price: { regular: '50.00 $' },
-          rating: { max: 5, score: 4 },
-          isInWishlist: false
-        },
-        {
-          title: 'Cream Beach Bag',
-          image: '/homepage/productB.webp',
-          price: { regular: '50.00 $' },
-          rating: { max: 5, score: 4 },
-          isInWishlist: false
-        }
       ]
     };
-  },
-  methods: {
-    toggleWishlist(index) {
-      this.products[index].isInWishlist = !this.products[index].isInWishlist;
-    }
   }
 };
 </script>
