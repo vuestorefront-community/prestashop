@@ -33,7 +33,7 @@
 
     <LazyHydrate when-visible>
       <div class="similar-products">
-        <SfHeading title="Match with it" :level="3"/>
+        <SfHeading title="Featured Products" :level="3"/>
         <nuxt-link :to="localePath('/c/women')" class="smartphone-only">See all</nuxt-link>
       </div>
     </LazyHydrate>
@@ -54,21 +54,18 @@
               @click="go('next')"
             />
           </template>
-          <SfLoader :class="{ productsLoading }" :loading="productsLoading">
-            <SfCarouselItem class="carousel__item" v-for="(product, i) in products" :key="i">
-              <SfProductCard
-                :title="product.title"
-                :image="product.image"
-                :regular-price="product.price.regular"
-                :max-rating="product.rating.max"
-                :score-rating="product.rating.score"
-                :show-add-to-cart-button="true"
-                :link="localePath({ name: 'home' })"
-                class="carousel__item__product"
-              />
-            </SfCarouselItem>
-          </SfLoader>
-        </SfCarousel>
+          <SfCarouselItem class="carousel__item" v-for="(product, i) in products" :key="i">
+            <SfProductCard
+              :title="productGetters.getName(product)"
+              :image="productGetters.getCoverImage(product)"
+              :regular-price="$n(productGetters.getPrice(product).regular, 'currency')"
+              :special-price="$n(productGetters.getPrice(product).regular, 'currency') === $n(productGetters.getPrice(product).special, 'currency')? '': $n(productGetters.getPrice(product).special, 'currency')"
+              :show-add-to-cart-button="true"
+              :link="localePath(`/p/${productGetters.getId(product)}/${productGetters.getSlug(product)}`)"
+              class="carousel__item__product"
+            />
+          </SfCarouselItem>
+      </SfCarousel>
     </LazyHydrate>
 
     <LazyHydrate when-visible>
@@ -126,9 +123,11 @@ export default {
 
     onSSR(async () => {
       await productsSearch({ featured: true });
+      console.log(featureProducts);
     });
 
     return {
+      productGetters,
       productsLoading,
       products: computed(() =>
         productGetters.getFeaturedProductsFiltered(featureProducts.value)
