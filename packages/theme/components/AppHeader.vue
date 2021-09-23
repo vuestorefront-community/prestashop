@@ -30,6 +30,16 @@
             />
           </SfButton>
           <SfButton
+            class="sf-button--pure sf-header__action"
+            @click="toggleWishlistSidebar"
+          >
+            <SfIcon
+              class="sf-header__icon"
+              icon="heart"
+              size="1.25rem"
+            />
+          </SfButton>
+          <SfButton
             v-e2e="'app-header-cart'"
             class="sf-button--pure sf-header__action"
             aria-label="Toggle cart sidebar"
