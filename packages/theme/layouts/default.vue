@@ -34,10 +34,24 @@ import WishlistSidebar from '~/components/WishlistSidebar.vue';
 import LoginModal from '~/components/LoginModal.vue';
 import LazyHydrate from 'vue-lazy-hydration';
 import Notification from '~/components/Notification';
+import {
+  useBootstrap
+} from '@vue-storefront/prestashop';
+import { onSSR } from '@vue-storefront/core';
 
 export default {
   name: 'DefaultLayout',
 
+  setup() {
+    const {
+      boot: boot
+    } = useBootstrap();
+
+    onSSR(async () => {
+      await boot();
+    });
+
+  },
   components: {
     LazyHydrate,
     TopBar,
