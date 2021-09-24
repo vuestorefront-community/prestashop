@@ -87,7 +87,7 @@
 <script>
 import { SfHeader, SfImage, SfIcon, SfButton, SfBadge, SfSearchBar, SfOverlay } from '@storefront-ui/vue';
 import { useUiState } from '~/composables';
-import { useCart, useUser, cartGetters } from '@vue-storefront/prestashop';
+import { useCart, useUser, cartGetters, useFacet, facetGetters } from '@vue-storefront/prestashop';
 import { computed, ref, onBeforeUnmount, watch } from '@vue/composition-api';
 import { useUiHelpers } from '~/composables';
 import LocaleSelector from './LocaleSelector';
@@ -99,7 +99,6 @@ import {
   unMapMobileObserver
 } from '@storefront-ui/vue/src/utilities/mobile-observer.js';
 import debounce from 'lodash.debounce';
-import mockedSearchProducts from '../mockedSearchProducts.json';
 
 export default {
   components: {
@@ -123,8 +122,10 @@ export default {
     const term = ref(getFacetsFromURL().phrase);
     const isSearchOpen = ref(false);
     const searchBarRef = ref(null);
-    const result = ref(null);
     const isMobile = ref(mapMobileObserver().isMobile.get());
+
+    const { result: productResult, search: productSearch } = useFacet();
+    const result = computed(() => facetGetters.getProducts(productResult.value));
 
     const cartTotalItems = computed(() => {
       const count = cartGetters.getTotalItems(cart.value);
@@ -152,15 +153,19 @@ export default {
       isSearchOpen.value = false;
     };
 
-    const handleSearch = debounce(async (paramValue) => {
+    const handleSearch = computed(() => debounce(async (paramValue) => {
       if (!paramValue.target) {
         term.value = paramValue;
       } else {
         term.value = paramValue.target.value;
       }
-      result.value = mockedSearchProducts;
 
-    }, 1000);
+      await productSearch({
+        type: 'instant-search',
+        term: term.value
+      });
+
+    }, 200));
 
     const closeOrFocusSearchBar = () => {
       if (isMobile.value) {

@@ -7,24 +7,6 @@
     >
       <transition name="sf-fade" mode="out-in">
         <div v-if="products && products.length > 0" class="search__wrapper-results" key="results">
-          <SfMegaMenuColumn :title="$t('Categories')" class="sf-mega-menu-column--pined-content-on-mobile search__categories">
-            <template #title="{title}">
-              <SfMenuItem :label="title" @click="megaMenu.changeActive(title)">
-                <template #mobile-nav-icon>
-                  &#8203;
-                </template>
-              </SfMenuItem>
-            </template>
-            <SfList>
-              <SfListItem v-for="(category, key) in categories" :key="key">
-                <SfMenuItem :label="category.label" :link="localePath(`/c/${category.slug}`)">
-                  <template #mobile-nav-icon>
-                    &#8203;
-                  </template>
-                </SfMenuItem>
-              </SfListItem>
-            </SfList>
-          </SfMegaMenuColumn>
           <SfMegaMenuColumn :title="$t('Product suggestions')" class="sf-mega-menu-column--pined-content-on-mobile search__results">
             <template #title="{title}">
               <SfMenuItem :label="title" class="sf-mega-menu-column__header search__header">
@@ -45,7 +27,7 @@
                   :image="productGetters.getCoverImage(product)"
                   :alt="productGetters.getName(product)"
                   :title="productGetters.getName(product)"
-                  :link="localePath(`/p/${productGetters.getId(product)}/${productGetters.getSlug(product)}`)"
+                  :link="`/p/${productGetters.getId(product)}/${productGetters.getSlug(product)}`"
                 />
               </div>
             </SfScrollable>
@@ -60,7 +42,7 @@
                 :image="productGetters.getCoverImage(product)"
                 :alt="productGetters.getName(product)"
                 :title="productGetters.getName(product)"
-                :link="localePath(`/p/${productGetters.getId(product)}/${productGetters.getSlug(product)}`)"
+                :link="`/p/${productGetters.getId(product)}/${productGetters.getSlug(product)}`"
               />
             </div>
           </SfMegaMenuColumn>
@@ -110,13 +92,12 @@ export default {
       default: false
     },
     result: {
-      type: Object
+      type: Array
     }
   },
   setup(props, { emit }) {
     const isSearchOpen = ref(props.visible);
-    const products = computed(() => props.result?.products);
-    const categories = computed(() => props.result?.categories);
+    const products = computed(() => props.result);
 
     watch(() => props.visible, (newVal) => {
       isSearchOpen.value = newVal;
@@ -131,8 +112,7 @@ export default {
     return {
       isSearchOpen,
       productGetters,
-      products,
-      categories
+      products
     };
   }
 };
