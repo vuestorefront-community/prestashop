@@ -15,6 +15,7 @@ export { useUserBilling } from './useUserBilling';
 export { useUserOrder } from './useUserOrder';
 export { useUserShipping } from './useUserShipping';
 export { useWishlist } from './useWishlist';
+export { useBootstrap } from './useBootstrap';
 
 // Getters
 export { cartGetters } from './getters/cartGetters';

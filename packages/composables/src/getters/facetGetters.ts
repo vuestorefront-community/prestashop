@@ -8,7 +8,8 @@ import {
   AgnosticBreadcrumb,
   AgnosticFacet
 } from '@vue-storefront/core';
-import type { Facet, FacetSearchCriteria } from '@vue-storefront/prestashop-api';
+import type { PsProduct, Facet, FacetSearchCriteria } from '@vue-storefront/prestashop-api';
+import { populateCategoryProducts } from '../helpers';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getAll(params: FacetSearchResult<Facet>, criteria?: FacetSearchCriteria): AgnosticFacet[] {
@@ -39,27 +40,13 @@ function getCategoryTree(params: FacetSearchResult<Facet>): AgnosticCategoryTree
   };
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getProducts(params: FacetSearchResult<Facet>): any {
-  return [
-    {
-      _id: 1,
-      _description: 'Some description',
-      _categoriesRef: [
-        '1',
-        '2'
-      ],
-      name: 'Black jacket',
-      sku: 'black-jacket',
-      images: [
-        'https://s3-eu-west-1.amazonaws.com/commercetools-maximilian/products/081223_1_large.jpg'
-      ],
-      price: {
-        original: 12.34,
-        current: 10.00
-      }
-    }
-  ];
+// eslint-disable-next-line @typescript-eslint/no-unused-vars,@typescript-eslint/explicit-module-boundary-types
+function getProducts(psdata: any): PsProduct[] {
+  if (!psdata.data) {
+    return [];
+  }
+  const products = Array.isArray(psdata.data.products) ? psdata.data.products : [psdata.data.products];
+  return populateCategoryProducts(products);
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
