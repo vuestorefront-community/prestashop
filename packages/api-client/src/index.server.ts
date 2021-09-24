@@ -4,6 +4,7 @@ import axios from 'axios';
 
 import { bootstrap } from './api/bootstrap';
 import { getProduct } from './api/getProduct';
+import { getCategoryProducts } from './api/getCategoryProducts';
 
 const onCreate = (settings) => {
   const client = axios.create({
@@ -20,7 +21,8 @@ const { createApiClient } = apiClientFactory<Setttings, Endpoints>({
   onCreate,
   api: {
     bootstrap,
-    getProduct
+    getProduct,
+    getCategoryProducts
   }
 });
 
