@@ -189,7 +189,7 @@ export default {
     const qty = ref(1);
     const { id } = context.root.$route.params;
     const { products, search } = useProduct('products');
-    const { products: relatedProducts, search: searchRelatedProducts, loading: relatedLoading } = useProduct('relatedProducts');
+    const { products: featureProducts, search: searchRelatedProducts, loading: relatedLoading } = useProduct('relatedProducts');
     const { addItem, loading } = useCart();
     const { reviews: productReviews, search: searchReviews } = useReview('productReviews');
 
@@ -210,7 +210,7 @@ export default {
 
     onSSR(async () => {
       await search({ id });
-      // await searchRelatedProducts({ catId: [categories.value[0]], limit: 8 });
+      await searchRelatedProducts({ featured: true });
       // await searchReviews({ productId: id });
     });
 
@@ -232,7 +232,9 @@ export default {
       reviewGetters,
       averageRating: computed(() => productGetters.getAverageRating(product.value)),
       totalReviews: computed(() => productGetters.getTotalReviews(product.value)),
-      relatedProducts: computed(() => productGetters.getFiltered(relatedProducts.value, { master: true })),
+      relatedProducts: computed(() =>
+        productGetters.getFeaturedProductsFiltered(featureProducts.value)
+      ),
       relatedLoading,
       options,
       qty,
