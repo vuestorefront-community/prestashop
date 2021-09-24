@@ -26,7 +26,7 @@
         <div class="product__price-and-rating">
           <SfPrice
             :regular="$n(productGetters.getPrice(product).regular, 'currency')"
-            :special="productGetters.getPrice(product).special && $n(productGetters.getPrice(product).special, 'currency')"
+            :special="$n(productGetters.getPrice(product).regular, 'currency') === $n(productGetters.getPrice(product).special, 'currency')? '': $n(productGetters.getPrice(product).special, 'currency')"
           />
           <div>
             <div class="product__rating">
@@ -42,8 +42,7 @@
           </div>
         </div>
         <div>
-          <p class="product__description desktop-only">
-            {{ description }}
+          <p class="product__description desktop-only" v-html='productGetters.getShortDescription(product)'>
           </p>
           <SfButton class="sf-button--text desktop-only product__guide">
             {{ $t('Size guide') }}
@@ -89,11 +88,11 @@
         <LazyHydrate when-idle>
           <SfTabs :open-tab="1" class="product__tabs">
             <SfTab title="Description">
-              <div class="product__description">
-                  {{ $t('Product description') }}
-              </div>
+              <div class="product__description" v-html='productGetters.getDescription(product)'></div>
+              <SfProperty class='product__property' name='Category' :value='productGetters.getCategory(product)'></SfProperty>
+
               <SfProperty
-                v-for="(property, i) in properties"
+                v-for="(property, i) in productGetters.getProductInfo(product)"
                 :key="i"
                 :name="property.name"
                 :value="property.value"
@@ -125,18 +124,10 @@
               title="Additional Information"
               class="product__additional-info"
             >
-            <div class="product__additional-info">
-              <p class="product__additional-info__title">{{ $t('Brand') }}</p>
-              <p>{{ brand }}</p>
-              <p class="product__additional-info__title">{{ $t('Instruction1') }}</p>
-              <p class="product__additional-info__paragraph">
-                {{ $t('Instruction2') }}
-              </p>
-              <p class="product__additional-info__paragraph">
-                {{ $t('Instruction3') }}
-              </p>
-              <p>{{ careInstructions }}</p>
-            </div>
+              <div class="product__additional-info">
+                <p class="product__additional-info__title">{{ $t('Brand') }}</p>
+                <p>{{ productGetters.getBrand(product) }}</p>
+              </div>
             </SfTab>
           </SfTabs>
         </LazyHydrate>
@@ -198,7 +189,7 @@ export default {
     const qty = ref(1);
     const { id } = context.root.$route.params;
     const { products, search } = useProduct('products');
-    const { products: relatedProducts, search: searchRelatedProducts, loading: relatedLoading } = useProduct('relatedProducts');
+    const { products: featureProducts, search: searchRelatedProducts, loading: relatedLoading } = useProduct('relatedProducts');
     const { addItem, loading } = useCart();
     const { reviews: productReviews, search: searchReviews } = useReview('productReviews');
 
@@ -214,13 +205,13 @@ export default {
       mobile: { url: img.small },
       desktop: { url: img.normal },
       big: { url: img.big },
-      alt: product.value._name || product.value.name
+      alt: product.value.name ? product.value.name : 'product alt'
     })));
 
     onSSR(async () => {
       await search({ id });
-      await searchRelatedProducts({ catId: [categories.value[0]], limit: 8 });
-      await searchReviews({ productId: id });
+      await searchRelatedProducts({ featured: true });
+      // await searchReviews({ productId: id });
     });
 
     const updateFilter = (filter) => {
@@ -241,7 +232,9 @@ export default {
       reviewGetters,
       averageRating: computed(() => productGetters.getAverageRating(product.value)),
       totalReviews: computed(() => productGetters.getTotalReviews(product.value)),
-      relatedProducts: computed(() => productGetters.getFiltered(relatedProducts.value, { master: true })),
+      relatedProducts: computed(() =>
+        productGetters.getFeaturedProductsFiltered(featureProducts.value)
+      ),
       relatedLoading,
       options,
       qty,
@@ -275,30 +268,6 @@ export default {
   },
   data() {
     return {
-      stock: 5,
-      properties: [
-        {
-          name: 'Product Code',
-          value: '578902-00'
-        },
-        {
-          name: 'Category',
-          value: 'Pants'
-        },
-        {
-          name: 'Material',
-          value: 'Cotton'
-        },
-        {
-          name: 'Country',
-          value: 'Germany'
-        }
-      ],
-      description: 'Find stunning women cocktail and party dresses. Stand out in lace and metallic cocktail dresses and party dresses from all your favorite brands.',
-      detailsIsActive: false,
-      brand:
-          'Brand name is the perfect pairing of quality and design. This label creates major everyday vibes with its collection of modern brooches, silver and gold jewellery, or clips it back with hair accessories in geo styles.',
-      careInstructions: 'Do not wash!',
       breadcrumbs: [
         {
           text: 'Home',
@@ -308,12 +277,6 @@ export default {
         },
         {
           text: 'Category',
-          route: {
-            link: '#'
-          }
-        },
-        {
-          text: 'Pants',
           route: {
             link: '#'
           }
