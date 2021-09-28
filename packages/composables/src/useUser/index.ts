@@ -35,7 +35,9 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   logIn: async (context: Context, { username, password }) => {
-    console.log('Mocked: useUser.logIn');
+    const {data, cookieObject} = await context.$prestashop.api.login({username, password});
+
+
     return {};
   },
 
