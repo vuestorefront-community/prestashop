@@ -1,5 +1,15 @@
-import { Logger } from '@vue-storefront/core';
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+// eslint-disable-next-line func-names
+export default (context) => {
+  const psName = context.$config.psCustomerCookieName;
+  const cookieName = context.$cookies.get(psName);
 
-export default () => {
-  Logger.error('Please implement vendor-specific is-authenticated.js middleware in the \'middleware\' directory to block guests from accessing user profile routes');
+  const psValue = context.$config.psCustomerCookieValue;
+  const cookieValue = context.$cookies.get(psValue);
+
+  // check if user not logged In
+  if (!cookieName && !cookieValue) {
+    context.app.router.push('/');
+    context.redirect('/');
+  }
 };
