@@ -8,8 +8,8 @@ export default (context) => {
   const cookieValue = context.$cookies.get(psValue);
 
   // check if user not logged In
-  if (!cookieName && !cookieValue) {
-    context.app.router.push('/');
-    context.redirect('/');
-  }
+  // if (!cookieName && !cookieValue) {
+  //   context.app.router.push('/');
+  //   context.redirect('/');
+  // }
 };

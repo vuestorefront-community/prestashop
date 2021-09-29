@@ -37,6 +37,17 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
   logIn: async (context: Context, { username, password }) => {
     const {data, cookieObject} = await context.$prestashop.api.login({username, password});
 
+    const cookieKey = context.$prestashop.config.app.$config.psCustomerCookieKey;
+    const cookieValue = context.$prestashop.config.app.$config.psCustomerCookieValue;
+    const code = data.code;
+
+    if (code === 200) {
+      context.$prestashop.config.app.$cookies.set(cookieKey, cookieObject.vsfPsKeyCookie);
+      context.$prestashop.config.app.$cookies.set(cookieValue, cookieObject.vsfPsValCookie);
+
+    } else if (code === 306) {
+      // authentication failed
+    }
 
     return {};
   },
