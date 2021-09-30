@@ -9,8 +9,11 @@ const onCreate = (settings) => {
   });
 
   return {
-    config: settings,
-    client
+    config: {
+      ...settings
+    },
+    client,
+    cookies: (settings.api).cookies
   };
 };
 
