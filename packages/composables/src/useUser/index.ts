@@ -12,13 +12,33 @@ import type {
 const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   load: async (context: Context) => {
-    console.log('Mocked: useUser.load');
+    const cookieKey = context.$prestashop.config.app.$config.psCustomerCookieKey;
+    const cookieValue = context.$prestashop.config.app.$config.psCustomerCookieValue;
+
+    const key = context.$prestashop.config.app.$cookies.get(cookieKey);
+    const value = context.$prestashop.config.app.$cookies.get(cookieValue);
+    if (key && value) {
+      const result: any = await context.$prestashop.api.loadCustomer({key, value});
+      // todo: setup User type
+    } else {
+      return null;
+    }
+
     return {};
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   logOut: async (context: Context) => {
-    console.log('Mocked: useUser.logOut');
+    const cookieKey = context.$prestashop.config.app.$config.psCustomerCookieKey;
+    const cookieValue = context.$prestashop.config.app.$config.psCustomerCookieValue;
+
+    const key = context.$prestashop.config.app.$cookies.get(cookieKey);
+    const value = context.$prestashop.config.app.$cookies.get(cookieValue);
+
+    context.$prestashop.config.app.$cookies.remove(cookieKey);
+    context.$prestashop.config.app.$cookies.remove(cookieValue);
+
+    // todo: call logout api
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
