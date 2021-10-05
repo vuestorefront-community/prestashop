@@ -7,38 +7,34 @@ import {
   AgnosticAttribute
 } from '@vue-storefront/core';
 import type { Cart, CartItem } from '@vue-storefront/prestashop-api';
+import { populateCartItems } from '../helpers';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getItems (cart: Cart): CartItem[] {
-  console.log('inside getItems');
-  console.log(cart);
-
-  return [
-    {}
-  ];
+  return populateCartItems(cart.psdata);
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getItemName(item: CartItem): string {
-  return 'Name';
+  return item.name;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getItemImage(item: CartItem): string {
-  return 'https://s3-eu-west-1.amazonaws.com/commercetools-maximilian/products/081223_1_large.jpg';
+  return item.image;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getItemPrice(item: CartItem): AgnosticPrice {
   return {
-    regular: 12,
-    special: 10
+    regular: item.regularPrice,
+    special: item.discountPrice
   };
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getItemQty(item: CartItem): number {
-  return 1;
+  return item.quantity;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -69,7 +65,10 @@ function getShippingPrice(cart: Cart): number {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getTotalItems(cart: Cart): number {
-  return 1;
+  if (cart) {
+    return cart.psdata.length;
+  }
+  return 0;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
