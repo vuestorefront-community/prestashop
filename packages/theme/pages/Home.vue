@@ -63,6 +63,7 @@
               :show-add-to-cart-button="true"
               :link="localePath(`/p/${productGetters.getId(product)}/${productGetters.getSlug(product)}`)"
               class="carousel__item__product"
+              :wishlist-icon="[]"
             />
           </SfCarouselItem>
       </SfCarousel>
