@@ -6,10 +6,10 @@ import {
 import type {
   Cart,
   CartItem,
-  Product
+  PsProduct
 } from '@vue-storefront/prestashop-api';
 
-const params: UseCartFactoryParams<Cart, CartItem, Product> = {
+const params: UseCartFactoryParams<Cart, CartItem, PsProduct> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   load: async (context: Context, { customQuery }) => {
     console.log('Mocked: useCart.load');
@@ -18,8 +18,23 @@ const params: UseCartFactoryParams<Cart, CartItem, Product> = {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   addItem: async (context: Context, { currentCart, product, quantity, customQuery }) => {
-    console.log('Mocked: useCart.addItem');
-    return {};
+    const vsfCookieKey = context.$prestashop.config.app.$config.psCustomerCookieKey;
+    const vsfCookieValue = context.$prestashop.config.app.$config.psCustomerCookieValue;
+
+    const psCookieKey = context.$prestashop.config.app.$cookies.get(vsfCookieKey);
+    const psCookieValue = context.$prestashop.config.app.$cookies.get(vsfCookieValue);
+
+    const {data, cookieObject} = await context.$prestashop.api.addToCart({psCookieKey, psCookieValue, product, quantity});
+
+    if (data.code === 200) {
+      context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
+      context.$prestashop.config.app.$cookies.set(vsfCookieValue, cookieObject.vsfPsValCookie);
+
+      return data;
+    } else {
+      // add to cart failed
+      return {};
+    }
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -64,4 +79,4 @@ const params: UseCartFactoryParams<Cart, CartItem, Product> = {
   }
 };
 
-export const useCart = useCartFactory<Cart, CartItem, Product>(params);
+export const useCart = useCartFactory<Cart, CartItem, PsProduct>(params);

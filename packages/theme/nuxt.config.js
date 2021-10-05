@@ -153,8 +153,6 @@ export default {
   publicRuntimeConfig: {
     theme,
     psCustomerCookieKey: 'ps-customer-cookie-key',
-    psCustomerCookieValue: 'ps-customer-cookie-value',
-    psCartCookieName: 'ps-cart-cookie-name',
-    psCartCookieValue: 'ps-cart-cookie-name'
+    psCustomerCookieValue: 'ps-customer-cookie-value'
   }
 };
