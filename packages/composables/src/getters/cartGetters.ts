@@ -10,6 +10,9 @@ import type { Cart, CartItem } from '@vue-storefront/prestashop-api';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getItems (cart: Cart): CartItem[] {
+  console.log('inside getItems');
+  console.log(cart);
+
   return [
     {}
   ];

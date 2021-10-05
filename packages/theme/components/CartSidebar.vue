@@ -123,6 +123,7 @@ import {
 import { computed } from '@vue/composition-api';
 import { useCart, useUser, cartGetters } from '@vue-storefront/prestashop';
 import { useUiState } from '~/composables';
+import { onSSR } from '@vue-storefront/core';
 
 export default {
   name: 'Cart',
@@ -144,7 +145,10 @@ export default {
     const products = computed(() => cartGetters.getItems(cart.value));
     const totals = computed(() => cartGetters.getTotals(cart.value));
     const totalItems = computed(() => cartGetters.getTotalItems(cart.value));
-    loadCart();
+
+    onSSR(async () => {
+      await loadCart();
+    });
 
     return {
       loading,
