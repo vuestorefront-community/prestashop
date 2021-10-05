@@ -8,15 +8,13 @@ export default async function getCartItems(context, params) {
   url.searchParams.set('image_size', 'small_default');
 
   if (psCookieKey && psCookieValue) {
-    const { data, headers } = await context.client.get(url.href, {
+    const { data } = await context.client.get(url.href, {
       headers: {
         Cookie: psCookieKey + '=' + psCookieValue + ';'
       }
     });
 
-    const cookieObject = cookieParser(headers);
-
-    return {data, cookieObject};
+    return {data};
   } else {
     const { data, headers } = await context.client.get(url.href);
 
