@@ -10,7 +10,15 @@ export type BillingAddress = TODO;
 
 export type Cart = TODO;
 
-export type CartItem = TODO;
+export type CartItem = {
+    id: string;
+    name: string;
+    image: string;
+    regularPrice: number;
+    discountPrice: number;
+    quantity: number;
+    reference: string;
+};
 
 export type Category = TODO;
 
