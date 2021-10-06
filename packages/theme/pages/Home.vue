@@ -63,6 +63,8 @@
               :show-add-to-cart-button="true"
               :link="localePath(`/p/${productGetters.getId(product)}/${productGetters.getSlug(product)}`)"
               class="carousel__item__product"
+              :wishlist-icon="[]"
+              @click:add-to-cart="addItemToCart({ product, quantity: 1 })"
             />
           </SfCarouselItem>
       </SfCarousel>
@@ -109,7 +111,7 @@ import {
 
 import {
   useProduct,
-  productGetters
+  productGetters, useCart
 } from '@vue-storefront/prestashop';
 
 export default {
@@ -121,12 +123,16 @@ export default {
       loading: productsLoading
     } = useProduct('relatedProducts');
 
+    const { addItem: addItemToCart, isInCart } = useCart();
+
     onSSR(async () => {
       await productsSearch({ featured: true });
       console.log(featureProducts);
     });
 
     return {
+      isInCart,
+      addItemToCart,
       productGetters,
       productsLoading,
       products: computed(() =>

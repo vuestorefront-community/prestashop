@@ -151,6 +151,8 @@ export default {
     }
   },
   publicRuntimeConfig: {
-    theme
+    theme,
+    psCustomerCookieKey: 'ps-customer-cookie-key',
+    psCustomerCookieValue: 'ps-customer-cookie-value'
   }
 };

@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export async function getCategoryProducts(context, params) {
+export default async function getCategoryProducts(context, params) {
   if (params.input.type && params.input.type === 'instant-search') {
     const url = new URL('/rest/productSearch', context.config.api.url);
 

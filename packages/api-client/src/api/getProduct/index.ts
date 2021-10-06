@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export async function getProduct(context, params) {
+export default async function getProduct(context, params) {
   if (params.id) {
     const url = new URL('/rest/productdetail', context.config.api.url);
 
