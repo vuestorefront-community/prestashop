@@ -57,8 +57,24 @@ const params: UseCartFactoryParams<Cart, CartItem, PsProduct> = {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   removeItem: async (context: Context, { currentCart, product, customQuery }) => {
-    console.log('Mocked: useCart.removeItem');
-    return {};
+    const vsfCookieKey = context.$prestashop.config.app.$config.psCustomerCookieKey;
+    const vsfCookieValue = context.$prestashop.config.app.$config.psCustomerCookieValue;
+
+    const psCookieKey = context.$prestashop.config.app.$cookies.get(vsfCookieKey);
+    const psCookieValue = context.$prestashop.config.app.$cookies.get(vsfCookieValue);
+
+    const {data, cookieObject} = await context.$prestashop.api.removeFromCart({psCookieKey, psCookieValue, product});
+
+    if (data.code === 200) {
+      if (cookieObject) {
+        context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
+        context.$prestashop.config.app.$cookies.set(vsfCookieValue, cookieObject.vsfPsValCookie);
+      }
+      return data;
+    } else {
+      // add to cart failed
+      return {};
+    }
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
