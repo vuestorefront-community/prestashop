@@ -5,7 +5,8 @@ const populateCartItems = (cartItems: Array<any>) => {
     image: cartItem.image_url,
     regularPrice: cartItem.price_without_reduction,
     discountPrice: cartItem.price,
-    quantity: cartItem.cart_quantity
+    quantity: cartItem.cart_quantity,
+    reference: cartItem.reference
   }));
 
   return populateCartItems;

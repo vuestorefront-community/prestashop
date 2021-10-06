@@ -16,6 +16,7 @@ export type CartItem = {
     regularPrice: number;
     discountPrice: number;
     quantity: number;
+    reference: string;
 };
 
 export type Category = TODO;

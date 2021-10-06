@@ -46,7 +46,7 @@ function getItemAttributes(item: CartItem, filterByAttributeName?: Array<string>
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getItemSku(item: CartItem): string {
-  return '';
+  return item.reference;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
