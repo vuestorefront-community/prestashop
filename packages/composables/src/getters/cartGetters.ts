@@ -51,11 +51,22 @@ function getItemSku(item: CartItem): string {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getTotals(cart: Cart): AgnosticTotals {
-  return {
-    total: 12,
-    subtotal: 12,
-    special: 10
-  };
+  if (cart) {
+    const products = cart.psdata;
+    let regularPrice = 0;
+    let discountPrice = 0;
+    for (const item of products) {
+      regularPrice += item.price_without_reduction;
+      discountPrice += item.price;
+    }
+    return {
+      total: regularPrice,
+      subtotal: regularPrice,
+      special: discountPrice
+    };
+  } else {
+    return {subtotal: 0, total: 0};
+  }
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
