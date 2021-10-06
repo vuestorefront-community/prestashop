@@ -5,7 +5,7 @@ export default async function getCartItems(context, params) {
   const {psCookieKey, psCookieValue} = params;
   const url = new URL('/rest/cartitems', context.config.api.url);
 
-  url.searchParams.set('image_size', 'small_default');
+  url.searchParams.set('image_size', 'medium_default');
 
   if (psCookieKey && psCookieValue) {
     const { data } = await context.client.get(url.href, {

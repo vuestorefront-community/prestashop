@@ -7,6 +7,7 @@ export default async function addToCart(context, params) {
 
   url.searchParams.set('product_id', product.id);
   url.searchParams.set('quantity', quantity);
+  url.searchParams.set('image_size', 'medium_default');
 
   if (psCookieKey && psCookieValue) {
     const { data, headers } = await context.client.get(url.href, {
