@@ -64,7 +64,7 @@
               :link="localePath(`/p/${productGetters.getId(product)}/${productGetters.getSlug(product)}`)"
               class="carousel__item__product"
               :wishlist-icon="[]"
-              @click:add-to-cart="addItemToCart({ product, quantity: 1 })"
+              @click:add-to-cart="HandleAddToCart({ product, quantity:1 })"
             />
           </SfCarouselItem>
       </SfCarousel>
@@ -108,6 +108,7 @@ import { onSSR } from '@vue-storefront/core';
 import {
   computed
 } from '@vue/composition-api';
+import { useUiNotification } from '~/composables';
 
 import {
   useProduct,
@@ -123,6 +124,7 @@ export default {
       loading: productsLoading
     } = useProduct('relatedProducts');
 
+    const { send: sendNotification } = useUiNotification();
     const { addItem: addItemToCart, isInCart } = useCart();
 
     onSSR(async () => {
@@ -131,6 +133,7 @@ export default {
     });
 
     return {
+      sendNotification,
       isInCart,
       addItemToCart,
       productGetters,
@@ -139,6 +142,19 @@ export default {
         productGetters.getFeaturedProductsFiltered(featureProducts.value)
       )
     };
+  },
+  methods: {
+    HandleAddToCart(productObj) {
+      this.addItemToCart(productObj).then(() => {
+        this.sendNotification({
+          key: 'added_to_cart',
+          message: 'Product has been successfully added to cart !',
+          type: 'success',
+          title: 'Product added!',
+          icon: 'check'
+        });
+      });
+    }
   },
   middleware: cacheControl({
     'max-age': 60,

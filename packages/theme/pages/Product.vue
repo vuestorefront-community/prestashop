@@ -81,7 +81,7 @@
             :disabled="loading"
             :canAddToCart="stock > 0"
             class="product__add-to-cart"
-            @click="addItem({ product, quantity: parseInt(qty) })"
+            @click="addingToCart({ product, quantity: parseInt(qty) })"
           />
         </div>
 
@@ -176,6 +176,7 @@ import { useProduct, useCart, productGetters, useReview, reviewGetters } from '@
 import { onSSR } from '@vue-storefront/core';
 import LazyHydrate from 'vue-lazy-hydration';
 import cacheControl from './../helpers/cacheControl';
+import useUiNotification from '~/composables/useUiNotification';
 
 export default {
   name: 'Product',
@@ -192,6 +193,7 @@ export default {
     const { products: featureProducts, search: searchRelatedProducts, loading: relatedLoading } = useProduct('relatedProducts');
     const { addItem, loading } = useCart();
     const { reviews: productReviews, search: searchReviews } = useReview('productReviews');
+    const { send: sendNotification } = useUiNotification();
 
     const product = computed(() => productGetters.getFiltered(products.value, { master: true, attributes: context.root.$route.query })[0]);
     const options = computed(() => productGetters.getAttributes(products.value, ['color', 'size']));
@@ -226,6 +228,7 @@ export default {
 
     return {
       updateFilter,
+      sendNotification,
       configuration,
       product,
       reviews,
@@ -243,6 +246,20 @@ export default {
       productGetters,
       productGallery
     };
+  },
+  methods: {
+    async addingToCart(Productdata) {
+      await this.addItem(Productdata).then(() => {
+        this.sendNotification({
+          key: 'product_added',
+          message: `${Productdata.product.name} has been successfully added to your cart.`,
+          type: 'success',
+          title: 'Product added!',
+          icon: 'check'
+        });
+        this.qty = 1;
+      });
+    }
   },
   components: {
     SfAlert,
