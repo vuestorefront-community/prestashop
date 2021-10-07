@@ -167,7 +167,7 @@
               :isAddedToCart="isInCart({ product })"
               :link="localePath(`/p/${productGetters.getId(product)}/${productGetters.getSlug(product)}`)"
               class="products__product-card"
-              @click:add-to-cart="addItemToCart({ product, quantity: 1 })"
+              @click:add-to-cart="HandleAddToCart({ product, quantity:1 })"
               :wishlist-icon="[]"
             />
           </transition-group>
@@ -191,7 +191,7 @@
               :max-rating="5"
               :score-rating="3"
               class="products__product-card-horizontal"
-              @click:add-to-cart="addItemToCart({ product, quantity: 1 })"
+              @click:add-to-cart="HandleAddToCart({ product, quantity:1 })"
               :link="localePath(`/p/${productGetters.getId(product)}/${productGetters.getSlug(product)}`)"
             >
               <template #configuration>
@@ -351,7 +351,7 @@ import {
 } from '@storefront-ui/vue';
 import { ref, computed, onMounted } from '@vue/composition-api';
 import { useCart, productGetters, useFacet, facetGetters } from '@vue-storefront/prestashop';
-import { useUiHelpers, useUiState } from '~/composables';
+import { useUiHelpers, useUiState, useUiNotification } from '~/composables';
 import { onSSR } from '@vue-storefront/core';
 import LazyHydrate from 'vue-lazy-hydration';
 import Vue from 'vue';
@@ -369,6 +369,7 @@ export default {
     const uiState = useUiState();
     const { addItem: addItemToCart, isInCart } = useCart();
     const { result, search, loading } = useFacet();
+    const { send: sendNotification } = useUiNotification();
 
     const products = computed(() => facetGetters.getProducts(result.value));
     const categoryTree = computed(() => facetGetters.getCategoryTree(result.value));
@@ -440,6 +441,7 @@ export default {
 
     return {
       ...uiState,
+      sendNotification,
       th,
       products,
       categoryTree,
@@ -459,6 +461,19 @@ export default {
       clearFilters,
       applyFilters
     };
+  },
+  methods: {
+    HandleAddToCart(productObj) {
+      this.addItemToCart(productObj).then(() => {
+        this.sendNotification({
+          key: 'added_to_cart',
+          message: 'Product has been successfully added to cart !',
+          type: 'success',
+          title: 'Product added!',
+          icon: 'check'
+        });
+      });
+    }
   },
   components: {
     SfButton,
