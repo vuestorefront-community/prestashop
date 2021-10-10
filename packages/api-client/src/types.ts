@@ -8,7 +8,7 @@ export type Endpoints = TODO;
 
 export type BillingAddress = TODO;
 
-export type Cart = TODO;
+export type Cart = any;
 
 export type CartItem = {
     id: string;
