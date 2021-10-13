@@ -1,9 +1,9 @@
 <template>
   <ValidationObserver v-slot="{ handleSubmit }">
     <SfHeading
-      v-e2e="'billing-heading'"
+      v-e2e="'shipping-heading'"
       :level="3"
-      :title="$t('Billing')"
+      :title="$t('Shipping')"
       class="sf-heading--left sf-heading--no-underline title"
     />
     <form @submit.prevent="handleSubmit(handleFormSubmit)">
@@ -15,7 +15,7 @@
           slim
         >
           <SfInput
-            v-e2e="'billing-firstName'"
+            v-e2e="'shipping-firstName'"
             v-model="form.firstName"
             label="First name"
             name="firstName"
@@ -32,7 +32,7 @@
           slim
         >
           <SfInput
-            v-e2e="'billing-lastName'"
+            v-e2e="'shipping-lastName'"
             v-model="form.lastName"
             label="Last name"
             name="lastName"
@@ -49,7 +49,7 @@
           slim
         >
           <SfInput
-            v-e2e="'billing-streetName'"
+            v-e2e="'shipping-streetName'"
             v-model="form.streetName"
             label="Street name"
             name="streetName"
@@ -66,7 +66,7 @@
           slim
         >
           <SfInput
-            v-e2e="'billing-apartment'"
+            v-e2e="'shipping-apartment'"
             v-model="form.apartment"
             label="House/Apartment number"
             name="apartment"
@@ -83,7 +83,7 @@
           slim
         >
           <SfInput
-            v-e2e="'billing-city'"
+            v-e2e="'shipping-city'"
             v-model="form.city"
             label="City"
             name="city"
@@ -98,7 +98,7 @@
           slim
         >
           <SfInput
-            v-e2e="'billing-state'"
+            v-e2e="'shipping-state'"
             v-model="form.state"
             label="State/Province"
             name="state"
@@ -112,7 +112,7 @@
           slim
         >
           <SfSelect
-            v-e2e="'billing-country'"
+            v-e2e="'shipping-country'"
             v-model="form.country"
             label="Country"
             name="country"
@@ -137,7 +137,7 @@
           slim
         >
           <SfInput
-            v-e2e="'billing-zipcode'"
+            v-e2e="'shipping-zipcode'"
             v-model="form.postalCode"
             label="Zip-code"
             name="zipCode"
@@ -154,7 +154,7 @@
           slim
         >
           <SfInput
-            v-e2e="'billing-phone'"
+            v-e2e="'shipping-phone'"
             v-model="form.phone"
             label="Phone number"
             name="phone"
@@ -168,21 +168,20 @@
       <div class="form">
         <div class="form__action">
           <SfButton
-            class="sf-button color-secondary form__back-button"
-            type="button"
-            @click="$router.push(localePath({ name: 'shipping' }))"
-          >
-            {{ $t('Go back') }}
-          </SfButton>
-          <SfButton
-            v-e2e="'continue-to-payment'"
+            v-e2e="'select-shipping'"
+            v-if="!isFormSubmitted"
+            :disabled="loading"
             class="form__action-button"
             type="submit"
           >
-            {{ $t('Continue to payment') }}
+            {{ $t('Select shipping method') }}
           </SfButton>
         </div>
       </div>
+      <VsfShippingProvider
+        v-if="isFormSubmitted"
+        @submit="$router.push(localePath({ name: 'billing' }))"
+      />
     </form>
   </ValidationObserver>
 </template>
@@ -192,13 +191,11 @@ import {
   SfHeading,
   SfInput,
   SfButton,
-  SfSelect,
-  SfRadio,
-  SfCheckbox
+  SfSelect
 } from '@storefront-ui/vue';
 import { ref } from '@vue/composition-api';
 import { onSSR } from '@vue-storefront/core';
-import { useBilling } from '@vue-storefront/prestashop';
+import { useShipping } from '@vue-storefront/prestashop';
 import { required, min, digits } from 'vee-validate/dist/rules';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 
@@ -223,19 +220,19 @@ extend('digits', {
 });
 
 export default {
-  name: 'Billing',
+  name: 'Shipping',
   components: {
     SfHeading,
     SfInput,
     SfButton,
     SfSelect,
-    SfRadio,
-    SfCheckbox,
     ValidationProvider,
-    ValidationObserver
+    ValidationObserver,
+    VsfShippingProvider: () => import('~/components/Checkout/VsfShippingProvider')
   },
-  setup(props, context) {
-    const { load, save } = useBilling();
+  setup () {
+    const isFormSubmitted = ref(false);
+    const { load, save, loading } = useShipping();
 
     const form = ref({
       firstName: '',
@@ -250,8 +247,8 @@ export default {
     });
 
     const handleFormSubmit = async () => {
-      await save({ billingDetails: form.value });
-      context.root.$router.push(context.root.localePath({ name: 'payment' }));
+      await save({ shippingDetails: form.value });
+      isFormSubmitted.value = true;
     };
 
     onSSR(async () => {
@@ -259,6 +256,8 @@ export default {
     });
 
     return {
+      loading,
+      isFormSubmitted,
       form,
       countries: COUNTRIES,
       handleFormSubmit
@@ -266,11 +265,10 @@ export default {
   }
 };
 </script>
+
 <style lang="scss" scoped>
-.title {
-  margin: var(--spacer-xl) 0 var(--spacer-base) 0;
-}
 .form {
+  --button-width: 100%;
   &__select {
     display: flex;
     align-items: center;
@@ -287,6 +285,7 @@ export default {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
+    --button-width: auto;
   }
   &__element {
     margin: 0 0 var(--spacer-xl) 0;
@@ -304,31 +303,20 @@ export default {
       }
     }
   }
-  &__group {
-    display: flex;
-    align-items: center;
-  }
   &__action {
     @include for-desktop {
       flex: 0 0 100%;
       display: flex;
     }
   }
-  &__action-button, &__back-button {
-    --button-width: 100%;
-    @include for-desktop {
-      --button-width: auto;
-    }
-  }
   &__action-button {
     &--secondary {
       @include for-desktop {
         order: -1;
-        --button-margin: 0;
         text-align: left;
       }
     }
-     &--add-address {
+    &--add-address {
       width: 100%;
       margin: 0;
       @include for-desktop {
@@ -340,42 +328,26 @@ export default {
   &__back-button {
     margin: var(--spacer-xl) 0 var(--spacer-sm);
     &:hover {
-      color:  white;
+      color:  var(--c-white);
     }
-    @include for-desktop {
-      margin: 0 var(--spacer-xl) 0 0;
-    }
-  }
-  &__back-button {
-    margin: 0 0 var(--spacer-sm) 0;
     @include for-desktop {
       margin: 0 var(--spacer-xl) 0 0;
     }
   }
 }
-.payment-methods {
-  @include for-desktop {
+
+.shipping {
+  &__label {
     display: flex;
-    padding: var(--spacer-lg) 0;
-    border: 1px solid var(--c-light);
-    border-width: 1px 0;
+    justify-content: space-between;
+  }
+  &__description {
+    --radio-description-margin: 0;
+    --radio-description-font-size: var(--font-xs);
   }
 }
-.payment-method {
-  --radio-container-align-items: center;
-  --ratio-content-margin: 0 0 0 var(--spacer-base);
-  --radio-label-font-size: var(--font-base);
-  --radio-background: transparent;
-  white-space: nowrap;
-  border: 1px solid var(--c-light);
-  border-width: 1px 0 0 0;
-  &:last-child {
-    border-width: 1px 0;
-  }
-  --radio-background: transparent;
-  @include for-desktop {
-    border: 0;
-    --radio-border-radius: 4px;
-  }
+
+.title {
+  margin: var(--spacer-xl) 0 var(--spacer-base) 0;
 }
 </style>
