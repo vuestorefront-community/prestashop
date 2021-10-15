@@ -27,9 +27,9 @@ export function getRoutes(themeDir = __dirname) {
     component: path.resolve(themeDir, 'pages/Checkout.vue'),
     children: [
       {
-        path: 'addresses',
-        name: 'addresses',
-        component: path.resolve(themeDir, 'pages/Checkout/Addresses.vue')
+        path: 'user-account',
+        name: 'user-account',
+        component: path.resolve(themeDir, 'pages/Checkout/UserAccount.vue')
       },
       {
         path: 'shipping',
