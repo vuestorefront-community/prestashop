@@ -1,188 +1,194 @@
 <template>
   <ValidationObserver v-slot="{ handleSubmit }">
     <SfHeading
-      v-e2e="'shipping-heading'"
+      v-e2e="'user-account-heading'"
       :level="3"
-      :title="$t('Shipping')"
+      :title="$t('User Account')"
       class="sf-heading--left sf-heading--no-underline title"
     />
-    <form @submit.prevent="handleSubmit(handleFormSubmit)">
-      <div class="form">
-        <ValidationProvider
-          name="firstName"
-          rules="required|min:2"
-          v-slot="{ errors }"
-          slim
-        >
-          <SfInput
-            v-e2e="'shipping-firstName'"
-            v-model="form.firstName"
-            label="First name"
+    <div v-if="!isAuthenticated">
+      Order as a Guest | <SfLink @click="handleAccountClick">Sign in - Register</SfLink>
+      <form @submit.prevent="handleSubmit(handleFormSubmit)">
+        <div class="form">
+          <ValidationProvider
             name="firstName"
-            class="form__element form__element--half"
-            required
-            :valid="!errors[0]"
-            :errorMessage="errors[0]"
-          />
-        </ValidationProvider>
-        <ValidationProvider
-          name="lastName"
-          rules="required|min:2"
-          v-slot="{ errors }"
-          slim
-        >
-          <SfInput
-            v-e2e="'shipping-lastName'"
-            v-model="form.lastName"
-            label="Last name"
+            rules="required|min:2"
+            v-slot="{ errors }"
+            slim
+          >
+            <SfInput
+              v-e2e="'shipping-firstName'"
+              v-model="form.firstName"
+              label="First name"
+              name="firstName"
+              class="form__element form__element--half"
+              required
+              :valid="!errors[0]"
+              :errorMessage="errors[0]"
+            />
+          </ValidationProvider>
+          <ValidationProvider
             name="lastName"
-            class="form__element form__element--half form__element--half-even"
-            required
-            :valid="!errors[0]"
-            :errorMessage="errors[0]"
-          />
-        </ValidationProvider>
-        <ValidationProvider
-          name="streetName"
-          rules="required"
-          v-slot="{ errors }"
-          slim
-        >
-          <SfInput
-            v-e2e="'shipping-streetName'"
-            v-model="form.streetName"
-            label="Street name"
+            rules="required|min:2"
+            v-slot="{ errors }"
+            slim
+          >
+            <SfInput
+              v-e2e="'shipping-lastName'"
+              v-model="form.lastName"
+              label="Last name"
+              name="lastName"
+              class="form__element form__element--half form__element--half-even"
+              required
+              :valid="!errors[0]"
+              :errorMessage="errors[0]"
+            />
+          </ValidationProvider>
+          <ValidationProvider
             name="streetName"
-            class="form__element form__element--half"
-            required
-            :valid="!errors[0]"
-            :errorMessage="errors[0]"
-          />
-        </ValidationProvider>
-        <ValidationProvider
-          name="apartment"
-          rules="required"
-          v-slot="{ errors }"
-          slim
-        >
-          <SfInput
-            v-e2e="'shipping-apartment'"
-            v-model="form.apartment"
-            label="House/Apartment number"
+            rules="required"
+            v-slot="{ errors }"
+            slim
+          >
+            <SfInput
+              v-e2e="'shipping-streetName'"
+              v-model="form.streetName"
+              label="Street name"
+              name="streetName"
+              class="form__element form__element--half"
+              required
+              :valid="!errors[0]"
+              :errorMessage="errors[0]"
+            />
+          </ValidationProvider>
+          <ValidationProvider
             name="apartment"
-            class="form__element form__element--half form__element--half-even"
-            required
-            :valid="!errors[0]"
-            :errorMessage="errors[0]"
-          />
-        </ValidationProvider>
-        <ValidationProvider
-          name="city"
-          rules="required"
-          v-slot="{ errors }"
-          slim
-        >
-          <SfInput
-            v-e2e="'shipping-city'"
-            v-model="form.city"
-            label="City"
+            rules="required"
+            v-slot="{ errors }"
+            slim
+          >
+            <SfInput
+              v-e2e="'shipping-apartment'"
+              v-model="form.apartment"
+              label="House/Apartment number"
+              name="apartment"
+              class="form__element form__element--half form__element--half-even"
+              required
+              :valid="!errors[0]"
+              :errorMessage="errors[0]"
+            />
+          </ValidationProvider>
+          <ValidationProvider
             name="city"
-            class="form__element form__element--half"
-            required
-            :valid="!errors[0]"
-            :errorMessage="errors[0]"
-          />
-        </ValidationProvider>
-        <ValidationProvider
-          name="state"
-          slim
-        >
-          <SfInput
-            v-e2e="'shipping-state'"
-            v-model="form.state"
-            label="State/Province"
+            rules="required"
+            v-slot="{ errors }"
+            slim
+          >
+            <SfInput
+              v-e2e="'shipping-city'"
+              v-model="form.city"
+              label="City"
+              name="city"
+              class="form__element form__element--half"
+              required
+              :valid="!errors[0]"
+              :errorMessage="errors[0]"
+            />
+          </ValidationProvider>
+          <ValidationProvider
             name="state"
-            class="form__element form__element--half form__element--half-even"
-          />
-        </ValidationProvider>
-        <ValidationProvider
-          name="country"
-          rules="required|min:2"
-          v-slot="{ errors }"
-          slim
-        >
-          <SfSelect
-            v-e2e="'shipping-country'"
-            v-model="form.country"
-            label="Country"
+            slim
+          >
+            <SfInput
+              v-e2e="'shipping-state'"
+              v-model="form.state"
+              label="State/Province"
+              name="state"
+              class="form__element form__element--half form__element--half-even"
+            />
+          </ValidationProvider>
+          <ValidationProvider
             name="country"
-            class="form__element form__element--half form__select sf-select--underlined"
-            required
-            :valid="!errors[0]"
-            :errorMessage="errors[0]"
+            rules="required|min:2"
+            v-slot="{ errors }"
+            slim
           >
-            <SfSelectOption
-              v-for="countryOption in countries"
-              :key="countryOption.key"
-              :value="countryOption.key"
+            <SfSelect
+              v-e2e="'shipping-country'"
+              v-model="form.country"
+              label="Country"
+              name="country"
+              class="form__element form__element--half form__select sf-select--underlined"
+              required
+              :valid="!errors[0]"
+              :errorMessage="errors[0]"
             >
-              {{ countryOption.label }}
-            </SfSelectOption>
-          </SfSelect>
-        </ValidationProvider>
-        <ValidationProvider
-          name="zipCode"
-          rules="required|min:2"
-          v-slot="{ errors }"
-          slim
-        >
-          <SfInput
-            v-e2e="'shipping-zipcode'"
-            v-model="form.postalCode"
-            label="Zip-code"
+              <SfSelectOption
+                v-for="countryOption in countries"
+                :key="countryOption.key"
+                :value="countryOption.key"
+              >
+                {{ countryOption.label }}
+              </SfSelectOption>
+            </SfSelect>
+          </ValidationProvider>
+          <ValidationProvider
             name="zipCode"
-            class="form__element form__element--half form__element--half-even"
-            required
-            :valid="!errors[0]"
-            :errorMessage="errors[0]"
-          />
-        </ValidationProvider>
-        <ValidationProvider
-          name="phone"
-          rules="required|digits:9"
-          v-slot="{ errors }"
-          slim
-        >
-          <SfInput
-            v-e2e="'shipping-phone'"
-            v-model="form.phone"
-            label="Phone number"
-            name="phone"
-            class="form__element form__element--half"
-            required
-            :valid="!errors[0]"
-            :errorMessage="errors[0]"
-          />
-        </ValidationProvider>
-      </div>
-      <div class="form">
-        <div class="form__action">
-          <SfButton
-            v-e2e="'select-shipping'"
-            v-if="!isFormSubmitted"
-            :disabled="loading"
-            class="form__action-button"
-            type="submit"
+            rules="required|min:2"
+            v-slot="{ errors }"
+            slim
           >
-            {{ $t('Select shipping method') }}
-          </SfButton>
+            <SfInput
+              v-e2e="'shipping-zipcode'"
+              v-model="form.postalCode"
+              label="Zip-code"
+              name="zipCode"
+              class="form__element form__element--half form__element--half-even"
+              required
+              :valid="!errors[0]"
+              :errorMessage="errors[0]"
+            />
+          </ValidationProvider>
+          <ValidationProvider
+            name="phone"
+            rules="required|digits:9"
+            v-slot="{ errors }"
+            slim
+          >
+            <SfInput
+              v-e2e="'shipping-phone'"
+              v-model="form.phone"
+              label="Phone number"
+              name="phone"
+              class="form__element form__element--half"
+              required
+              :valid="!errors[0]"
+              :errorMessage="errors[0]"
+            />
+          </ValidationProvider>
         </div>
-      </div>
-      <VsfShippingProvider
-        v-if="isFormSubmitted"
-        @submit="$router.push(localePath({ name: 'billing' }))"
-      />
-    </form>
+        <div class="form">
+          <div class="form__action">
+            <SfButton
+              v-e2e="'select-shipping'"
+              v-if="!isFormSubmitted"
+              :disabled="loading"
+              class="form__action-button"
+              type="submit"
+            >
+              {{ $t('Select shipping method') }}
+            </SfButton>
+          </div>
+        </div>
+        <VsfShippingProvider
+          v-if="isFormSubmitted"
+          @submit="$router.push(localePath({ name: 'billing' }))"
+        />
+      </form>
+    </div>
+    <div v-if="!isAuthenticated">
+      You are authenticated. <SfLink >Log out</SfLink>
+    </div>
   </ValidationObserver>
 </template>
 
@@ -191,11 +197,13 @@ import {
   SfHeading,
   SfInput,
   SfButton,
-  SfSelect
+  SfSelect,
+  SfLink
 } from '@storefront-ui/vue';
 import { ref } from '@vue/composition-api';
+import { useUiState } from '~/composables';
 import { onSSR } from '@vue-storefront/core';
-import { useShipping } from '@vue-storefront/prestashop';
+import {useShipping, useUser} from '@vue-storefront/prestashop';
 import { required, min, digits } from 'vee-validate/dist/rules';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 
@@ -226,6 +234,7 @@ export default {
     SfInput,
     SfButton,
     SfSelect,
+    SfLink,
     ValidationProvider,
     ValidationObserver,
     VsfShippingProvider: () => import('~/components/Checkout/VsfShippingProvider')
@@ -233,6 +242,8 @@ export default {
   setup () {
     const isFormSubmitted = ref(false);
     const { load, save, loading } = useShipping();
+    const { toggleLoginModal } = useUiState();
+    const { isAuthenticated } = useUser();
 
     const form = ref({
       firstName: '',
@@ -255,7 +266,13 @@ export default {
       await load();
     });
 
+    const handleAccountClick = async () => {
+      toggleLoginModal();
+    };
+
     return {
+      isAuthenticated,
+      handleAccountClick,
       loading,
       isFormSubmitted,
       form,
