@@ -186,8 +186,8 @@
         />
       </form>
     </div>
-    <div v-if="!isAuthenticated">
-      You are authenticated. <SfLink >Log out</SfLink>
+    <div v-if="isAuthenticated">
+      You are logged in. <SfLink >Log out</SfLink>
     </div>
   </ValidationObserver>
 </template>
