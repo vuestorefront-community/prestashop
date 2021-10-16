@@ -19,9 +19,6 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
     const value = context.$prestashop.config.app.$cookies.get(cookieValue);
     if (key && value) {
       const result: any = await context.$prestashop.api.loadCustomer({key, value});
-      if (result.code === 410) {
-        return null;
-      }
       // todo: setup User type
     } else {
       return null;
@@ -52,7 +49,20 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   register: async (context: Context, { email, password, firstName, lastName }) => {
-    console.log('Mocked: useUser.register');
+    const {data, cookieObject} = await context.$prestashop.api.login({email, password, firstName, lastName});
+
+    const cookieKey = context.$prestashop.config.app.$config.psCustomerCookieKey;
+    const cookieValue = context.$prestashop.config.app.$config.psCustomerCookieValue;
+    const code = data.code;
+
+    if (code === 200) {
+      context.$prestashop.config.app.$cookies.set(cookieKey, cookieObject.vsfPsKeyCookie);
+      context.$prestashop.config.app.$cookies.set(cookieValue, cookieObject.vsfPsValCookie);
+
+    } else if (code === 306) {
+      // authentication failed
+    }
+
     return {};
   },
 
