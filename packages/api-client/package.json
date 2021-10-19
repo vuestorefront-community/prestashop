@@ -1,6 +1,6 @@
 {
   "name": "@vue-storefront/prestashop-api",
-  "version": "2.4.1",
+  "version": "2.4.3",
   "private": true,
   "sideEffects": false,
   "server": "server/index.js",
@@ -17,12 +17,11 @@
     "update:update": "ncu -u"
   },
   "dependencies": {
-    "@vue-storefront/core": "~2.4.1",
-    "axios": "^0.21.4"
+    "@vue-storefront/core": "~2.4.3"
   },
   "devDependencies": {
-    "@rollup/plugin-node-resolve": "^13.0.0",
-    "rollup-plugin-typescript2": "^0.30.0"
+    "rollup-plugin-typescript2": "^0.30.0",
+    "@rollup/plugin-node-resolve": "^13.0.0"
   },
   "files": [
     "lib/**/*"
