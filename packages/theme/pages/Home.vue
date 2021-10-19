@@ -335,7 +335,7 @@ export default {
 }
 
 .carousel {
-    margin: 0 calc(var(--spacer-sm) * -1) 0 0;
+  margin: 0 calc(0 - var(--spacer-sm)) 0 0;
   @include for-desktop {
     margin: 0;
   }
@@ -350,8 +350,8 @@ export default {
   }
   ::v-deep .sf-arrow--long .sf-arrow--right {
     --arrow-icon-transform: rotate(180deg);
-     -webkit-transform-origin: center;
-     transform-origin: center;
+    -webkit-transform-origin: center;
+    transform-origin: center;
   }
 }
 
