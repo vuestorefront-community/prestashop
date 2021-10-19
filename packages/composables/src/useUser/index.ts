@@ -19,11 +19,14 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
     const value = context.$prestashop.config.app.$cookies.get(cookieValue);
     if (key && value) {
       const result: any = await context.$prestashop.api.loadCustomer({key, value});
-      // todo: setup User type
+      if (result.code === 410) {
+        return null;
+      }
     } else {
       return null;
     }
 
+    // todo: setup User type
     return {};
   },
 
