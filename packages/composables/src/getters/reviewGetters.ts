@@ -1,34 +1,35 @@
 import { ReviewGetters, AgnosticRateCount } from '@vue-storefront/core';
-import type { Review, ReviewItem } from '@vue-storefront/prestashop-api';
+import { Review, ReviewItem } from '@vue-storefront/prestashop-api';
+
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getItems (review: Review): ReviewItem[] {
+function getItems(review: Review): ReviewItem[] {
   return [];
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getReviewId(item: ReviewItem): string {
-  return '';
+function getReviewId(review: ReviewItem): string {
+  return review["id_product_comment"];
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getReviewAuthor(item: ReviewItem): string {
-  return '';
+function getReviewAuthor(review: ReviewItem): string {
+  return review["firstname"] + " " + review["lastname"];
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getReviewMessage(item: ReviewItem): string {
-  return '';
+function getReviewMessage(review: ReviewItem): string {
+  return review["content"];
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getReviewRating(item: ReviewItem): number {
-  return 0;
+function getReviewRating(review: ReviewItem): number {
+  return parseInt(review["grade"]);
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getReviewDate(item: ReviewItem): string {
-  return '';
+function getReviewDate(review: ReviewItem): string {
+  return review["date_add"];
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
