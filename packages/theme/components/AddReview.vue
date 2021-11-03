@@ -1,8 +1,6 @@
 <template>
+
   <SfModal v-e2e="'add-review-modal'" visible class="modal" :cross="false">
-    <template #modal-bar>
-      <SfBar class="sf-modal__bar" :title="$t('Add Review')" />
-    </template>
 
     <SfInput
       v-e2e="'add-review-modal'"
@@ -13,7 +11,7 @@
       class="form__element"
     />
     <p style="margin-bottom:0px;">Comment</p>
-    <SfTextarea v-model="comment" name="Cooment" :cols="44" :rows="10" />
+    <SfTextarea v-model="comment" name="Cooment" class="textare" :rows="6" />
 
     <p style="margin-bottom:0px;">Rating</p>
     <SfSelect
@@ -55,6 +53,7 @@ const { send: sendNotification } = useUiNotification();
 import { onSSR } from '@vue-storefront/core';
 import useUiNotification from '~/composables/useUiNotification';
 
+
 extend('required', {
   ...required,
   message: 'This field is required'
@@ -82,7 +81,7 @@ export default {
   },
   setup(props, context) {
     const form = ref({});
-
+   
     const { reviews: productReviews, addReview } = useReview();
 
     return {
@@ -94,6 +93,7 @@ export default {
   },
   data() {
     return {
+      close: true,
       comment: '',
       title: '',
       rate: 1
@@ -107,7 +107,6 @@ export default {
         comment_title: this.title,
         criterion: this.rate.toString()
       };
-
       this.addingToReview(comment);
     },
     async addingToReview(comment) {
@@ -129,9 +128,12 @@ export default {
           title: 'Comment added!',
           icon: 'check'
         });
+        document.body.removeAttribute( 'style' );
+         this.$emit('close')
       }
     },
     closeModal() {
+      document.body.removeAttribute( 'style' );
       this.$emit('close');
     }
   }
@@ -186,4 +188,11 @@ export default {
   justify-content: space-between;
   margin-top: 50px;
 }
+.textare{
+  width:100%
+ 
+}
+.textare textarea {
+    width:92%
+  }
 </style>
