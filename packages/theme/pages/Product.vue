@@ -103,10 +103,12 @@
             <!-- ******************* -->
             <SfTab title="Read reviews">
               <SfButton
+              v-if="isAuthenticated"
                 class="before-results__button"
                 style="margin-bottom:60px"
                 @click="addReviewModal=true"
               >ADD REVIEW</SfButton>
+            <p  v-else>You must be logged in to write comment</p>
               <SfReview
                 v-for="review in productReviews.psdata.comments"
                 :key="reviewGetters.getReviewId(review)"
@@ -127,19 +129,19 @@
                   :visible="5"
                 >
                   <template #number="{page}">
-                    <button
-                      class="sf-pagination__item"
+                    <span
+                      class="sf-pagination__item arrow"
                       :class="{'current': currentPage === page}"
                       @click="goNext(page)"
-                    >{{page}}</button>
+                    >{{page}}</span>
                   </template>
 
                   <template #next="{isDisabled, go, next}">
-                    <button @click="goNext(next)">next</button>
+                    <span @click="goNext(currentPage + 1)" class="arrow">&#8594</span>
                   </template>
 
                   <template #prev="{isDisabled, go, prev}">
-                    <button @click="goNext(prev)">prev</button>
+                    <span @click="goNext(currentPage - 1)" class="arrow">&#8592</span>
                   </template>
                 </SfPagination>
               </LazyHydrate>
@@ -160,7 +162,7 @@
       <RelatedProducts :products="relatedProducts" :loading="relatedLoading" title="Match it with" />
     </LazyHydrate>
 
-    <LazyHydrate when-visible v-if="addReviewModal">
+    <LazyHydrate v-if="addReviewModal" >
       <AddReview :productId="id" @close="addReviewModal = false" />
     </LazyHydrate>
 
@@ -200,6 +202,7 @@ import {
   useCart,
   productGetters,
   useReview,
+  useUser,
   reviewGetters
 } from '@vue-storefront/prestashop';
 import { onSSR } from '@vue-storefront/core';
@@ -229,6 +232,7 @@ export default {
     );
     const { send: sendNotification } = useUiNotification();
     // const pagination = computed(() => facetGetters.getPagination(result.value));
+    const { isAuthenticated } = useUser();
 
     const product = computed(
       () =>
@@ -302,7 +306,8 @@ export default {
       loading,
       productGetters,
       productGallery,
-      id
+      id,
+      isAuthenticated
     };
   },
   mounted() {
@@ -311,6 +316,10 @@ export default {
   },
   methods: {
     async goNext(item) {
+      if (item < 1 || Math.ceil(this.totalReview / this.totalReviewPerPAge) < item) {
+        return false;
+      }
+
       this.currentPage = item;
       await this.searchReviews({ productId: this.id, page: this.currentPage });
     },
@@ -384,6 +393,10 @@ export default {
     max-width: 1272px;
     margin: 0 auto;
   }
+}
+.arrow {
+  cursor: pointer;
+  font-size: 26px;
 }
 .product {
   @include for-desktop {
