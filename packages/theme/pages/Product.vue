@@ -1,6 +1,9 @@
 <template>
   <div id="product">
-    <SfBreadcrumbs class="breadcrumbs desktop-only" :breadcrumbs="breadcrumbs" />
+    <SfBreadcrumbs
+      class="breadcrumbs desktop-only"
+      :breadcrumbs="breadcrumbs"
+    />
     <div class="product">
       <LazyHydrate when-idle>
         <SfGallery :images="productGallery" class="product__gallery" />
@@ -27,18 +30,23 @@
           />
           <div>
             <div class="product__rating">
-              <SfRating :score="averageRating" :max="5" @onClick="alert(2)" />
-              <a v-if="!!totalReviews" href="#" class="product__count">({{ totalReviews }})</a>
+              <SfRating
+                :score="averageRating"
+                :max="5"
+              />
+              <a v-if="!!totalReviews" href="#" class="product__count">
+                ({{ totalReviews }})
+              </a>
             </div>
             <SfButton class="sf-button--text">{{ $t('Read all reviews') }}</SfButton>
           </div>
         </div>
         <div>
-          <p
-            class="product__description desktop-only"
-            v-html="productGetters.getShortDescription(product)"
-          ></p>
-          <SfButton class="sf-button--text desktop-only product__guide">{{ $t('Size guide') }}</SfButton>
+          <p class="product__description desktop-only" v-html='productGetters.getShortDescription(product)'>
+          </p>
+          <SfButton class="sf-button--text desktop-only product__guide">
+            {{ $t('Size guide') }}
+          </SfButton>
           <SfSelect
             v-e2e="'size-select'"
             v-if="options.size"
@@ -52,12 +60,11 @@
               v-for="size in options.size"
               :key="size.value"
               :value="size.value"
-            >{{size.label}}</SfSelectOption>
+            >
+              {{size.label}}
+            </SfSelectOption>
           </SfSelect>
-          <div
-            v-if="options.color && options.color.length > 1"
-            class="product__colors desktop-only"
-          >
+          <div v-if="options.color && options.color.length > 1" class="product__colors desktop-only">
             <p class="product__color-label">{{ $t('Color') }}:</p>
             <SfColor
               v-for="(color, i) in options.color"
@@ -81,12 +88,8 @@
         <LazyHydrate when-idle>
           <SfTabs :open-tab="1" class="product__tabs">
             <SfTab title="Description">
-              <div class="product__description" v-html="productGetters.getDescription(product)"></div>
-              <SfProperty
-                class="product__property"
-                name="Category"
-                :value="productGetters.getCategory(product)"
-              ></SfProperty>
+              <div class="product__description" v-html='productGetters.getDescription(product)'></div>
+              <SfProperty class='product__property' name='Category' :value='productGetters.getCategory(product)'></SfProperty>
 
               <SfProperty
                 v-for="(property, i) in productGetters.getProductInfo(product)"
@@ -96,57 +99,31 @@
                 class="product__property"
               >
                 <template v-if="property.name === 'Category'" #value>
-                  <SfButton class="product__property__button sf-button--text">{{ property.value }}</SfButton>
+                  <SfButton class="product__property__button sf-button--text">
+                    {{ property.value }}
+                  </SfButton>
                 </template>
               </SfProperty>
             </SfTab>
             <SfTab title="Read reviews">
-              <SfButton
-              v-if="isAuthenticated"
-                class="before-results__button"
-                style="margin-bottom:60px"
-                @click="addReviewModal=true"
-              >ADD REVIEW</SfButton>
-            <p  v-else>You must be logged in to write comment</p>
-<!--              TODO: loop over review type instead of API structure -->
               <SfReview
-                v-for="review in productReviews.psdata.comments"
+                v-for="review in reviews"
                 :key="reviewGetters.getReviewId(review)"
                 :author="reviewGetters.getReviewAuthor(review)"
                 :date="reviewGetters.getReviewDate(review)"
                 :message="reviewGetters.getReviewMessage(review)"
+                :max-rating="5"
                 :rating="reviewGetters.getReviewRating(review)"
+                :char-limit="250"
                 read-more-text="Read more"
                 hide-full-text="Read less"
                 class="product__review"
               />
-              <LazyHydrate>
-                <SfPagination
-                  v-if="Math.ceil(totalReview/totalReviewPerPAge) > 1"
-                  class="products__pagination desktop-only"
-                  :current="currentPage"
-                  :total="Math.ceil(totalReview/totalReviewPerPAge)"
-                  :visible="5"
-                >
-                  <template #number="{page}">
-                    <span
-                      class="sf-pagination__item arrow"
-                      :class="{'current': currentPage === page}"
-                      @click="goNext(page)"
-                    >{{page}}</span>
-                  </template>
-
-                  <template #next="{isDisabled, go, next}">
-                    <span @click="goNext(currentPage + 1)" class="arrow">&#8594</span>
-                  </template>
-
-                  <template #prev="{isDisabled, go, prev}">
-                    <span @click="goNext(currentPage - 1)" class="arrow">&#8592</span>
-                  </template>
-                </SfPagination>
-              </LazyHydrate>
             </SfTab>
-            <SfTab title="Additional Information" class="product__additional-info">
+            <SfTab
+              title="Additional Information"
+              class="product__additional-info"
+            >
               <div class="product__additional-info">
                 <p class="product__additional-info__title">{{ $t('Brand') }}</p>
                 <p>{{ productGetters.getBrand(product) }}</p>
@@ -158,16 +135,17 @@
     </div>
 
     <LazyHydrate when-visible>
-      <RelatedProducts :products="relatedProducts" :loading="relatedLoading" title="Match it with" />
-    </LazyHydrate>
-
-    <LazyHydrate v-if="addReviewModal" >
-      <AddReview :productId="id" @close="addReviewModal = false" />
+      <RelatedProducts
+        :products="relatedProducts"
+        :loading="relatedLoading"
+        title="Match it with"
+      />
     </LazyHydrate>
 
     <LazyHydrate when-visible>
       <InstagramFeed />
     </LazyHydrate>
+
   </div>
 </template>
 <script>
@@ -188,22 +166,13 @@ import {
   SfReview,
   SfBreadcrumbs,
   SfButton,
-  SfColor,
-  SfPagination
+  SfColor
 } from '@storefront-ui/vue';
 
 import InstagramFeed from '~/components/InstagramFeed.vue';
-import AddReview from '~/components/AddReview.vue';
 import RelatedProducts from '~/components/RelatedProducts.vue';
 import { ref, computed } from '@vue/composition-api';
-import {
-  useProduct,
-  useCart,
-  productGetters,
-  useReview,
-  useUser,
-  reviewGetters
-} from '@vue-storefront/prestashop';
+import { useProduct, useCart, productGetters, useReview, reviewGetters } from '@vue-storefront/prestashop';
 import { onSSR } from '@vue-storefront/core';
 import LazyHydrate from 'vue-lazy-hydration';
 import cacheControl from './../helpers/cacheControl';
@@ -217,57 +186,34 @@ export default {
     'stale-when-revalidate': 5
   }),
   setup(props, context) {
+
     const qty = ref(1);
     const { id } = context.root.$route.params;
     const { products, search } = useProduct('products');
-    const {
-      products: featureProducts,
-      search: searchRelatedProducts,
-      loading: relatedLoading
-    } = useProduct('relatedProducts');
+    const { products: featureProducts, search: searchRelatedProducts, loading: relatedLoading } = useProduct('relatedProducts');
     const { addItem, loading } = useCart();
-    const { reviews: productReviews, search: searchReviews } = useReview(
-      'productReviews'
-    );
+    const { reviews: productReviews, search: searchReviews } = useReview('productReviews');
     const { send: sendNotification } = useUiNotification();
-    // const pagination = computed(() => facetGetters.getPagination(result.value));
-    const { isAuthenticated } = useUser();
 
-    const product = computed(
-      () =>
-        productGetters.getFiltered(products.value, {
-          master: true,
-          attributes: context.root.$route.query
-        })[0]
-    );
-    const options = computed(() =>
-      productGetters.getAttributes(products.value, ['color', 'size'])
-    );
-    const configuration = computed(() =>
-      productGetters.getAttributes(product.value, ['color', 'size'])
-    );
-    const categories = computed(() =>
-      productGetters.getCategoryIds(product.value)
-    );
-    const reviews = computed(() =>
-      reviewGetters.getItems(productReviews.value)
-    );
+    const product = computed(() => productGetters.getFiltered(products.value, { master: true, attributes: context.root.$route.query })[0]);
+    const options = computed(() => productGetters.getAttributes(products.value, ['color', 'size']));
+    const configuration = computed(() => productGetters.getAttributes(product.value, ['color', 'size']));
+    const categories = computed(() => productGetters.getCategoryIds(product.value));
+    const reviews = computed(() => reviewGetters.getItems(productReviews.value));
 
     // TODO: Breadcrumbs are temporary disabled because productGetters return undefined. We have a mocks in data
     // const breadcrumbs = computed(() => productGetters.getBreadcrumbs ? productGetters.getBreadcrumbs(product.value) : props.fallbackBreadcrumbs);
-    const productGallery = computed(() =>
-      productGetters.getGallery(product.value).map((img) => ({
-        mobile: { url: img.small },
-        desktop: { url: img.normal },
-        big: { url: img.big },
-        alt: product.value.name ? product.value.name : 'product alt'
-      }))
-    );
+    const productGallery = computed(() => productGetters.getGallery(product.value).map(img => ({
+      mobile: { url: img.small },
+      desktop: { url: img.normal },
+      big: { url: img.big },
+      alt: product.value.name ? product.value.name : 'product alt'
+    })));
 
     onSSR(async () => {
       await search({ id });
       await searchRelatedProducts({ featured: true });
-      await searchReviews({ productId: id, page: '1' });
+      // await searchReviews({ productId: id });
     });
 
     const updateFilter = (filter) => {
@@ -282,19 +228,13 @@ export default {
 
     return {
       updateFilter,
-      searchReviews,
       sendNotification,
       configuration,
       product,
       reviews,
-      productReviews,
       reviewGetters,
-      averageRating: computed(() =>
-        productGetters.getAverageRating(product.value)
-      ),
-      totalReviews: computed(() =>
-        productGetters.getTotalReviews(product.value)
-      ),
+      averageRating: computed(() => productGetters.getAverageRating(product.value)),
+      totalReviews: computed(() => productGetters.getTotalReviews(product.value)),
       relatedProducts: computed(() =>
         productGetters.getFeaturedProductsFiltered(featureProducts.value)
       ),
@@ -304,24 +244,10 @@ export default {
       addItem,
       loading,
       productGetters,
-      productGallery,
-      id,
-      isAuthenticated
+      productGallery
     };
   },
-  mounted() {
-    this.totalReview = this.productReviews.psdata.comments_nb;
-    this.totalReviewPerPAge = this.productReviews.psdata.comments_per_page;
-  },
   methods: {
-    async goNext(item) {
-      if (item < 1 || Math.ceil(this.totalReview / this.totalReviewPerPAge) < item) {
-        return false;
-      }
-
-      this.currentPage = item;
-      await this.searchReviews({ productId: this.id, page: this.currentPage });
-    },
     async addingToCart(Productdata) {
       await this.addItem(Productdata).then(() => {
         this.sendNotification({
@@ -340,7 +266,6 @@ export default {
     SfColor,
     SfProperty,
     SfHeading,
-    SfPagination,
     SfPrice,
     SfRating,
     SfSelect,
@@ -355,16 +280,11 @@ export default {
     SfBreadcrumbs,
     SfButton,
     InstagramFeed,
-    AddReview,
     RelatedProducts,
     LazyHydrate
   },
   data() {
     return {
-      currentPage: 1,
-      totalReview: 0,
-      totalReviewPerPAge: 0,
-      addReviewModal: false,
       breadcrumbs: [
         {
           text: 'Home',
@@ -378,8 +298,7 @@ export default {
             link: '#'
           }
         }
-      ],
-      stock: 1
+      ]
     };
   }
 };
@@ -393,18 +312,9 @@ export default {
     margin: 0 auto;
   }
 }
-.arrow {
-  cursor: pointer;
-  font-size: 26px;
-}
 .product {
   @include for-desktop {
     display: flex;
-  }
-  &__pagination {
-    display: flex;
-    justify-content: flex-start;
-    margin: var(--spacer-xl) 0 0 0;
   }
   &__info {
     margin: var(--spacer-sm) auto;

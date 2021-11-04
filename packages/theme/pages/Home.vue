@@ -33,35 +33,40 @@
 
     <LazyHydrate when-visible>
       <div class="similar-products">
-        <SfHeading title="Featured Products" :level="3" />
+        <SfHeading title="Featured Products" :level="3"/>
         <nuxt-link :to="localePath('/c/women')" class="smartphone-only">See all</nuxt-link>
       </div>
     </LazyHydrate>
 
     <LazyHydrate when-visible>
-      <SfCarousel
-        class="carousel"
-        :settings="{ peek: 16, breakpoints: { 1023: { peek: 0, perView: 2 } } }"
-      >
-        <template #prev="{go}">
-          <SfArrow aria-label="prev" class="sf-arrow--left sf-arrow--long" @click="go('prev')" />
-        </template>
-        <template #next="{go}">
-          <SfArrow aria-label="next" class="sf-arrow--right sf-arrow--long" @click="go('next')" />
-        </template>
-        <SfCarouselItem class="carousel__item" v-for="(product, i) in products" :key="i">
-          <SfProductCard
-            :title="productGetters.getName(product)"
-            :image="productGetters.getCoverImage(product)"
-            :regular-price="$n(productGetters.getPrice(product).regular, 'currency')"
-            :special-price="$n(productGetters.getPrice(product).regular, 'currency') === $n(productGetters.getPrice(product).special, 'currency')? '': $n(productGetters.getPrice(product).special, 'currency')"
-            :show-add-to-cart-button="true"
-            :link="localePath(`/p/${productGetters.getId(product)}/${productGetters.getSlug(product)}`)"
-            class="carousel__item__product"
-            :wishlist-icon="[]"
-            @click:add-to-cart="HandleAddToCart({ product, quantity:1 })"
-          />
-        </SfCarouselItem>
+        <SfCarousel class="carousel" :settings="{ peek: 16, breakpoints: { 1023: { peek: 0, perView: 2 } } }">
+          <template #prev="{go}">
+            <SfArrow
+              aria-label="prev"
+              class="sf-arrow--left sf-arrow--long"
+              @click="go('prev')"
+            />
+          </template>
+          <template #next="{go}">
+            <SfArrow
+              aria-label="next"
+              class="sf-arrow--right sf-arrow--long"
+              @click="go('next')"
+            />
+          </template>
+          <SfCarouselItem class="carousel__item" v-for="(product, i) in products" :key="i">
+            <SfProductCard
+              :title="productGetters.getName(product)"
+              :image="productGetters.getCoverImage(product)"
+              :regular-price="$n(productGetters.getPrice(product).regular, 'currency')"
+              :special-price="$n(productGetters.getPrice(product).regular, 'currency') === $n(productGetters.getPrice(product).special, 'currency')? '': $n(productGetters.getPrice(product).special, 'currency')"
+              :show-add-to-cart-button="true"
+              :link="localePath(`/p/${productGetters.getId(product)}/${productGetters.getSlug(product)}`)"
+              class="carousel__item__product"
+              :wishlist-icon="[]"
+              @click:add-to-cart="HandleAddToCart({ product, quantity:1 })"
+            />
+          </SfCarouselItem>
       </SfCarousel>
     </LazyHydrate>
 
@@ -78,6 +83,7 @@
     <LazyHydrate when-visible>
       <InstagramFeed />
     </LazyHydrate>
+
   </div>
 </template>
 <script>
@@ -99,13 +105,14 @@ import InstagramFeed from '~/components/InstagramFeed.vue';
 import LazyHydrate from 'vue-lazy-hydration';
 import cacheControl from './../helpers/cacheControl';
 import { onSSR } from '@vue-storefront/core';
-import { computed } from '@vue/composition-api';
+import {
+  computed
+} from '@vue/composition-api';
 import { useUiNotification } from '~/composables';
 
 import {
   useProduct,
-  productGetters,
-  useCart
+  productGetters, useCart
 } from '@vue-storefront/prestashop';
 
 export default {
@@ -273,8 +280,7 @@ export default {
     }
   }
   ::v-deep .sf-hero__control {
-    &--right,
-    &--left {
+    &--right, &--left {
       display: none;
     }
   }
@@ -329,7 +335,7 @@ export default {
 }
 
 .carousel {
-  margin: 0 calc(var(--spacer-sm) * -1) 0 0;
+  margin: 0 calc(0 - var(--spacer-sm)) 0 0;
   @include for-desktop {
     margin: 0;
   }
@@ -348,4 +354,5 @@ export default {
     transform-origin: center;
   }
 }
+
 </style>
