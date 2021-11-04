@@ -100,7 +100,6 @@
                 </template>
               </SfProperty>
             </SfTab>
-            <!-- ******************* -->
             <SfTab title="Read reviews">
               <SfButton
               v-if="isAuthenticated"
@@ -109,6 +108,7 @@
                 @click="addReviewModal=true"
               >ADD REVIEW</SfButton>
             <p  v-else>You must be logged in to write comment</p>
+<!--              TODO: loop over review type instead of API structure -->
               <SfReview
                 v-for="review in productReviews.psdata.comments"
                 :key="reviewGetters.getReviewId(review)"
@@ -146,7 +146,6 @@
                 </SfPagination>
               </LazyHydrate>
             </SfTab>
-            <!-- ************************* -->
             <SfTab title="Additional Information" class="product__additional-info">
               <div class="product__additional-info">
                 <p class="product__additional-info__title">{{ $t('Brand') }}</p>
