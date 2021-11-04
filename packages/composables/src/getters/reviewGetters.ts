@@ -1,7 +1,6 @@
 import { ReviewGetters, AgnosticRateCount } from '@vue-storefront/core';
 import { Review, ReviewItem } from '@vue-storefront/prestashop-api';
 
-
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getItems(review: Review): ReviewItem[] {
   return [];

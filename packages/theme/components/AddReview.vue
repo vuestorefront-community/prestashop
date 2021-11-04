@@ -14,8 +14,9 @@
     <SfTextarea v-model="comment" name="Cooment" class="textare" :rows="6" />
 
     <p style="margin-bottom:0px;">Rating</p>
+<!--    TODO: style-->
     <SfSelect
-      style="padding-top:0px:padding-bottom:0px"
+      style="padding-top:0px;padding-bottom:0px"
       v-e2e="'Rsting'"
       v-model="rate"
       name="Rate"
@@ -53,7 +54,6 @@ const { send: sendNotification } = useUiNotification();
 import { onSSR } from '@vue-storefront/core';
 import useUiNotification from '~/composables/useUiNotification';
 
-
 extend('required', {
   ...required,
   message: 'This field is required'
@@ -81,7 +81,7 @@ export default {
   },
   setup(props, context) {
     const form = ref({});
-   
+
     const { reviews: productReviews, addReview } = useReview();
 
     return {
@@ -123,17 +123,17 @@ export default {
       } else {
         this.sendNotification({
           key: 'review_added',
-          message: `comment has been successfully added .`,
+          message: 'comment has been successfully added .',
           type: 'success',
           title: 'Comment added!',
           icon: 'check'
         });
-        document.body.removeAttribute( 'style' );
-         this.$emit('close')
+        document.body.removeAttribute('style');
+        this.$emit('close');
       }
     },
     closeModal() {
-      document.body.removeAttribute( 'style' );
+      document.body.removeAttribute('style');
       this.$emit('close');
     }
   }
@@ -190,7 +190,7 @@ export default {
 }
 .textare{
   width:100%
- 
+
 }
 .textare textarea {
     width:92%

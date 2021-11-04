@@ -5,8 +5,8 @@ import {
 } from '@vue-storefront/core';
 import type {
   Cart,
-    CartItem,
-    PsProduct
+  CartItem,
+  PsProduct
 } from '@vue-storefront/prestashop-api';
 
 const params: UseCartFactoryParams<Cart, CartItem, PsProduct> = {
