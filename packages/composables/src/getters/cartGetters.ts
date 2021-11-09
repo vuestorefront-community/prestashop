@@ -11,7 +11,7 @@ import { populateCartItems } from '../helpers';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getItems (cart: Cart): CartItem[] {
-  return populateCartItems(cart.psdata);
+  return populateCartItems(cart.psdata.products);
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -52,7 +52,7 @@ function getItemSku(item: CartItem): string {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getTotals(cart: Cart): AgnosticTotals {
   if (cart) {
-    const products = cart.psdata;
+    const products = cart.psdata.products;
     let regularPrice = 0;
     let discountPrice = 0;
     for (const item of products) {
@@ -77,7 +77,7 @@ function getShippingPrice(cart: Cart): number {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getTotalItems(cart: Cart): number {
   if (cart) {
-    return cart.psdata.length;
+    return cart.psdata.products.length;
   }
   return 0;
 }
