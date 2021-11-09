@@ -26,7 +26,10 @@ export const useBootstrap = () => {
         const vsfCookieKey = context.$prestashop.config.app.$config.psCustomerCookieKey;
         const vsfCookieValue = context.$prestashop.config.app.$config.psCustomerCookieValue;
 
-        if (cookieObject) {
+        const psCookieKey = context.$prestashop.config.app.$cookies.get(vsfCookieKey);
+        const psCookieValue = context.$prestashop.config.app.$cookies.get(vsfCookieValue);
+
+        if (cookieObject && !psCookieKey && !psCookieValue) {
           context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
           context.$prestashop.config.app.$cookies.set(vsfCookieValue, cookieObject.vsfPsValCookie);
         }
