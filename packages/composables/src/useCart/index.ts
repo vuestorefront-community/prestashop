@@ -20,7 +20,7 @@ const params: UseCartFactoryParams<Cart, CartItem, PsProduct> = {
 
     const { data, cookieObject } = await context.$prestashop.api.getCartItems({ psCookieKey, psCookieValue });
 
-    if (data.code === 200) {
+    if (data && data.code === 200) {
       if (cookieObject) {
         context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
         context.$prestashop.config.app.$cookies.set(vsfCookieValue, cookieObject.vsfPsValCookie);
@@ -28,8 +28,8 @@ const params: UseCartFactoryParams<Cart, CartItem, PsProduct> = {
 
       return data;
     } else {
-      // add to cart failed
-      return {};
+      // cart loading failed
+      return null;
     }
   },
 
