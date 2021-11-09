@@ -6,3 +6,4 @@ export { default as loadCustomer } from './loadCustomer';
 export { default as addToCart } from './addToCart';
 export { default as getCartItems } from './getCartItems';
 export { default as removeFromCart } from './removeFromCart';
+export { default as loadAddresses } from './loadAddresses';
