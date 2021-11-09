@@ -23,10 +23,6 @@ export default async function addToCart(context, params) {
 
     return {data, cookieObject};
   } else {
-    const { data, headers } = await context.client.get(url.href);
-
-    const cookieObject = cookieParser(headers);
-
-    return {data, cookieObject};
+    return {};
   }
 }
