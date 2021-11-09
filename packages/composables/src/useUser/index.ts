@@ -68,8 +68,6 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
     const code = data.code;
 
     if (code === 200) {
-      context.$prestashop.config.app.$cookies.set(cookieKey, cookieObject.vsfPsKeyCookie);
-      context.$prestashop.config.app.$cookies.set(cookieValue, cookieObject.vsfPsValCookie);
       context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
       context.$prestashop.config.app.$cookies.set(vsfCookieValue, cookieObject.vsfPsValCookie);
 
