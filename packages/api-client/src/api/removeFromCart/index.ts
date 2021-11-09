@@ -1,5 +1,6 @@
 import {cookieParser} from '../../helpers/cookieParser';
 
+// TODO: what happens to this api?
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export default async function removeFromCart(context, params) {
   const {psCookieKey, psCookieValue, product, quantity} = params;
