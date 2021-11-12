@@ -16,9 +16,38 @@ function getAll(params: FacetSearchResult<Facet>, criteria?: FacetSearchCriteria
   return [];
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getGrouped(params: FacetSearchResult<Facet>, criteria?: FacetSearchCriteria): AgnosticGroupedFacet[] {
-  return [];
+const normalizeFacet = (facet) => {
+  return {
+    type: facet.type,
+    id: facet.label,
+    value: facet.label,
+    attrName: facet.label,
+    selected: facet.active,
+    count: facet.magnitude
+  };
+};
+
+function buildFacets(facets = []) {
+  return facets.reduce((result, facetGroup) => {
+    if (facetGroup.displayed) {
+      result.push(
+        {
+          id: facetGroup.label,
+          label: facetGroup.label,
+          options: facetGroup.filters.map(normalizeFacet),
+          count: null
+        }
+      );
+    }
+    return result;
+  }, []);
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars,@typescript-eslint/explicit-module-boundary-types
+function getGrouped(searchResult, criteria?: FacetSearchCriteria): AgnosticGroupedFacet[] {
+  const facets = searchResult?.data?.facets;
+
+  return buildFacets(facets);
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

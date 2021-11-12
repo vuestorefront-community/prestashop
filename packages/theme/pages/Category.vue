@@ -375,7 +375,7 @@ export default {
     const categoryTree = computed(() => facetGetters.getCategoryTree(result.value));
     const breadcrumbs = computed(() => facetGetters.getBreadcrumbs(result.value));
     const sortBy = computed(() => facetGetters.getSortOptions(result.value));
-    const facets = computed(() => facetGetters.getGrouped(result.value, ['color', 'size']));
+    const facets = computed(() => facetGetters.getGrouped(result.value));
     const pagination = computed(() => facetGetters.getPagination(result.value));
     const activeCategory = computed(() => {
       const items = categoryTree.value.items;
