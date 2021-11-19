@@ -16,25 +16,34 @@ function getAll(params: FacetSearchResult<Facet>, criteria?: FacetSearchCriteria
   return [];
 }
 
-const normalizeFacet = (facet) => {
-  return {
+const replaceSpacesWithDash = (word) => {
+  return word.replace(/\s/g, '-');
+};
+
+const normalizeFacet = (result, facet) => {
+  const label = replaceSpacesWithDash(facet.label);
+  console.log(facet.active);
+  result.push({
     type: facet.type,
-    id: facet.label,
-    value: facet.label,
-    attrName: facet.label,
+    id: label,
+    label: facet.label,
+    value: label,
+    attrName: label,
     selected: facet.active,
     count: facet.magnitude
-  };
+  });
+  return result;
 };
 
 function buildFacets(facets = []) {
   return facets.reduce((result, facetGroup) => {
     if (facetGroup.displayed && facetGroup.widgetType !== 'slider') {
+      const label = replaceSpacesWithDash(facetGroup.label);
       result.push(
         {
-          id: facetGroup.label,
+          id: label,
           label: facetGroup.label,
-          options: facetGroup.filters.map(normalizeFacet),
+          options: facetGroup.filters.reduce(normalizeFacet, []),
           count: null
         }
       );

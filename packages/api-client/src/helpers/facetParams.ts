@@ -1,12 +1,10 @@
 
-const replaceSpacesWithPlus = (word) => {
-  return word.replace(/\s/g, '+');
+const replaceSpacesWithDash = (word) => {
+  return word.replace('-', ' ');
 };
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const facetParams = (filters) : string => {
-  console.log('this flters ');
-  console.log(filters);
   let urlString = '';
   let counter = 0;
   for (const facet in filters) {
@@ -17,18 +15,17 @@ const facetParams = (filters) : string => {
         if (counter !== 0) {
           urlString += '/';
         }
-        urlString += (replaceSpacesWithPlus(facet));
+        urlString += (replaceSpacesWithDash(facet));
 
         // eslint-disable-next-line max-depth
         for (const filter of filterArray) {
-          urlString += ('-' + replaceSpacesWithPlus(filter));
+          urlString += ('-' + replaceSpacesWithDash(filter));
         }
         counter ++;
       }
     }
   }
 
-  console.log(urlString);
   return urlString;
 };
 
