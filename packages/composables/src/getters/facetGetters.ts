@@ -22,7 +22,6 @@ const replaceSpacesWithDash = (word) => {
 
 const normalizeFacet = (result, facet) => {
   const label = replaceSpacesWithDash(facet.label);
-  console.log(facet.active);
   result.push({
     type: facet.type,
     id: label,
