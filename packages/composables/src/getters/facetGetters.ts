@@ -16,9 +16,46 @@ function getAll(params: FacetSearchResult<Facet>, criteria?: FacetSearchCriteria
   return [];
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getGrouped(params: FacetSearchResult<Facet>, criteria?: FacetSearchCriteria): AgnosticGroupedFacet[] {
-  return [];
+const replaceSpacesWithDash = (word) => {
+  return word.replace(/\s/g, '-');
+};
+
+const normalizeFacet = (result, facet) => {
+  const label = replaceSpacesWithDash(facet.label);
+  result.push({
+    type: facet.type,
+    id: label,
+    label: facet.label,
+    value: label,
+    attrName: label,
+    selected: facet.active,
+    count: facet.magnitude
+  });
+  return result;
+};
+
+function buildFacets(facets = []) {
+  return facets.reduce((result, facetGroup) => {
+    if (facetGroup.displayed && facetGroup.widgetType !== 'slider') {
+      const label = replaceSpacesWithDash(facetGroup.label);
+      result.push(
+        {
+          id: label,
+          label: facetGroup.label,
+          options: facetGroup.filters.reduce(normalizeFacet, []),
+          count: null
+        }
+      );
+    }
+    return result;
+  }, []);
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars,@typescript-eslint/explicit-module-boundary-types
+function getGrouped(searchResult, criteria?: FacetSearchCriteria): AgnosticGroupedFacet[] {
+  const facets = searchResult?.data?.facets;
+
+  return buildFacets(facets);
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

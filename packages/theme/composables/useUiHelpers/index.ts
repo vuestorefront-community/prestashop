@@ -59,7 +59,12 @@ const useUiHelpers = () => {
 
   // eslint-disable-next-line
   const changeFilters = (filters) => {
-    console.warn('[VSF] please implement useUiHelpers.changeFilters.');
+    context.$router.push({
+      query: {
+        ...getFiltersDataFromUrl(context, false),
+        ...filters
+      }
+    });
   };
 
   // eslint-disable-next-line
