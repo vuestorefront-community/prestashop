@@ -29,7 +29,7 @@ const normalizeFacet = (facet) => {
 
 function buildFacets(facets = []) {
   return facets.reduce((result, facetGroup) => {
-    if (facetGroup.displayed) {
+    if (facetGroup.displayed && facetGroup.widgetType !== 'slider') {
       result.push(
         {
           id: facetGroup.label,
