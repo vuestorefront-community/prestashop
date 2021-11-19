@@ -259,14 +259,15 @@
         class="sidebar-filters"
         @close="toggleFilterSidebar"
       >
-        <div class="filters desktop-only">
-          <div v-for="(facet, i) in facets" :key="i">
-            <SfHeading
-              :level="4"
-              :title="facet.label"
-              class="filters__title sf-heading--left"
-              :key="`filter-title-${facet.id}`"
-            />
+        <SfLoader class="desktop-only" :loading="loading">
+          <div v-if="!loading" class="filters desktop-only">
+            <div v-for="(facet, i) in facets" :key="i">
+              <SfHeading
+                :level="4"
+                :title="facet.label"
+                class="filters__title sf-heading--left"
+                :key="`filter-title-${facet.id}`"
+              />
               <div
                 v-if="isFacetColor(facet)"
                 class="filters__colors"
@@ -291,26 +292,29 @@
                   @change="() => selectFilter(facet, option)"
                 />
               </div>
+            </div>
           </div>
-        </div>
-        <SfAccordion class="filters smartphone-only">
-          <div v-for="(facet, i) in facets" :key="i">
-            <SfAccordionItem
-              :key="`filter-title-${facet.id}`"
-              :header="facet.label"
-              class="filters__accordion-item"
-            >
-            <SfFilter
-              v-for="option in facet.options"
-              :key="`${facet.id}-${option.id}`"
-              :label="option.label"
-              :selected="isFilterSelected(facet, option)"
-              class="filters__item"
-              @change="() => selectFilter(facet, option)"
-            />
-          </SfAccordionItem>
-        </div>
-        </SfAccordion>
+        </SfLoader>
+        <SfLoader class="smartphone-only" :loading="loading">
+          <SfAccordion v-if="!loading" class="filters smartphone-only">
+            <div v-for="(facet, i) in facets" :key="i">
+              <SfAccordionItem
+                :key="`filter-title-${facet.id}`"
+                :header="facet.label"
+                class="filters__accordion-item"
+              >
+                <SfFilter
+                  v-for="option in facet.options"
+                  :key="`${facet.id}-${option.id}`"
+                  :label="option.label"
+                  :selected="isFilterSelected(facet, option)"
+                  class="filters__item"
+                  @change="() => selectFilter(facet, option)"
+                />
+              </SfAccordionItem>
+            </div>
+          </SfAccordion>
+        </SfLoader>
         <template #content-bottom>
           <div class="filters__buttons">
             <SfButton
@@ -422,10 +426,12 @@ export default {
 
       if (selectedFilters.value[facet.id].find(f => f === option.id)) {
         selectedFilters.value[facet.id] = selectedFilters.value[facet.id].filter(f => f !== option.id);
+        changeFilters(selectedFilters.value);
         return;
       }
 
       selectedFilters.value[facet.id].push(option.id);
+      changeFilters(selectedFilters.value);
     };
 
     const clearFilters = () => {
@@ -436,7 +442,6 @@ export default {
 
     const applyFilters = () => {
       toggleFilterSidebar();
-      changeFilters(selectedFilters.value);
     };
 
     return {
