@@ -1,5 +1,5 @@
 
-const replaceSpacesWithDash = (word) => {
+const replaceDashWithSpace = (word) => {
   return word.replace('-', ' ');
 };
 
@@ -15,11 +15,11 @@ const facetParams = (filters) : string => {
         if (counter !== 0) {
           urlString += '/';
         }
-        urlString += (replaceSpacesWithDash(facet));
+        urlString += (replaceDashWithSpace(facet));
 
         // eslint-disable-next-line max-depth
         for (const filter of filterArray) {
-          urlString += ('-' + replaceSpacesWithDash(filter));
+          urlString += ('-' + replaceDashWithSpace(filter));
         }
         counter ++;
       }
