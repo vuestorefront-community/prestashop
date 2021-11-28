@@ -1,9 +1,6 @@
 <template>
   <div id="product">
-    <SfBreadcrumbs
-      class="breadcrumbs desktop-only"
-      :breadcrumbs="breadcrumbs"
-    />
+    <SfBreadcrumbs class="breadcrumbs desktop-only" :breadcrumbs="breadcrumbs" />
     <div class="product">
       <LazyHydrate when-idle>
         <SfGallery :images="productGallery" class="product__gallery" />
@@ -30,47 +27,65 @@
           />
           <div>
             <div class="product__rating">
-              <SfRating
-                :score="averageRating"
-                :max="5"
-              />
-              <a v-if="!!totalReviews" href="#" class="product__count">
-                ({{ totalReviews }})
-              </a>
+              <SfRating :score="averageRating" :max="5" />
+              <a v-if="!!totalReviews" href="#" class="product__count">({{ totalReviews }})</a>
             </div>
             <SfButton class="sf-button--text">{{ $t('Read all reviews') }}</SfButton>
           </div>
         </div>
         <div>
-          <p class="product__description desktop-only" v-html='productGetters.getShortDescription(product)'>
-          </p>
-          <SfButton class="sf-button--text desktop-only product__guide">
-            {{ $t('Size guide') }}
-          </SfButton>
-          <SfSelect
-            v-e2e="'size-select'"
-            v-if="options.size"
-            :value="configuration.size"
-            @input="size => updateFilter({ size })"
-            label="Size"
-            class="sf-select--underlined product__select-size"
-            :required="true"
+          <p
+            class="product__description desktop-only"
+            v-html="productGetters.getShortDescription(product)"
+          ></p>
+          <SfButton class="sf-button--text desktop-only product__guide">{{ $t('Size guide') }}</SfButton>
+
+          <div v-for="opt in objOFOptions">
+            <div v-if="opt.group_name === 'Size'">
+              {{ opt.group_name }}
+              <SfSelect
+                v-e2e="'size-select'"
+                class="sf-select--underlined product__select-size"
+                :required="true"
+                @input="size => updateFilter({ size })"
+              >
+                <SfSelectOption
+                  v-for="item in opt.attributes"
+                  :key="item.id"
+                  :value="item.name"
+                >{{item.name}}</SfSelectOption>
+              </SfSelect>
+            </div>
+
+            <div v-if="opt.group_name === 'Dimension'">
+              {{ opt.group_name }}
+              <SfSelect
+                v-e2e="'size-select'"
+                class="sf-select--underlined product__select-size"
+                :required="true"
+                @input="dimension =>  updateFilter({ dimension})"
+                v-model="optionSelected"
+              >
+                <SfSelectOption
+                  v-for="item in opt.attributes"
+                  :key="item.id"
+                  :value="item.name"
+                >{{item.name}}</SfSelectOption>
+              </SfSelect>
+            </div>
+          </div>
+
+          <div
+            v-if="objOFOptions.Color && objOFOptions.Color.attributes.length > 1"
+            class="product__colors desktop-only"
           >
-            <SfSelectOption
-              v-for="size in options.size"
-              :key="size.value"
-              :value="size.value"
-            >
-              {{size.label}}
-            </SfSelectOption>
-          </SfSelect>
-          <div v-if="options.color && options.color.length > 1" class="product__colors desktop-only">
             <p class="product__color-label">{{ $t('Color') }}:</p>
             <SfColor
-              v-for="(color, i) in options.color"
+              v-for="(color, i) in objOFOptions.Color.attributes"
               :key="i"
-              :color="color.value"
+              color="color.html_color_code"
               class="product__color"
+              style=" --color-box-shadow-opacity: 0.5"
               @click="updateFilter({color})"
             />
           </div>
@@ -88,8 +103,12 @@
         <LazyHydrate when-idle>
           <SfTabs :open-tab="1" class="product__tabs">
             <SfTab title="Description">
-              <div class="product__description" v-html='productGetters.getDescription(product)'></div>
-              <SfProperty class='product__property' name='Category' :value='productGetters.getCategory(product)'></SfProperty>
+              <div class="product__description" v-html="productGetters.getDescription(product)"></div>
+              <SfProperty
+                class="product__property"
+                name="Category"
+                :value="productGetters.getCategory(product)"
+              ></SfProperty>
 
               <SfProperty
                 v-for="(property, i) in productGetters.getProductInfo(product)"
@@ -99,9 +118,7 @@
                 class="product__property"
               >
                 <template v-if="property.name === 'Category'" #value>
-                  <SfButton class="product__property__button sf-button--text">
-                    {{ property.value }}
-                  </SfButton>
+                  <SfButton class="product__property__button sf-button--text">{{ property.value }}</SfButton>
                 </template>
               </SfProperty>
             </SfTab>
@@ -120,10 +137,7 @@
                 class="product__review"
               />
             </SfTab>
-            <SfTab
-              title="Additional Information"
-              class="product__additional-info"
-            >
+            <SfTab title="Additional Information" class="product__additional-info">
               <div class="product__additional-info">
                 <p class="product__additional-info__title">{{ $t('Brand') }}</p>
                 <p>{{ productGetters.getBrand(product) }}</p>
@@ -135,17 +149,12 @@
     </div>
 
     <LazyHydrate when-visible>
-      <RelatedProducts
-        :products="relatedProducts"
-        :loading="relatedLoading"
-        title="Match it with"
-      />
+      <RelatedProducts :products="relatedProducts" :loading="relatedLoading" title="Match it with" />
     </LazyHydrate>
 
     <LazyHydrate when-visible>
       <InstagramFeed />
     </LazyHydrate>
-
   </div>
 </template>
 <script>
@@ -172,7 +181,13 @@ import {
 import InstagramFeed from '~/components/InstagramFeed.vue';
 import RelatedProducts from '~/components/RelatedProducts.vue';
 import { ref, computed } from '@vue/composition-api';
-import { useProduct, useCart, productGetters, useReview, reviewGetters } from '@vue-storefront/prestashop';
+import {
+  useProduct,
+  useCart,
+  productGetters,
+  useReview,
+  reviewGetters
+} from '@vue-storefront/prestashop';
 import { onSSR } from '@vue-storefront/core';
 import LazyHydrate from 'vue-lazy-hydration';
 import cacheControl from './../helpers/cacheControl';
@@ -186,29 +201,58 @@ export default {
     'stale-when-revalidate': 5
   }),
   setup(props, context) {
-
     const qty = ref(1);
     const { id } = context.root.$route.params;
     const { products, search } = useProduct('products');
-    const { products: featureProducts, search: searchRelatedProducts, loading: relatedLoading } = useProduct('relatedProducts');
+    const {
+      products: featureProducts,
+      search: searchRelatedProducts,
+      loading: relatedLoading
+    } = useProduct('relatedProducts');
     const { addItem, loading } = useCart();
-    const { reviews: productReviews, search: searchReviews } = useReview('productReviews');
+    const { reviews: productReviews, search: searchReviews } = useReview(
+      'productReviews'
+    );
     const { send: sendNotification } = useUiNotification();
 
-    const product = computed(() => productGetters.getFiltered(products.value, { master: true, attributes: context.root.$route.query })[0]);
-    const options = computed(() => productGetters.getAttributes(products.value, ['color', 'size']));
-    const configuration = computed(() => productGetters.getAttributes(product.value, ['color', 'size']));
-    const categories = computed(() => productGetters.getCategoryIds(product.value));
-    const reviews = computed(() => reviewGetters.getItems(productReviews.value));
+    const product = computed(
+      () =>
+        productGetters.getFiltered(products.value, {
+          master: true,
+          attributes: context.root.$route.query
+        })[0]
+    );
+    const options = computed(
+      productGetters.getAttributes(products.value, [
+        'color',
+        'size',
+        'dimension'
+      ])
+    );
+    const configuration = computed(
+      productGetters.getAttributes(product.value, [
+        'color',
+        'size',
+        'dimension'
+      ])
+    );
+    const categories = computed(() =>
+      productGetters.getCategoryIds(product.value)
+    );
+    const reviews = computed(() =>
+      reviewGetters.getItems(productReviews.value)
+    );
 
     // TODO: Breadcrumbs are temporary disabled because productGetters return undefined. We have a mocks in data
     // const breadcrumbs = computed(() => productGetters.getBreadcrumbs ? productGetters.getBreadcrumbs(product.value) : props.fallbackBreadcrumbs);
-    const productGallery = computed(() => productGetters.getGallery(product.value).map(img => ({
-      mobile: { url: img.small },
-      desktop: { url: img.normal },
-      big: { url: img.big },
-      alt: product.value.name ? product.value.name : 'product alt'
-    })));
+    const productGallery = computed(() =>
+      productGetters.getGallery(product.value).map((img) => ({
+        mobile: { url: img.small },
+        desktop: { url: img.normal },
+        big: { url: img.big },
+        alt: product.value.name ? product.value.name : 'product alt'
+      }))
+    );
 
     onSSR(async () => {
       await search({ id });
@@ -216,14 +260,19 @@ export default {
       // await searchReviews({ productId: id });
     });
 
-    const updateFilter = (filter) => {
-      context.root.$router.push({
-        path: context.root.$route.path,
-        query: {
-          ...configuration.value,
-          ...filter
+    const updateFilter = async (filter) => {
+      let group = null;
+      let attr = null;
+      for (const [keyAttr, valueAttr] of Object.entries(options.value)) {
+        const item = options.value[keyAttr].attributes;
+        for (const [keyItem, valueItem] of Object.entries(item)) {
+          if (item[keyItem].name === filter.dimension) {
+            attr = keyItem;
+            group = keyAttr;
+          }
         }
-      });
+      }
+      await search({ id, refresh: true, group: group, attr: attr });
     };
 
     return {
@@ -233,8 +282,12 @@ export default {
       product,
       reviews,
       reviewGetters,
-      averageRating: computed(() => productGetters.getAverageRating(product.value)),
-      totalReviews: computed(() => productGetters.getTotalReviews(product.value)),
+      averageRating: computed(() =>
+        productGetters.getAverageRating(product.value)
+      ),
+      totalReviews: computed(() =>
+        productGetters.getTotalReviews(product.value)
+      ),
       relatedProducts: computed(() =>
         productGetters.getFeaturedProductsFiltered(featureProducts.value)
       ),

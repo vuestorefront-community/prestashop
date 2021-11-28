@@ -9,7 +9,7 @@ import { populateFeaturedProducts, populateProducts } from '../helpers';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getName(product: PsProduct): string {
-  return product?.name || '';
+  return product ?.name || '';
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -21,14 +21,14 @@ function getSlug(product: PsProduct): string {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getPrice(product: PsProduct): AgnosticPrice {
   return {
-    regular: product?.regularPrice || 0,
-    special: product?.discountPrice || 0
+    regular: product ?.regularPrice || 0,
+    special: product ?.discountPrice || 0
   };
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getGallery(product: PsProduct): AgnosticMediaGalleryItem[] {
-  return product?.images || [];
+  return product ?.images || [];
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -56,33 +56,33 @@ function getFeaturedProductsFiltered(products, filters: ProductFilter): PsProduc
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getAttributes(products: PsProduct[] | PsProduct, filterByAttributeName?: string[]): Record<string, AgnosticAttribute | string> {
-  return {};
+function getAttributes(products, filterByAttributeName?: string[]) {
+  return products ?.groups;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getDescription(product: PsProduct): any {
-  return product?.description || '';
+  return product ?.description || '';
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getShortDescription(product: PsProduct): any {
-  return product?.shortDescription || '';
+  return product ?.shortDescription || '';
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getBrand(product: PsProduct): any {
-  return product?.brand || '';
+  return product ?.brand || '';
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getCategory(product: PsProduct): any {
-  return product?.category || '';
+  return product ?.category || '';
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getProductInfo(product: PsProduct): any {
-  return product?.productInfo || '';
+  return product ?.productInfo || '';
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
