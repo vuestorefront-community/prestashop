@@ -7,19 +7,25 @@ const populateProducts = (psProducts: Array<any>) => {
     id: product.id_product,
     name: product.name,
     slug: 'todo-back',
-    regularPrice: product.float_price,
+    regularPrice: parseFloat(psProducts[0].price.substr(1)),
     // eslint-disable-next-line line-comment-position
-    discountPrice: product.float_price, // todo
+    discountPrice: parseFloat(psProducts[0].price.substr(1)), // todo
     coverImageSmall: product.cover_image,
     coverImageMedium: product.cover_image,
     coverImageLarge: product.cover_image,
-    images: product.images.map(
-      (image)=>(<AgnosticMediaGalleryItem>{
+    images: product.images ? product.images.map(
+      (image) => (<AgnosticMediaGalleryItem>{
         small: image.src,
         normal: image.src,
         big: image.src
       }
-      )),
+      )) :
+      ([{
+        small: product.default_image.url,
+        normal: product.default_image.url,
+        big: product.default_image.url
+      }]
+      ),
     description: product.description,
     shortDescription: product.description_short,
     brand: product.manufacturer_name,

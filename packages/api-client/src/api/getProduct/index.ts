@@ -4,8 +4,8 @@ export default async function getProduct(context, params) {
     const url = new URL('/rest/productdetail', context.config.api.url);
 
     params.id && url.searchParams.set('product_id', params.id);
-    // params.catId && url.searchParams.set('catId', params.catId);
-    // params.limit && url.searchParams.set('limit', params.limit);
+    params.refresh && url.searchParams.set('refresh', params.refresh);
+    params.group && url.searchParams.set(`group[${params.group}]`, params.attr);
 
     const { data } = await context.client.get(url.href);
     return data;

@@ -11,8 +11,15 @@ import type {
 const params: UseProductFactoryParams<Product, SearchParams> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   productsSearch: async (context: Context, params) => {
-    const data = await context.$prestashop.api.getProduct(params);
-
+    let obj = params
+    if (params.refresh) {
+      obj = {}
+      obj['refresh'] = true;
+      obj['id'] = params.id;
+      obj['group'] = params.group;
+      obj['attr'] = params.attr
+    }
+    const data = await context.$prestashop.api.getProduct(obj);
     return data.psdata;
   }
 };
