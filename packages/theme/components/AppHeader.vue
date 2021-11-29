@@ -18,10 +18,10 @@
         <LocaleSelector class="smartphone-only" />
       </template>
       <template #header-icons>
-        <div class="sf-header__icons">
+        <div v-e2e="'header-icons'" class="sf-header__icons">
           <SfButton
-            v-e2e="'app-header-account'"
             class="sf-button--pure sf-header__action"
+            aria-label="Open account button"
             @click="handleAccountClick"
           >
             <SfIcon
@@ -32,6 +32,7 @@
           <SfButton
             v-e2e="'app-header-cart'"
             class="sf-button--pure sf-header__action"
+            aria-label="Toggle cart sidebar"
             @click="toggleCartSidebar"
           >
             <SfIcon
@@ -59,6 +60,7 @@
           <template #icon>
             <SfButton
               v-if="!!term"
+              aria-label="Close search"
               class="sf-search-bar__button sf-button--pure"
               @click="closeOrFocusSearchBar"
             >
@@ -68,6 +70,7 @@
             </SfButton>
             <SfButton
               v-else
+              aria-label="Open search"
               class="sf-search-bar__button sf-button--pure"
               @click="isSearchOpen ? isSearchOpen = false : isSearchOpen = true"
             >
@@ -79,7 +82,13 @@
         </SfSearchBar>
       </template>
     </SfHeader>
-    <SearchResults :visible="isSearchOpen" :result="result" @close="closeSearch" @removeSearchResults="removeSearchResults" />
+    <SearchResults
+      :visible="isSearchOpen"
+      :result="result"
+      :term="term"
+      @close="closeSearch"
+      @removeSearchResults="removeSearchResults"
+    />
     <SfOverlay :visible="isSearchOpen" />
   </div>
 </template>
@@ -125,7 +134,7 @@ export default {
     const isMobile = ref(mapMobileObserver().isMobile.get());
 
     const { result: productResult, search: productSearch } = useFacet();
-    const result = computed(() => facetGetters.getProducts(productResult.value));
+    const result = ref(null);
 
     const cartTotalItems = computed(() => {
       const count = cartGetters.getTotalItems(cart.value);
@@ -153,7 +162,7 @@ export default {
       isSearchOpen.value = false;
     };
 
-    const handleSearch = computed(() => debounce(async (paramValue) => {
+    const handleSearch = debounce(async (paramValue) => {
       if (!paramValue.target) {
         term.value = paramValue;
       } else {
@@ -165,7 +174,9 @@ export default {
         term: term.value
       });
 
-    }, 200));
+      result.value = facetGetters.getProducts(productResult.value);
+
+    }, 200);
 
     const closeOrFocusSearchBar = () => {
       if (isMobile.value) {
