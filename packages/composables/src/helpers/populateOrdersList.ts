@@ -4,7 +4,8 @@ const populateOrdersList = (psOrders: Array<any>) => {
     id: order.id_order,
     date: order.date_add,
     status: order.order_state,
-    total: order.total_paid
+    total: order.total_paid,
+    products: order.orderDetails ? order.orderDetails.products : null
   }));
   return populateOrdersList;
 };

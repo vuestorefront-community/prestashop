@@ -1,6 +1,6 @@
 import { UserOrderGetters } from '@vue-storefront/core';
 import type { Order, OrderItem } from '@vue-storefront/prestashop-api';
-import { populateOrdersList } from '../helpers';
+import { populateOrdersList, populateOrderDetails } from '../helpers';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 function getOrdersListFiltered(orders:any) {
@@ -9,6 +9,14 @@ function getOrdersListFiltered(orders:any) {
   }
   orders = Array.isArray(orders) ? orders : [orders];
   return populateOrdersList(orders);
+}
+
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+function getOrderDetailsFiltered(details:any) {
+  if (!details) {
+    return [];
+  }
+  return populateOrderDetails(details);
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -42,27 +50,39 @@ function getPrice(order: Order): number | null {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getItems(order: Order): OrderItem[] {
-  return [];
+  if (order) {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+    return order.products;
+  } else return [];
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getItemSku(item: OrderItem): string {
+  // TODO
   return '';
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getItemName(item: OrderItem): string {
-  return '';
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  return item.name;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getItemQty(item: OrderItem): number {
-  return 0;
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  return item.quantity;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getItemPrice(item: OrderItem): number {
-  return 0;
+
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  return item.price;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -77,6 +97,7 @@ function getOrdersTotal(orders: any): number {
 
 export const orderGetters: UserOrderGetters<Order, OrderItem> = {
   getOrdersListFiltered,
+  getOrderDetailsFiltered,
   getDate,
   getId,
   getStatus,

@@ -25,28 +25,13 @@
             class="sf-property--full-width property"
           />
         </div>
-        <SfTable class="products">
-          <SfTableHeading>
-            <SfTableHeader class="products__name">{{ $t('Product') }}</SfTableHeader>
-            <SfTableHeader>{{ $t('Quantity') }}</SfTableHeader>
-            <SfTableHeader>{{ $t('Price') }}</SfTableHeader>
-          </SfTableHeading>
-          <SfTableRow v-for="(item, i) in orderGetters.getItems(currentOrder)" :key="i">
-            <SfTableData class="products__name">
-              <nuxt-link :to="'/p/'+orderGetters.getItemSku(item)+'/'+orderGetters.getItemSku(item)">
-                {{orderGetters.getItemName(item)}}
-              </nuxt-link>
-            </SfTableData>
-            <SfTableData>{{orderGetters.getItemQty(item)}}</SfTableData>
-            <SfTableData>{{$n(orderGetters.getItemPrice(item), 'currency')}}</SfTableData>
-          </SfTableRow>
-        </SfTable>
+        <order-items :order='currentOrder'></order-items>
       </div>
       <div v-else>
         <p class="message">
           {{ $t('Details and status orders') }}
         </p>
-        <div v-if="ordersList.length === 0" class="no-orders">
+        <div v-if="ordersList.length == 0" class="no-orders">
           <p class="no-orders__title">{{ $t('You currently have no orders') }}</p>
           <SfButton class="no-orders__button">{{ $t('Start shopping') }}</SfButton>
         </div>
@@ -87,6 +72,7 @@
 </template>
 
 <script>
+import OrderItems from '../../components/OrderItems.vue';
 import {
   SfTabs,
   SfTable,
@@ -100,30 +86,29 @@ import { AgnosticOrderStatus } from '@vue-storefront/core';
 import { onSSR } from '@vue-storefront/core';
 
 export default {
-  name: 'PersonalDetails',
+  name: 'OrederHistory',
   components: {
     SfTabs,
     SfTable,
     SfButton,
     SfProperty,
-    SfLink
+    SfLink,
+    OrderItems
   },
   setup() {
     const { orders, search } = useUserOrder();
     const currentOrder = ref(null);
-    const ordersList = computed(() => orderGetters.getOrdersListFiltered(orders.value));
+    const ordersList = ref(orderGetters.getOrdersListFiltered(orders.value));
     const totalOrders = computed(() => orderGetters.getOrdersTotal(orders.value));
     onSSR(async () => {
-      await search();
+      await search({orderId: null});
     });
-
     const tableHeaders = [
       'Order ID',
       'Payment date',
       'Amount',
       'Status'
     ];
-
     const getStatusTextClass = (order) => {
       const status = orderGetters.getStatus(order);
       switch (status) {
