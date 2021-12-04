@@ -8,7 +8,8 @@ const populateOrderDetails = (details) => {
       id: product.id_product,
       name: product.product_name,
       quantity: product.quantity,
-      price: Number(product.product_price)
+      price: Number(product.product_price),
+      slug: product.link_rewrite
     };
     orderDetails.products.push(features);
   }

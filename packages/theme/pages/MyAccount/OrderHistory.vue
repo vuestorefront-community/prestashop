@@ -27,7 +27,7 @@
         </div>
         <order-items :order='currentOrder'></order-items>
       </div>
-      <div v-else>
+      <div v-show='currentOrder === null'>
         <p class="message">
           {{ $t('Details and status orders') }}
         </p>
@@ -98,8 +98,8 @@ export default {
   setup() {
     const { orders, search } = useUserOrder();
     const currentOrder = ref(null);
-    const ordersList = ref(orderGetters.getOrdersListFiltered(orders.value));
-    const totalOrders = computed(() => orderGetters.getOrdersTotal(orders.value));
+    const ordersList = computed(()=> orders.value ? orderGetters.getOrdersListFiltered(orders.value) : []);
+    const totalOrders = computed(() => orders.value ? orderGetters.getOrdersTotal(orders.value) : 0);
     onSSR(async () => {
       await search({orderId: null});
     });

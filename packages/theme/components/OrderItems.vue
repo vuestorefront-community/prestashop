@@ -7,7 +7,7 @@
     </SfTableHeading>
     <SfTableRow v-for="item in orderProducts" :key='item.id'>
       <SfTableData class="products__name">
-        <nuxt-link :to="'/p/' + orderGetters.getItemSku(item)+'/'+orderGetters.getItemSku(item)">
+        <nuxt-link :to="localePath(`/p/${orderGetters.getId(item)}/${orderGetters.getSlug(item)}`)">
           {{orderGetters.getItemName(item)}}
         </nuxt-link>
       </SfTableData>

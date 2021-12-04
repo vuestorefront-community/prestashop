@@ -1,10 +1,11 @@
 import { UserOrderGetters } from '@vue-storefront/core';
 import type { Order, OrderItem } from '@vue-storefront/prestashop-api';
 import { populateOrdersList, populateOrderDetails } from '../helpers';
+import { PsProduct } from '@vue-storefront/prestashop-api';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 function getOrdersListFiltered(orders:any) {
-  if (!orders) {
+  if (!orders || orders.total === 0) {
     return [];
   }
   orders = Array.isArray(orders) ? orders : [orders];
@@ -58,9 +59,15 @@ function getItems(order: Order): OrderItem[] {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getItemSku(item: OrderItem): string {
-  // TODO
+function getItemSku(product: PsProduct): string {
   return '';
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function getSlug(product: PsProduct): string {
+  if (product) {
+    return product.slug;
+  }
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -104,6 +111,7 @@ export const orderGetters: UserOrderGetters<Order, OrderItem> = {
   getPrice,
   getItems,
   getItemSku,
+  getSlug,
   getItemName,
   getItemQty,
   getItemPrice,
