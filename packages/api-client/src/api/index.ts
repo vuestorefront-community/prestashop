@@ -9,3 +9,4 @@ export { default as getCartItems } from './getCartItems';
 export { default as removeFromCart } from './removeFromCart';
 export { default as getReview } from './getReview';
 export { default as addReview } from './addReview';
+export { default as fetchOrders } from './fetchOrders';
