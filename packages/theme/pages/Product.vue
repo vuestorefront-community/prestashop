@@ -40,9 +40,13 @@
           ></p>
           <SfButton class="sf-button--text desktop-only product__guide">{{ $t('Size guide') }}</SfButton>
 
+<<<<<<< HEAD
          
           <div v-for="opt in objOFOptions">
 
+=======
+          <div v-for="opt in objOFOptions">
+>>>>>>> productVariants
             <div v-if="opt.group_name === 'Size'">
               {{ opt.group_name }}
               <SfSelect
@@ -75,6 +79,7 @@
                 >{{item.name}}</SfSelectOption>
               </SfSelect>
             </div>
+<<<<<<< HEAD
             
 
 
@@ -96,6 +101,11 @@
           </div>
 
           <!-- <div
+=======
+          </div>
+
+          <div
+>>>>>>> productVariants
             v-if="objOFOptions.Color && objOFOptions.Color.attributes.length > 1"
             class="product__colors desktop-only"
           >
@@ -242,15 +252,23 @@ export default {
           attributes: context.root.$route.query
         })[0]
     );
+<<<<<<< HEAD
 
     const options = computed(() =>
+=======
+    const options = computed(
+>>>>>>> productVariants
       productGetters.getAttributes(products.value, [
         'color',
         'size',
         'dimension'
       ])
     );
+<<<<<<< HEAD
     const configuration = computed(() =>
+=======
+    const configuration = computed(
+>>>>>>> productVariants
       productGetters.getAttributes(product.value, [
         'color',
         'size',
@@ -295,7 +313,6 @@ export default {
         }
       }
       await search({ id, refresh: true, group: group, attr: attr });
-      console.log(products);
     };
 
     return {
