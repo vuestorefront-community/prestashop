@@ -7,6 +7,7 @@ export { default as register } from './register';
 export { default as addToCart } from './addToCart';
 export { default as getCartItems } from './getCartItems';
 export { default as removeFromCart } from './removeFromCart';
+export { default as loadAddresses } from './loadAddresses';
 export { default as getReview } from './getReview';
 export { default as addReview } from './addReview';
 export { default as fetchOrders } from './fetchOrders';
