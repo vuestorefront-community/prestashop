@@ -40,7 +40,9 @@
           ></p>
           <SfButton class="sf-button--text desktop-only product__guide">{{ $t('Size guide') }}</SfButton>
 
+         
           <div v-for="opt in objOFOptions">
+
             <div v-if="opt.group_name === 'Size'">
               {{ opt.group_name }}
               <SfSelect
@@ -73,9 +75,27 @@
                 >{{item.name}}</SfSelectOption>
               </SfSelect>
             </div>
+            
+
+
+            <div v-if="opt.group_name === 'Color'"
+              class="product__colors desktop-only"
+            >
+               <p class="product__color-label">{{ $t('Color') }}:</p>
+                <SfColor
+                  v-for="(color, i) in opt.attributes"
+                  :key="i"
+                  :color="color.html_color_code"
+                  class="product__color"
+                  style=" --color-box-shadow-opacity: 0.5"
+                  @click="updateFilter({color})"
+                />
+            </div>
+
+
           </div>
 
-          <div
+          <!-- <div
             v-if="objOFOptions.Color && objOFOptions.Color.attributes.length > 1"
             class="product__colors desktop-only"
           >
@@ -88,7 +108,7 @@
               style=" --color-box-shadow-opacity: 0.5"
               @click="updateFilter({color})"
             />
-          </div>
+          </div> -->
           <SfAddToCart
             v-e2e="'product_add-to-cart'"
             :stock="stock"
@@ -222,14 +242,15 @@ export default {
           attributes: context.root.$route.query
         })[0]
     );
-    const options = computed(
+
+    const options = computed(() =>
       productGetters.getAttributes(products.value, [
         'color',
         'size',
         'dimension'
       ])
     );
-    const configuration = computed(
+    const configuration = computed(() =>
       productGetters.getAttributes(product.value, [
         'color',
         'size',
@@ -254,10 +275,11 @@ export default {
       }))
     );
 
+    // let objOFOptions=[];
     onSSR(async () => {
       await search({ id });
-      await searchRelatedProducts({ featured: true });
-      // await searchReviews({ productId: id });
+      await searchRelatedProducts({ featured: true });   
+      await searchReviews({ productId: id });  
     });
 
     const updateFilter = async (filter) => {
@@ -273,6 +295,7 @@ export default {
         }
       }
       await search({ id, refresh: true, group: group, attr: attr });
+      console.log(products);
     };
 
     return {
@@ -312,7 +335,18 @@ export default {
         });
         this.qty = 1;
       });
+    },
+    getAttribute(){
+      for (const [keyAttr, valueAttr] of Object.entries(this.options)) {
+          this.objOFOptions.push({
+          group_name : valueAttr.group_name,
+          attributes: valueAttr.attributes
+        })
+      } 
     }
+  },
+  mounted() {
+    this.getAttribute();
   },
   components: {
     SfAlert,
@@ -351,7 +385,8 @@ export default {
             link: '#'
           }
         }
-      ]
+      ],
+      objOFOptions:[]
     };
   }
 };
