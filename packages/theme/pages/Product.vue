@@ -1,5 +1,5 @@
 <template>
-  <div id="product">
+  <div id="product" v-if="!productLoading">
     <SfBreadcrumbs class="breadcrumbs desktop-only" :breadcrumbs="breadcrumbs" />
     <div class="product">
       <LazyHydrate when-idle>
@@ -219,7 +219,7 @@ export default {
   setup(props, context) {
     const qty = ref(1);
     const { id } = context.root.$route.params;
-    const { products, search } = useProduct('products');
+    const { products, search, loading: productLoading } = useProduct('products');
     const {
       products: featureProducts,
       search: searchRelatedProducts,
@@ -321,6 +321,7 @@ export default {
       qty,
       addItem,
       loading,
+      productLoading,
       productGetters,
       productGallery,
       isAuthenticated,
