@@ -1,5 +1,5 @@
 <template>
-  <div id="product">
+  <div id="product" v-if="!productLoading">
     <SfBreadcrumbs class="breadcrumbs desktop-only" :breadcrumbs="breadcrumbs" />
     <div class="product">
       <LazyHydrate when-idle>
@@ -110,7 +110,7 @@
             <p  v-else>You must be logged in to write comment</p>
 <!--              TODO: loop over review type instead of API structure -->
               <SfReview
-                v-for="review in productReviews.psdata.comments"
+                v-for="review in reviews"
                 :key="reviewGetters.getReviewId(review)"
                 :author="reviewGetters.getReviewAuthor(review)"
                 :date="reviewGetters.getReviewDate(review)"
@@ -122,10 +122,10 @@
               />
               <LazyHydrate>
                 <SfPagination
-                  v-if="Math.ceil(totalReview/totalReviewPerPAge) > 1"
+                  v-if="Math.ceil(totalReviews/totalReviewPerPage) > 1"
                   class="products__pagination desktop-only"
                   :current="currentPage"
-                  :total="Math.ceil(totalReview/totalReviewPerPAge)"
+                  :total="Math.ceil(totalReviews/totalReviewPerPage)"
                   :visible="5"
                 >
                   <template #number="{page}">
@@ -162,7 +162,7 @@
     </LazyHydrate>
 
     <LazyHydrate v-if="addReviewModal" >
-      <AddReview :productId="id" @close="addReviewModal = false" />
+      <AddReview :productId="productGetters.getId(product)" @close="addReviewModal = false" />
     </LazyHydrate>
 
     <LazyHydrate when-visible>
@@ -219,7 +219,7 @@ export default {
   setup(props, context) {
     const qty = ref(1);
     const { id } = context.root.$route.params;
-    const { products, search } = useProduct('products');
+    const { products, search, loading: productLoading } = useProduct('products');
     const {
       products: featureProducts,
       search: searchRelatedProducts,
@@ -250,7 +250,7 @@ export default {
       productGetters.getCategoryIds(product.value)
     );
     const reviews = computed(() =>
-      reviewGetters.getItems(productReviews.value)
+      reviewGetters.getItems(productReviews.value.psdata)
     );
 
     // TODO: Breadcrumbs are temporary disabled because productGetters return undefined. We have a mocks in data
@@ -280,6 +280,25 @@ export default {
       });
     };
 
+    const totalReviews = computed(() =>
+      reviewGetters.getTotalReviews(productReviews.value.psdata)
+    );
+
+    const totalReviewPerPage = computed(() =>
+      reviewGetters.getReviewsPage(productReviews.value.psdata)
+    );
+
+    const goNext = (item) => {
+      if (item < 1 || Math.ceil(totalReviews / totalReviewPerPage) < item) {
+        return false;
+      }
+
+      this.currentPage = item;
+      onSSR(async () => {
+        searchReviews({ productId: this.id, page: this.currentPage });
+      });
+    };
+
     return {
       updateFilter,
       searchReviews,
@@ -292,9 +311,8 @@ export default {
       averageRating: computed(() =>
         productGetters.getAverageRating(product.value)
       ),
-      totalReviews: computed(() =>
-        productGetters.getTotalReviews(product.value)
-      ),
+      totalReviews,
+      totalReviewPerPage,
       relatedProducts: computed(() =>
         productGetters.getFeaturedProductsFiltered(featureProducts.value)
       ),
@@ -303,25 +321,14 @@ export default {
       qty,
       addItem,
       loading,
+      productLoading,
       productGetters,
       productGallery,
-      id,
-      isAuthenticated
+      isAuthenticated,
+      goNext
     };
   },
-  mounted() {
-    this.totalReview = this.productReviews.psdata.comments_nb;
-    this.totalReviewPerPAge = this.productReviews.psdata.comments_per_page;
-  },
   methods: {
-    async goNext(item) {
-      if (item < 1 || Math.ceil(this.totalReview / this.totalReviewPerPAge) < item) {
-        return false;
-      }
-
-      this.currentPage = item;
-      await this.searchReviews({ productId: this.id, page: this.currentPage });
-    },
     async addingToCart(Productdata) {
       await this.addItem(Productdata).then(() => {
         this.sendNotification({
@@ -362,8 +369,6 @@ export default {
   data() {
     return {
       currentPage: 1,
-      totalReview: 0,
-      totalReviewPerPAge: 0,
       addReviewModal: false,
       breadcrumbs: [
         {

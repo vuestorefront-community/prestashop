@@ -1,6 +1,7 @@
 import webpack from 'webpack';
 import { VSF_LOCALE_COOKIE } from '@vue-storefront/core';
 import theme from './themeConfig';
+import { getRoutes } from './routes';
 
 export default {
   server: {
@@ -61,7 +62,8 @@ export default {
           apiClient: '@vue-storefront/prestashop-api',
           composables: '@vue-storefront/prestashop'
         }
-      }
+      },
+      routes: false
     }],
     // @core-development-only-end
     /* project-only-start
@@ -142,7 +144,18 @@ export default {
     ]
   },
   router: {
-    middleware: ['checkout']
+    extendRoutes(routes) {
+      getRoutes(`${__dirname}/_theme`)
+        .forEach((route) => routes.unshift(route));
+    },
+    middleware: ['checkout'],
+    scrollBehavior (_to, _from, savedPosition) {
+      if (savedPosition) {
+        return savedPosition;
+      } else {
+        return { x: 0, y: 0 };
+      }
+    }
   },
   publicRuntimeConfig: {
     theme,
