@@ -44,7 +44,22 @@
             <template
               v-for="(option, optionKey) in options"
             >
+              <div
+                v-if="option.group_type === 'color'"
+                class="product__colors desktop-only"
+              >
+                <p class="product__color-label">{{ $t('Color') }}:</p>
+                <SfColor
+                  v-for="(color, i) in option.attributes"
+                  :key="i"
+                  :color="color.html_color_code"
+                  class="product__color"
+                  @click="updateFilter({color: `${i}-${color.name}`})"
+                />
+              </div>
+
               <SfSelect
+                v-else
                 :key="optionKey"
                 @input="input => updateFilter({ input })"
                 :label="option.name"
@@ -59,20 +74,6 @@
               </SfSelect>
             </template>
 
-<!--            TODO-->
-            <!--          <div-->
-            <!--            v-if="options.color && options.color.length > 1"-->
-            <!--            class="product__colors desktop-only"-->
-            <!--          >-->
-            <!--            <p class="product__color-label">{{ $t('Color') }}:</p>-->
-            <!--            <SfColor-->
-            <!--              v-for="(color, i) in options.color"-->
-            <!--              :key="i"-->
-            <!--              :color="color.value"-->
-            <!--              class="product__color"-->
-            <!--              @click="updateFilter({color})"-->
-            <!--            />-->
-            <!--          </div>-->
             <SfAddToCart
               v-e2e="'product_add-to-cart'"
               :stock="stock"
