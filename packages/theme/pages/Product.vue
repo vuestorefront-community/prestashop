@@ -53,7 +53,7 @@
                 <SfSelectOption
                   v-for="(attribute, attributeKey) in option.attributes"
                   :key="attributeKey"
-                  :value="attribute.name"
+                  :value="`${attributeKey}-${attribute.name}`"
                   :selecte:="attribute.selected"
                 >{{attribute.name}}</SfSelectOption>
               </SfSelect>
