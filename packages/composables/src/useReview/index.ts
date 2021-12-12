@@ -6,7 +6,7 @@ import {
 import type { Review } from '@vue-storefront/prestashop-api';
 import type {
   UseReviewSearchParams as SearchParams,
-    UseReviewAddParams as AddParams
+  UseReviewAddParams as AddParams
 } from '../types';
 
 const params: UseReviewFactoryParams<Review, SearchParams, AddParams> = {
@@ -27,12 +27,10 @@ const params: UseReviewFactoryParams<Review, SearchParams, AddParams> = {
     const key = context.$prestashop.config.app.$cookies.get(cookieKey);
     const value = context.$prestashop.config.app.$cookies.get(cookieValue);
 
-
     const item = await context.$prestashop.api.addReview({ ...AddParams, customQuery, key, value });
     return item;
   }
 };
 
 export const useReview = useReviewFactory<Review, SearchParams, AddParams>(params);
-
 

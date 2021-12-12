@@ -11,3 +11,5 @@ export { default as loadAddresses } from './loadAddresses';
 export { default as getReview } from './getReview';
 export { default as addReview } from './addReview';
 export { default as fetchOrders } from './fetchOrders';
+export { default as addAddress } from './addAddress';
+export { default as getAvailableCountries } from './getAvailableCountries';

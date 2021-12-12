@@ -7,6 +7,5 @@ export default async function loadAddresses(context, params) {
       Cookie: params.psCookieKey + '=' + params.psCookieValue + ';'
     }
   });
-
   return data;
 }
