@@ -17,6 +17,7 @@ export { useUserShipping } from './useUserShipping';
 export { useWishlist } from './useWishlist';
 export { useBootstrap } from './useBootstrap';
 export { useCountryList } from './useCountryList';
+export { usePayment } from './usePayment';
 
 // Getters
 export { cartGetters } from './getters/cartGetters';
@@ -31,6 +32,8 @@ export { userGetters } from './getters/userGetters';
 export { userShippingGetters } from './getters/userShippingGetters';
 export { wishlistGetters } from './getters/wishlistGetters';
 export { countryGetters } from './getters/countryGetters';
+export { shippingProviderGetters } from './getters/shippingProviderGetters';
+export { paymentProviderGetters } from './getters/paymentProviderGetters';
 
 // Types
 export * from './types';

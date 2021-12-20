@@ -1,12 +1,8 @@
 <template>
   <div>
-    <p>
-      <b>Please implement vendor-specific VsfPaymentProvider component in the 'components/Checkout' directory</b>
-    </p>
-
     <SfRadio
       v-e2e="'payment-method'"
-      v-for="method in shippingMethods"
+      v-for="method in paymentMethods"
       :key="method.value"
       :label="method.label"
       :value="method.value"
@@ -25,15 +21,9 @@
 
 <script>
 import { SfButton, SfRadio } from '@storefront-ui/vue';
-import { ref } from '@vue/composition-api';
-
-const SHIPPING_METHODS = [
-  { label: 'Visa Debit', value: 'visa_debit' },
-  { label: 'MasterCard', value: 'master_card' },
-  { label: 'VisaElectron', value: 'visa_electron' },
-  { label: 'Cash on delivery', value: 'cash' },
-  { label: 'Check', value: 'check' }
-];
+import { ref, onBeforeMount, computed } from '@vue/composition-api';
+import { usePayment } from '@vue-storefront/prestashop';
+import { paymentProviderGetters } from '@vue-storefront/prestashop/src/getters/paymentProviderGetters';
 
 export default {
   name: 'VsfPaymentProvider',
@@ -43,16 +33,18 @@ export default {
     SfRadio
   },
 
-  setup(props, { emit }) {
+  setup() {
     const selectedMethod = ref(null);
-
-    const selectMethod = (method) => {
+    const selectMethod = (method)=> {
       selectedMethod.value = method;
-      emit('status');
     };
-
+    const { load, shipping: payment } = usePayment();
+    onBeforeMount(async()=>{
+      await load();
+      console.log(payment.value);
+    });
     return {
-      shippingMethods: SHIPPING_METHODS,
+      paymentMethods: computed(()=> payment.value ? paymentProviderGetters.getPaymentProvidersList(payment.value) : []),
       selectedMethod,
       selectMethod
     };

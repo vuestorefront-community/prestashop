@@ -6,9 +6,11 @@
       :title="$t('Shipping')"
       class="sf-heading--left sf-heading--no-underline title"
     />
-    <form v-if='addressesList.length >= 1 && !toggleAddNewAddress' @submit.prevent="handleSelectedAddressSubmit(selectedAddress)">
+    <form v-if='addressesList.length >= 1 && !toggleAddNewAddress' @submit.prevent="handleSelectedAddressSubmit()">
       <sf-address-picker v-model='selectedAddress'>
-        <sf-address v-for="address in addressesList" :key="address.id" :name="address.id">
+        <div  v-for="address in addressesList" :key="address.id">
+        <sf-address :name="address.id">
+          <div>
           <span>{{address.alias}}</span>
           <span>{{address.address1}}</span>
           <span>{{address.address2}}</span>
@@ -16,11 +18,31 @@
           <span>{{address.city}}</span>
           <span>{{address.country}}</span>
           <span>{{address.phone}}</span>
+          </div>
+          <div class='flex-row'>
+            <div>
+
+              <SfLink
+                @click.prevent='editAddress(address.id)'
+              >
+                {{ $t('Edit') }}
+              </SfLink>
+            </div>
+            <div>
+              <SfLink
+                @click.prevent='removeAddress(address.id)'
+              >
+                {{ $t('Remove') }}
+              </SfLink>
+            </div>
+          </div>
         </sf-address>
+        </div>
       </sf-address-picker>
       <div class="form">
         <div class='form__action'>
           <SfButton
+            v-if="!isFormSubmitted"
             v-e2e="'add-new-address'"
             :disabled="loading"
             class="form__action-button"
@@ -29,6 +51,7 @@
             {{ $t('Add new address') }}
           </SfButton>
           <SfButton
+            v-if="!isFormSubmitted"
             v-e2e="'select-shipping'"
             :disabled="loading || !selectedAddress"
             class="form__action-button"
@@ -110,7 +133,7 @@
           <SfSelect
             v-e2e="'shipping-state'"
             v-model="form.id_state"
-            label="state"
+            label="State"
             name="state"
             :disabled='loadingCountries || !isStatesRequired '
             class="form__element form__element--half form__element--half-even form__select sf-select--underlined"
@@ -195,23 +218,31 @@
         </ValidationProvider>
       </div>
       <div class="form">
-        <div class="form__action">
+        <div class="form__action"
+             v-if="!isFormSubmitted"
+             :disabled="loading"
+        >
+          <SfLink
+            v-show=' addressesList.length >= 1'
+            @click='toggleAddNewAddress'
+          >
+            {{ $t('Go back to addresses') }}
+          </SfLink>
           <SfButton
             v-e2e="'select-shipping'"
-            v-if="!isFormSubmitted"
-            :disabled="loading"
             class="form__action-button"
             type="submit"
           >
-            {{ $t('Select shipping method') }}
+            {{ $t('Add address') }}
           </SfButton>
         </div>
       </div>
-      <VsfShippingProvider
-        v-if="isFormSubmitted "
-        @submit="$router.push(localePath({ name: 'billing' }))"
-      />
     </form>
+    <VsfShippingProvider
+      v-if="isFormSubmitted "
+      :selected-address="selectedAddress"
+      @submit="$router.push(localePath({ name: 'payment' }))"
+    />
   </ValidationObserver>
 </template>
 
@@ -221,7 +252,8 @@ import {
   SfInput,
   SfButton,
   SfSelect,
-  SfAddressPicker
+  SfAddressPicker,
+  SfLink
 } from '@storefront-ui/vue';
 import { computed, ref, watch } from '@vue/composition-api';
 import { onSSR } from '@vue-storefront/core';
@@ -250,6 +282,7 @@ export default {
     SfButton,
     SfSelect,
     SfAddressPicker,
+    SfLink,
     ValidationProvider,
     ValidationObserver,
     VsfShippingProvider: () => import('~/components/Checkout/VsfShippingProvider')
@@ -257,7 +290,7 @@ export default {
   setup () {
     const isFormSubmitted = ref(false);
     const selectedCountry = ref(null);
-    const { shipping, load, addAddress, loading } = useUserShipping();
+    const { shipping, load, addAddress, setDefaultAddress, loading, deleteAddress } = useUserShipping();
     const { countries, loading: loadingCountries, load: loadCountries } = useCountryList();
     const form = ref({
       alias: '',
@@ -273,21 +306,25 @@ export default {
       phone: null
     });
     const selectedAddress = ref(null);
-    const isSelectedAddressSubmited = ref(false);
     const toggleAddNewAddress = ref(false);
     const countriesList = computed(()=>countries.value ? countryGetters.getCountriesList(countries.value.countries) : []);
     const statesList = computed(()=> selectedCountry.value && countriesList.value.length >= 1 ? countriesList.value.find(el => el.id === selectedCountry.value).states : []);
     const isStatesRequired = computed(()=>(statesList.value && statesList.value.length >= 1));
     const changeAddNewAddressVisibility = (() => toggleAddNewAddress.value = !toggleAddNewAddress.value);
+    const removeAddress = async (id) => {
+      await deleteAddress({address: {id: id} });
+    };
+    const editAddress = (id) => console.log('edit address', id);
     const addressesList = computed(()=> shipping.value ? userShippingGetters.getAddresses(shipping.value) : []);
     watch(selectedCountry, (newVal) => form.value.country = countriesList.value.find(el => el.id === newVal).name);
+
     const handleFormSubmit = async () => {
-      await addAddress({ address: form.value });
-      isFormSubmitted.value = true;
+      await addAddress({address: form.value});
+      toggleAddNewAddress.value = false;
     };
-    const handleSelectedAddressSubmit = (address) => {
-      console.log(address);
-      isSelectedAddressSubmited.value = true;
+    const handleSelectedAddressSubmit = async() => {
+      await setDefaultAddress({address: {id: selectedAddress.value} });
+      isFormSubmitted.value = true;
     };
 
     onSSR(async () => {
@@ -309,8 +346,9 @@ export default {
       toggleAddNewAddress,
       changeAddNewAddressVisibility,
       handleSelectedAddressSubmit,
-      isSelectedAddressSubmited,
-      isStatesRequired
+      isStatesRequired,
+      removeAddress,
+      editAddress
     };
   }
 };
@@ -399,5 +437,11 @@ export default {
 
 .title {
   margin: var(--spacer-xl) 0 var(--spacer-base) 0;
+}
+.flex-row{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  border-top: 1px dotted grey ;
 }
 </style>

@@ -6,6 +6,8 @@ import populateOrdersList from './populateOrdersList';
 import populateOrderDetails from './populateOrderDetails';
 import populateAddressesList from './populateAddressesList';
 import populateCountriesList from './populateCountriesList';
+import populateShippingProvidersList from './populateShippingProvidersList';
+import populatePaymentProvidersList from './populatePaymentProvidersList';
 
 export {
   populateCategoryProducts,
@@ -15,6 +17,8 @@ export {
   populateOrdersList,
   populateOrderDetails,
   populateAddressesList,
-  populateCountriesList
+  populateCountriesList,
+  populateShippingProvidersList,
+  populatePaymentProvidersList
 };
 
