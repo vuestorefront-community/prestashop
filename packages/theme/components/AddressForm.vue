@@ -161,12 +161,13 @@
            :disabled="loading"
       >
         <SfLink
+          v-if='Boolean($props.addressesCount)'
           @click='toggleAddNewAddress'
         >
           {{ $t('Go back to addresses') }}
         </SfLink>
         <SfButton
-          v-if='isForEditAddressBoolean'
+          v-if='$props.edit'
           v-e2e="'select-shipping'"
           class="form__action-button"
           type="submit"
@@ -228,9 +229,15 @@ export default {
     VsfShippingProvider: () => import('~/components/Checkout/VsfShippingProvider')
   },
   props: {
-    isForEditAddress: {
+    edit: {
       type: Boolean,
-      required: false
+      required: false,
+      default: false
+    },
+    addressesCount: {
+      type: Number,
+      required: true,
+      default: 0
     },
     addressForEdit: {
       type: Object,
@@ -255,7 +262,6 @@ export default {
   },
   setup(props, context) {
     const isFormSubmitted = ref(false);
-    const isForEditAddressBoolean = Boolean(props.isForEditAddress);
     const selectedCountry = ref(null);
     const { addAddress, loading, deleteAddress, updateAddress } = useUserShipping();
     const { countries, loading: loadingCountries, load: loadCountries } = useCountryList();
@@ -289,7 +295,7 @@ export default {
       context.emit('toggle');
     };
     const handleFormSubmit = async () => {
-      if (isForEditAddressBoolean) {
+      if (props.edit) {
         await updateAddress({ address: form.value });
       } else {
         await addAddress({ address: form.value });
@@ -299,11 +305,12 @@ export default {
     const countriesLoading = async () => {
       await loadCountries();
       // eslint-disable-next-line camelcase
-      selectedCountry.value = props.addressForEdit.id_country;
+      if (props.addressForEdit.id_country) {
+        selectedCountry.value = props.addressForEdit.id_country;
+      }
     };
     countriesLoading();
     return {
-      isForEditAddressBoolean,
       loading,
       loadingCountries,
       isFormSubmitted,

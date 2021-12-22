@@ -6,7 +6,7 @@
       :title="$t('Shipping')"
       class="sf-heading--left sf-heading--no-underline title"
     />
-    <form v-if='addressesList.length >= 1 && !toggleAddNewAddress' @submit.prevent="handleSelectedAddressSubmit">
+    <form v-if='addressesList.length >= 1 && !addressFormVisibility' @submit.prevent="handleSelectedAddressSubmit">
       <sf-address-picker v-model='selectedAddress'>
         <div  v-for="address in addressesList" :key="address.id">
         <sf-address :name="address.id">
@@ -21,7 +21,6 @@
           </div>
           <div class='flex-row'>
             <div>
-
               <SfLink
                 @click.prevent='editAddress(address)'
               >
@@ -62,10 +61,10 @@
         </div>
       </div>
     </form>
-    <address-form v-else-if='isForEdit' :addressForEdit='addressForEdit' :isForEditAddress='isForEdit'  @toggle='changeAddNewAddressVisibility' />
-    <address-form v-else :isForEditAddress='isForEdit'  @toggle='changeAddNewAddressVisibility' />
+    <address-form v-else-if='isEdit' edit :addressForEdit='addressForEdit' :addressesCount='addressesList.length' @toggle='toggleAddressFormVisibility' />
+    <address-form v-else :addressesCount='addressesList.length' @toggle='toggleAddressFormVisibility' />
     <VsfShippingProvider
-      v-if="isFormSubmitted "
+      v-if="isFormSubmitted"
       :selected-address="selectedAddress"
       @submit="$router.push(localePath({ name: 'payment' }))"
     />
@@ -113,24 +112,24 @@ export default {
     const isFormSubmitted = ref(false);
     const { shipping, load, setDefaultAddress, loading, deleteAddress } = useUserShipping();
     const selectedAddress = ref(null);
-    const toggleAddNewAddress = ref(false);
+    const addressFormVisibility = ref(false);
     const addressForEdit = ref(null);
-    const isForEdit = ref(false);
-    const changeAddNewAddressVisibility = (() => toggleAddNewAddress.value = !toggleAddNewAddress.value);
+    const isEdit = ref(false);
+    const addressesList = computed(()=> shipping.value ? userShippingGetters.getAddresses(shipping.value) : []);
+    const toggleAddressFormVisibility = (() => addressFormVisibility.value = !addressFormVisibility.value);
     const removeAddress = async (id) => {
       await deleteAddress({address: {id: id} });
     };
     const addNewAddress = () => {
       addressForEdit.value = null;
-      isForEdit.value = false;
-      changeAddNewAddressVisibility();
+      isEdit.value = false;
+      toggleAddressFormVisibility();
     };
     const editAddress = (address) => {
       addressForEdit.value = address;
-      isForEdit.value = true;
-      changeAddNewAddressVisibility();
+      isEdit.value = true;
+      toggleAddressFormVisibility();
     };
-    const addressesList = computed(()=> shipping.value ? userShippingGetters.getAddresses(shipping.value) : []);
     const handleSelectedAddressSubmit = async() => {
       await setDefaultAddress({address: {id: selectedAddress.value} });
       isFormSubmitted.value = true;
@@ -145,12 +144,12 @@ export default {
       selectedAddress,
       loading,
       isFormSubmitted,
-      toggleAddNewAddress,
-      changeAddNewAddressVisibility,
+      addressFormVisibility,
+      toggleAddressFormVisibility,
       handleSelectedAddressSubmit,
       removeAddress,
       editAddress,
-      isForEdit,
+      isEdit,
       addNewAddress,
       addressForEdit
     };
