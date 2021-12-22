@@ -260,7 +260,8 @@ export default {
     const { addAddress, loading, deleteAddress, updateAddress } = useUserShipping();
     const { countries, loading: loadingCountries, load: loadCountries } = useCountryList();
     const form = ref({
-      id: props.addressForEdit.id,
+      // eslint-disable-next-line camelcase
+      id_address: props.addressForEdit.id,
       alias: props.addressForEdit.alias,
       address1: props.addressForEdit.address1,
       address2: props.addressForEdit.address2,
