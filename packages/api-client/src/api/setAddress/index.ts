@@ -15,6 +15,5 @@ export default async function setAddress(context, params) {
   }
   );
   const cookieObject = cookieParser(headers);
-  console.log(data);
   return {data, cookieObject};
 }

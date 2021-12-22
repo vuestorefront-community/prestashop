@@ -60,8 +60,25 @@ const params: UseUserShippingFactoryParams<Address, AddressItem> = {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   updateAddress: async (context: Context, params) => {
-    console.log('Mocked: useUserShipping.updateAddress');
-    return {};
+    const { address } = params;
+    const vsfCookieKey = context.$prestashop.config.app.$config.psCustomerCookieKey;
+    const vsfCookieValue = context.$prestashop.config.app.$config.psCustomerCookieValue;
+
+    const psCookieKey = context.$prestashop.config.app.$cookies.get(vsfCookieKey);
+    const psCookieValue = context.$prestashop.config.app.$cookies.get(vsfCookieValue);
+
+    await context.$prestashop.api.updateOneAddress({address, psCookieKey, psCookieValue });
+    const { data, cookieObject } = await context.$prestashop.api.loadAddresses({ psCookieKey, psCookieValue });
+    if (data.code === 200) {
+      if (cookieObject) {
+        context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
+        context.$prestashop.config.app.$cookies.set(vsfCookieValue, cookieObject.vsfPsValCookie);
+      }
+      return data.psdata;
+    } else {
+      // add to cart failed
+      return {};
+    }
   },
 
   load: async (context: Context) => {

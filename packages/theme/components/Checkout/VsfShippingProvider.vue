@@ -35,7 +35,7 @@
 <script>
 import { SfButton, SfRadio } from '@storefront-ui/vue';
 import { ref, onBeforeMount, computed } from '@vue/composition-api';
-import { useShipping } from '@vue-storefront/prestashop';
+import { useShippingProvider } from '@vue-storefront/prestashop';
 import { shippingProviderGetters } from '@vue-storefront/prestashop/src/getters/shippingProviderGetters';
 
 export default {
@@ -47,15 +47,14 @@ export default {
   },
   setup(props) {
     const selectedMethod = ref(null);
-    const { load, shipping, save } = useShipping();
+    const { load, state, save } = useShippingProvider();
     const selectMethod = async(method) => {
       await save({shippingMethodId: method, addressId: props.selectedAddress });
       selectedMethod.value = method;
     };
-    const shippingList = computed(()=> shipping.value ? shippingProviderGetters.getShippingProvidersList(shipping.value) : []);
+    const shippingList = computed(()=> state.value ? shippingProviderGetters.getShippingProvidersList(state.value) : []);
     onBeforeMount(async()=>{
       await load();
-      console.log(shippingProviderGetters.getShippingProvidersList(shipping.value));
     });
     return {
       shippingMethods: shippingList,

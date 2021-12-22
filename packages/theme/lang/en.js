@@ -84,6 +84,7 @@ export default {
   'Delete': 'Delete',
   'Add new address': 'Add new address',
   'Add address': 'Add address',
+  'Edit address': 'Edit address',
   'Set up newsletter': 'Set up your newsletter and we will send you information about new products and trends from the sections you selected every week.',
   'Sections that interest you': 'Sections that interest you',
   'Save changes': 'Save changes',

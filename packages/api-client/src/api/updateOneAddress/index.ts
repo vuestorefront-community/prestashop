@@ -2,7 +2,7 @@
 import { cookieParser } from '../../helpers/cookieParser';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export default async function addNewAddress(context, params) {
+export default async function updateOneAddress(context, params) {
   const { address } = params;
   const url = new URL('/rest/address', context.config.api.url);
 

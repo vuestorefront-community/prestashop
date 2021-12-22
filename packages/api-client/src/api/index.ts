@@ -13,6 +13,7 @@ export { default as addReview } from './addReview';
 export { default as fetchOrders } from './fetchOrders';
 export { default as getAvailableCountries } from './getAvailableCountries';
 export { default as addNewAddress } from './addNewAddress';
+export { default as updateOneAddress } from './updateOneAddress';
 export { default as removeAddress } from './removeAddress';
 export { default as setAddress } from './setAddress';
 export { default as getShippingMethods } from './getShippingMethods';
