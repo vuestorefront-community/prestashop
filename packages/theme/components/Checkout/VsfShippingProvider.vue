@@ -1,9 +1,5 @@
 <template>
   <div>
-    <p>
-      <b>Please implement vendor-specific VsfShippingProvider component in the 'components/Checkout' directory</b>
-    </p>
-
     <SfRadio
       v-e2e="'shipping-method'"
       v-for="method in shippingMethods"
@@ -38,28 +34,31 @@
 
 <script>
 import { SfButton, SfRadio } from '@storefront-ui/vue';
-import { ref } from '@vue/composition-api';
-
-const SHIPPING_METHODS = [
-  { label: 'Express US', value: 'express', description: 'Same day delivery' },
-  { label: 'Standard US', value: 'standard', description: 'Delivery in 5-6 working days' }
-];
+import { ref, computed } from '@vue/composition-api';
+import { useShippingProvider } from '@vue-storefront/prestashop';
+import { shippingProviderGetters } from '@vue-storefront/prestashop/src/getters/shippingProviderGetters';
 
 export default {
   name: 'VsfShippingProvider',
-
+  props: ['selectedAddress'],
   components: {
     SfButton,
     SfRadio
   },
-
-  setup() {
+  setup(props) {
     const selectedMethod = ref(null);
-
-    const selectMethod = method => selectedMethod.value = method;
-
+    const { load, state, save } = useShippingProvider();
+    const selectMethod = async(method) => {
+      await save({shippingMethodId: method, addressId: props.selectedAddress });
+      selectedMethod.value = method;
+    };
+    const shippingProvidersList = computed(()=> state.value ? shippingProviderGetters.getShippingProvidersList(state.value) : []);
+    const loadShippingProviders = async () => {
+      await load();
+    };
+    loadShippingProviders();
     return {
-      shippingMethods: SHIPPING_METHODS,
+      shippingMethods: shippingProvidersList,
       selectedMethod,
       selectMethod
     };

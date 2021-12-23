@@ -11,13 +11,13 @@ import type {
 const params: UseUserBillingFactoryParams<Address, AddressItem> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   addAddress: async (context: Context, params) => {
-    console.log('Mocked: useUserBilling.addAddress');
+    console.log('Mocked: useUserBilling.addNewAddress');
     return {};
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   deleteAddress: async (context: Context, params) => {
-    console.log('Mocked: useUserBilling.deleteAddress');
+    console.log('Mocked: useUserBilling.removeAddress');
     return {};
   },
 
