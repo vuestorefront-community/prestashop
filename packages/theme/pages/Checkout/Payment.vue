@@ -77,7 +77,7 @@
           <SfButton
             type="button"
             class="sf-button color-secondary summary__back-button"
-            @click="$router.push('/checkout/billing')"
+            @click="$router.push('/checkout/shipping')"
           >
             {{ $t('Go back') }}
           </SfButton>

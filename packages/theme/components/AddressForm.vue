@@ -164,7 +164,7 @@
           v-if='Boolean($props.addressesCount)'
           @click='toggleAddNewAddress'
         >
-          {{ $t('Go back to addresses') }}
+          {{ $t('Go back') }}
         </SfLink>
         <SfButton
           v-if='$props.edit'
