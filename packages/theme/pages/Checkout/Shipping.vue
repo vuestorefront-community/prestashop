@@ -7,9 +7,9 @@
       class="sf-heading--left sf-heading--no-underline title"
     />
     <form v-if='addressesList.length >= 1 && !addressFormVisibility' @submit.prevent="handleSelectedAddressSubmit">
-      <sf-address-picker v-model='selectedAddress'>
+      <sf-address-picker v-model='selectedAddress' class='address-picker'>
         <div  v-for="address in addressesList" :key="address.id">
-        <sf-address :name="address.id">
+        <sf-address :name="address.id" v-if='!isFormSubmitted || isSelectedAddress(address.id)'>
           <div>
           <span>{{address.alias}}</span>
           <span>{{address.address1}}</span>
@@ -19,7 +19,7 @@
           <span>{{address.country}}</span>
           <span>{{address.phone}}</span>
           </div>
-          <div class='flex-row'>
+          <div class='flex-row' v-if='!isFormSubmitted'>
             <div>
               <SfLink
                 @click.prevent='editAddress(address)'
@@ -38,10 +38,9 @@
         </sf-address>
         </div>
       </sf-address-picker>
-      <div class="form">
+      <div class="form" v-if="!isFormSubmitted">
         <div class='form__action'>
           <SfButton
-            v-if="!isFormSubmitted"
             v-e2e="'add-new-address'"
             :disabled="loading"
             class="form__action-button"
@@ -50,7 +49,6 @@
             {{ $t('Add new address') }}
           </SfButton>
           <SfButton
-            v-if="!isFormSubmitted"
             v-e2e="'select-shipping'"
             :disabled="loading || !selectedAddress"
             class="form__action-button"
@@ -66,7 +64,7 @@
     <VsfShippingProvider
       v-if="isFormSubmitted"
       :selected-address="selectedAddress"
-      @submit="$router.push(localePath({ name: 'payment' }))"
+      @go-back='goBack'
     />
   </ValidationObserver>
 </template>
@@ -120,6 +118,12 @@ export default {
     const removeAddress = async (id) => {
       await deleteAddress({address: {id: id} });
     };
+    const isSelectedAddress = (id) => {
+      if (selectedAddress.value && id === selectedAddress.value) {
+        return true;
+      }
+      return false;
+    };
     const addNewAddress = () => {
       addressForEdit.value = null;
       isEdit.value = false;
@@ -133,6 +137,9 @@ export default {
     const handleSelectedAddressSubmit = async() => {
       await setDefaultAddress({address: {id: selectedAddress.value} });
       isFormSubmitted.value = true;
+    };
+    const goBack = () => {
+      isFormSubmitted.value = false;
     };
 
     onSSR(async () => {
@@ -151,7 +158,9 @@ export default {
       editAddress,
       isEdit,
       addNewAddress,
-      addressForEdit
+      addressForEdit,
+      isSelectedAddress,
+      goBack
     };
   }
 };
@@ -246,5 +255,11 @@ export default {
   flex-direction: row;
   justify-content: space-around;
   border-top: 1px dotted grey ;
+}
+.form__action>*{
+  margin-right: 1rem;
+}
+.address-picker{
+  margin-bottom:2rem
 }
 </style>

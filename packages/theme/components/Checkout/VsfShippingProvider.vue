@@ -20,20 +20,24 @@
         {{ method.description }}
       </div>
     </SfRadio>
-
+    <SfLink
+      @click.prevent="$emit('go-back')"
+    >
+      {{ $t('Go back') }}
+    </SfLink>
     <SfButton
       v-e2e="'continue-to-billing'"
       :disabled="!selectedMethod"
       type="button"
-      @click="$emit('submit')"
+      @click="goToBilling"
     >
-      {{ $t('Continue to billing') }}
+      {{ $t('Continue to payment') }}
     </SfButton>
   </div>
 </template>
 
 <script>
-import { SfButton, SfRadio } from '@storefront-ui/vue';
+import { SfButton, SfRadio, SfLink } from '@storefront-ui/vue';
 import { ref, computed } from '@vue/composition-api';
 import { useShippingProvider } from '@vue-storefront/prestashop';
 import { shippingProviderGetters } from '@vue-storefront/prestashop/src/getters/shippingProviderGetters';
@@ -43,14 +47,18 @@ export default {
   props: ['selectedAddress'],
   components: {
     SfButton,
-    SfRadio
+    SfRadio,
+    SfLink
   },
-  setup(props) {
+  setup(props, context) {
     const selectedMethod = ref(null);
     const { load, state, save } = useShippingProvider();
     const selectMethod = async(method) => {
-      await save({shippingMethodId: method, addressId: props.selectedAddress });
       selectedMethod.value = method;
+    };
+    const goToBilling = async () => {
+      await save({shippingMethodId: selectedMethod.value, addressId: props.selectedAddress });
+      context.root.$router.push({ path: 'payment' });
     };
     const shippingProvidersList = computed(()=> state.value ? shippingProviderGetters.getShippingProvidersList(state.value) : []);
     const loadShippingProviders = async () => {
@@ -60,7 +68,8 @@ export default {
     return {
       shippingMethods: shippingProvidersList,
       selectedMethod,
-      selectMethod
+      selectMethod,
+      goToBilling
     };
   }
 };
