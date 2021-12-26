@@ -10,7 +10,7 @@
       :selected ="selectedMethod"
       name="shippingMethod"
       class="form__radio shipping"
-      @input="selectMethod(method.value)"
+      @input="selectMethod(method.name)"
     >
       <div class="shipping__label">
         {{ method.label }}
@@ -21,7 +21,7 @@
 
 <script>
 import { SfButton, SfRadio } from '@storefront-ui/vue';
-import { ref, onBeforeMount, computed } from '@vue/composition-api';
+import { ref, onBeforeMount, computed, watch } from '@vue/composition-api';
 import { usePayment } from '@vue-storefront/prestashop';
 import { paymentProviderGetters } from '@vue-storefront/prestashop/src/getters/paymentProviderGetters';
 
@@ -33,8 +33,11 @@ export default {
     SfRadio
   },
 
-  setup() {
+  setup(_props, context) {
     const selectedMethod = ref(null);
+    watch(selectedMethod, (newVal) => {
+      context.emit('changeSelectedMethod', newVal);
+    });
     const selectMethod = (method)=> {
       selectedMethod.value = method;
     };

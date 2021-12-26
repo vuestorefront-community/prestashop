@@ -25,14 +25,13 @@ const params: UseShippingParams<ShippingAddress, AddParams> = {
       }
       return data.psdata;
     } else {
-      // add to cart failed
       return {};
     }
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   save: async (context: Context, params) => {
-    console.log('save shipping provider');
+    console.log('save shipping provider', params);
   }
 };
 

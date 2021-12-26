@@ -4,7 +4,6 @@ const populateShippingProvidersList = (shippingProviders) => {
   const populatedShippingProvidersList = [];
   for (const id in shippingsArr) {
     const provider = shippingsArr[id];
-    console.log(provider);
     const features = {
       id: provider.id,
       label: provider.name,

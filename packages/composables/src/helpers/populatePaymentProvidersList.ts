@@ -11,7 +11,9 @@ const populatePaymentProvidersList = (paymentProviders) => {
       id: provider.id,
       label: provider.call_to_action_text,
       value: provider.id,
-      description: ''
+      description: '',
+      // eslint-disable-next-line camelcase
+      name: provider.module_name
     };
     populatedShippingProvidersList.push(features);
   }

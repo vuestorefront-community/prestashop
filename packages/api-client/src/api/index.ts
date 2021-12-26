@@ -19,3 +19,4 @@ export { default as setAddress } from './setAddress';
 export { default as getShippingMethods } from './getShippingMethods';
 export { default as setShippingMethod } from './setShippingMethod';
 export { default as getPaymentMethods } from './getPaymentMethods';
+export { default as makeOrder } from './makeOrder';
