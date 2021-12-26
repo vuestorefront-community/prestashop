@@ -1,5 +1,6 @@
 <template>
   <div>
+    <SfLoader :class="{ loading }" :loading="loading">
     <SfRadio
       v-e2e="'payment-method'"
       v-for="method in paymentMethods"
@@ -16,11 +17,12 @@
         {{ method.label }}
       </div>
     </SfRadio>
+    </SfLoader>
   </div>
 </template>
 
 <script>
-import { SfButton, SfRadio } from '@storefront-ui/vue';
+import { SfButton, SfRadio, SfLoader } from '@storefront-ui/vue';
 import { ref, onBeforeMount, computed, watch } from '@vue/composition-api';
 import { usePayment } from '@vue-storefront/prestashop';
 import { paymentProviderGetters } from '@vue-storefront/prestashop/src/getters/paymentProviderGetters';
@@ -30,7 +32,8 @@ export default {
 
   components: {
     SfButton,
-    SfRadio
+    SfRadio,
+    SfLoader
   },
 
   setup(_props, context) {

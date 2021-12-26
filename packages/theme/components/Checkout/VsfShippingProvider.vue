@@ -1,5 +1,6 @@
 <template>
   <div>
+    <SfLoader :class="{ loading }" :loading="loading">
     <SfRadio
       v-e2e="'shipping-method'"
       v-for="method in shippingMethods"
@@ -20,6 +21,7 @@
         {{ method.description }}
       </div>
     </SfRadio>
+    </SfLoader>
     <SfLink
       @click.prevent="$emit('go-back')"
     >
@@ -37,7 +39,7 @@
 </template>
 
 <script>
-import { SfButton, SfRadio, SfLink } from '@storefront-ui/vue';
+import { SfButton, SfRadio, SfLink, SfLoader } from '@storefront-ui/vue';
 import { ref, computed } from '@vue/composition-api';
 import { useShippingProvider } from '@vue-storefront/prestashop';
 import { shippingProviderGetters } from '@vue-storefront/prestashop/src/getters/shippingProviderGetters';
@@ -48,7 +50,8 @@ export default {
   components: {
     SfButton,
     SfRadio,
-    SfLink
+    SfLink,
+    SfLoader
   },
   setup(props, context) {
     const selectedMethod = ref(null);

@@ -1,5 +1,6 @@
 <template>
   <ValidationObserver v-slot="{ handleSubmit }">
+    <SfLoader :class="{ loading }" :loading="loading||loadingCountries">
   <form @submit.prevent="handleSubmit(handleFormSubmit)">
     <div class="form">
       <ValidationProvider
@@ -185,6 +186,7 @@
       </div>
     </div>
   </form>
+    </SfLoader>
   </ValidationObserver>
 </template>
 
@@ -195,7 +197,8 @@ import {
   SfButton,
   SfSelect,
   SfAddressPicker,
-  SfLink
+  SfLink,
+  SfLoader
 } from '@storefront-ui/vue';
 import { computed, ref, watch } from '@vue/composition-api';
 import { useUserShipping, useCountryList, countryGetters } from '@vue-storefront/prestashop';
@@ -224,6 +227,7 @@ export default {
     SfSelect,
     SfAddressPicker,
     SfLink,
+    SfLoader,
     ValidationProvider,
     ValidationObserver,
     VsfShippingProvider: () => import('~/components/Checkout/VsfShippingProvider')
