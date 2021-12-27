@@ -6,171 +6,54 @@
       :title="$t('Shipping')"
       class="sf-heading--left sf-heading--no-underline title"
     />
-    <form @submit.prevent="handleSubmit(handleFormSubmit)">
-      <div class="form">
-        <ValidationProvider
-          name="firstName"
-          rules="required|min:2"
-          v-slot="{ errors }"
-          slim
-        >
-          <SfInput
-            v-e2e="'shipping-firstName'"
-            v-model="form.firstName"
-            label="First name"
-            name="firstName"
-            class="form__element form__element--half"
-            required
-            :valid="!errors[0]"
-            :errorMessage="errors[0]"
-          />
-        </ValidationProvider>
-        <ValidationProvider
-          name="lastName"
-          rules="required|min:2"
-          v-slot="{ errors }"
-          slim
-        >
-          <SfInput
-            v-e2e="'shipping-lastName'"
-            v-model="form.lastName"
-            label="Last name"
-            name="lastName"
-            class="form__element form__element--half form__element--half-even"
-            required
-            :valid="!errors[0]"
-            :errorMessage="errors[0]"
-          />
-        </ValidationProvider>
-        <ValidationProvider
-          name="streetName"
-          rules="required"
-          v-slot="{ errors }"
-          slim
-        >
-          <SfInput
-            v-e2e="'shipping-streetName'"
-            v-model="form.streetName"
-            label="Street name"
-            name="streetName"
-            class="form__element form__element--half"
-            required
-            :valid="!errors[0]"
-            :errorMessage="errors[0]"
-          />
-        </ValidationProvider>
-        <ValidationProvider
-          name="apartment"
-          rules="required"
-          v-slot="{ errors }"
-          slim
-        >
-          <SfInput
-            v-e2e="'shipping-apartment'"
-            v-model="form.apartment"
-            label="House/Apartment number"
-            name="apartment"
-            class="form__element form__element--half form__element--half-even"
-            required
-            :valid="!errors[0]"
-            :errorMessage="errors[0]"
-          />
-        </ValidationProvider>
-        <ValidationProvider
-          name="city"
-          rules="required"
-          v-slot="{ errors }"
-          slim
-        >
-          <SfInput
-            v-e2e="'shipping-city'"
-            v-model="form.city"
-            label="City"
-            name="city"
-            class="form__element form__element--half"
-            required
-            :valid="!errors[0]"
-            :errorMessage="errors[0]"
-          />
-        </ValidationProvider>
-        <ValidationProvider
-          name="state"
-          slim
-        >
-          <SfInput
-            v-e2e="'shipping-state'"
-            v-model="form.state"
-            label="State/Province"
-            name="state"
-            class="form__element form__element--half form__element--half-even"
-          />
-        </ValidationProvider>
-        <ValidationProvider
-          name="country"
-          rules="required|min:2"
-          v-slot="{ errors }"
-          slim
-        >
-          <SfSelect
-            v-e2e="'shipping-country'"
-            v-model="form.country"
-            label="Country"
-            name="country"
-            class="form__element form__element--half form__select sf-select--underlined"
-            required
-            :valid="!errors[0]"
-            :errorMessage="errors[0]"
+    <form v-if='addressesList.length >= 1 && !addressFormVisibility' @submit.prevent="handleSelectedAddressSubmit">
+      <SfLoader :class="{ loading }" :loading="loading">
+        <div>
+      <sf-address-picker v-model='selectedAddress' class='address-picker'>
+        <div  v-for="address in addressesList" :key="address.id">
+        <sf-address :name="address.id" v-if='!isFormSubmitted || isSelectedAddress(address.id)'>
+          <div>
+          <span>{{address.alias}}</span>
+          <span>{{address.address1}}</span>
+          <span>{{address.address2}}</span>
+          <span>{{address.postcode}}</span>
+          <span>{{address.city}}</span>
+          <span>{{address.country}}</span>
+          <span>{{address.phone}}</span>
+          </div>
+          <div class='flex-row' v-if='!isFormSubmitted'>
+            <div>
+              <SfLink
+                @click.prevent='editAddress(address)'
+              >
+                {{ $t('Edit') }}
+              </SfLink>
+            </div>
+            <div>
+              <SfLink
+                @click.prevent='removeAddress(address.id)'
+              >
+                {{ $t('Remove') }}
+              </SfLink>
+            </div>
+          </div>
+        </sf-address>
+
+        </div>
+      </sf-address-picker>
+      <div class="form" v-if="!isFormSubmitted">
+        <div class='form__action'>
+          <SfButton
+            v-e2e="'add-new-address'"
+            :disabled="loading"
+            class="form__action-button"
+            @click='addNewAddress'
           >
-            <SfSelectOption
-              v-for="countryOption in countries"
-              :key="countryOption.key"
-              :value="countryOption.key"
-            >
-              {{ countryOption.label }}
-            </SfSelectOption>
-          </SfSelect>
-        </ValidationProvider>
-        <ValidationProvider
-          name="zipCode"
-          rules="required|min:2"
-          v-slot="{ errors }"
-          slim
-        >
-          <SfInput
-            v-e2e="'shipping-zipcode'"
-            v-model="form.postalCode"
-            label="Zip-code"
-            name="zipCode"
-            class="form__element form__element--half form__element--half-even"
-            required
-            :valid="!errors[0]"
-            :errorMessage="errors[0]"
-          />
-        </ValidationProvider>
-        <ValidationProvider
-          name="phone"
-          rules="required|digits:9"
-          v-slot="{ errors }"
-          slim
-        >
-          <SfInput
-            v-e2e="'shipping-phone'"
-            v-model="form.phone"
-            label="Phone number"
-            name="phone"
-            class="form__element form__element--half"
-            required
-            :valid="!errors[0]"
-            :errorMessage="errors[0]"
-          />
-        </ValidationProvider>
-      </div>
-      <div class="form">
-        <div class="form__action">
+            {{ $t('Add new address') }}
+          </SfButton>
           <SfButton
             v-e2e="'select-shipping'"
-            v-if="!isFormSubmitted"
-            :disabled="loading"
+            :disabled="loading || !selectedAddress"
             class="form__action-button"
             type="submit"
           >
@@ -178,33 +61,32 @@
           </SfButton>
         </div>
       </div>
-      <VsfShippingProvider
-        v-if="isFormSubmitted"
-        @submit="$router.push(localePath({ name: 'billing' }))"
-      />
+        </div>
+      </SfLoader>
     </form>
+    <address-form v-else-if='isEdit' edit :addressForEdit='addressForEdit' :addressesCount='addressesList.length' @toggle='toggleAddressFormVisibility' />
+    <address-form v-else :addressesCount='addressesList.length' @toggle='toggleAddressFormVisibility' />
+    <VsfShippingProvider
+      v-if="isFormSubmitted"
+      :selected-address="selectedAddress"
+      @go-back='goBack'
+    />
   </ValidationObserver>
 </template>
 
 <script>
 import {
   SfHeading,
-  SfInput,
   SfButton,
-  SfSelect
+  SfAddressPicker,
+  SfLink,
+  SfLoader
 } from '@storefront-ui/vue';
-import { ref } from '@vue/composition-api';
+import { computed, ref } from '@vue/composition-api';
 import { onSSR } from '@vue-storefront/core';
-import { useShipping } from '@vue-storefront/prestashop';
+import { userShippingGetters, useUserShipping } from '@vue-storefront/prestashop';
 import { required, min, digits } from 'vee-validate/dist/rules';
-import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
-
-const COUNTRIES = [
-  { key: 'US', label: 'United States' },
-  { key: 'UK', label: 'United Kingdom' },
-  { key: 'IT', label: 'Italy' },
-  { key: 'PL', label: 'Poland' }
-];
+import { ValidationObserver, extend } from 'vee-validate';
 
 extend('required', {
   ...required,
@@ -223,32 +105,48 @@ export default {
   name: 'Shipping',
   components: {
     SfHeading,
-    SfInput,
     SfButton,
-    SfSelect,
-    ValidationProvider,
+    SfLink,
+    SfAddressPicker,
+    SfLoader,
     ValidationObserver,
+    AddressForm: () => import('../../components/AddressForm.vue'),
     VsfShippingProvider: () => import('~/components/Checkout/VsfShippingProvider')
   },
   setup () {
     const isFormSubmitted = ref(false);
-    const { load, save, loading } = useShipping();
-
-    const form = ref({
-      firstName: '',
-      lastName: '',
-      streetName: '',
-      apartment: '',
-      city: '',
-      state: '',
-      country: '',
-      postalCode: '',
-      phone: null
-    });
-
-    const handleFormSubmit = async () => {
-      await save({ shippingDetails: form.value });
+    const { shipping, load, setDefaultAddress, loading, deleteAddress } = useUserShipping();
+    const selectedAddress = ref(null);
+    const addressFormVisibility = ref(false);
+    const addressForEdit = ref(null);
+    const isEdit = ref(false);
+    const addressesList = computed(()=> shipping.value ? userShippingGetters.getAddresses(shipping.value) : []);
+    const toggleAddressFormVisibility = (() => addressFormVisibility.value = !addressFormVisibility.value);
+    const removeAddress = async (id) => {
+      await deleteAddress({address: {id: id} });
+    };
+    const isSelectedAddress = (id) => {
+      if (selectedAddress.value && id === selectedAddress.value) {
+        return true;
+      }
+      return false;
+    };
+    const addNewAddress = () => {
+      addressForEdit.value = null;
+      isEdit.value = false;
+      toggleAddressFormVisibility();
+    };
+    const editAddress = (address) => {
+      addressForEdit.value = address;
+      isEdit.value = true;
+      toggleAddressFormVisibility();
+    };
+    const handleSelectedAddressSubmit = async() => {
+      await setDefaultAddress({address: {id: selectedAddress.value} });
       isFormSubmitted.value = true;
+    };
+    const goBack = () => {
+      isFormSubmitted.value = false;
     };
 
     onSSR(async () => {
@@ -256,11 +154,20 @@ export default {
     });
 
     return {
+      addressesList,
+      selectedAddress,
       loading,
       isFormSubmitted,
-      form,
-      countries: COUNTRIES,
-      handleFormSubmit
+      addressFormVisibility,
+      toggleAddressFormVisibility,
+      handleSelectedAddressSubmit,
+      removeAddress,
+      editAddress,
+      isEdit,
+      addNewAddress,
+      addressForEdit,
+      isSelectedAddress,
+      goBack
     };
   }
 };
@@ -349,5 +256,17 @@ export default {
 
 .title {
   margin: var(--spacer-xl) 0 var(--spacer-base) 0;
+}
+.flex-row{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  border-top: 1px dotted grey ;
+}
+.form__action>*{
+  margin-right: 1rem;
+}
+.address-picker{
+  margin-bottom:2rem
 }
 </style>

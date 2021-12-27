@@ -4,10 +4,16 @@ import type {
   UserShippingAddressItem as AddressItem,
   UserShippingAddressSearchCriteria
 } from '@vue-storefront/prestashop-api';
+import { populateAddressesList } from '../helpers';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getAddresses(shipping: Address, criteria?: UserShippingAddressSearchCriteria): AddressItem[] {
-  return [];
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  if (!shipping || shipping.length === 0) {
+    return [];
+  }
+  return populateAddressesList(shipping);
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

@@ -1,60 +1,61 @@
 <template>
   <div>
-    <p>
-      <b>Please implement vendor-specific VsfPaymentProvider component in the 'components/Checkout' directory</b>
-    </p>
-
+    <SfLoader :class="{ loading }" :loading="loading">
+      <div>
     <SfRadio
       v-e2e="'payment-method'"
-      v-for="method in shippingMethods"
-      :key="method.value"
+      v-for="method in paymentMethods"
+      :key="method.id"
       :label="method.label"
-      :value="method.value"
+      :value="method.name"
       :description="method.description"
       :selected ="selectedMethod"
       name="shippingMethod"
       class="form__radio shipping"
-      @input="selectMethod(method.value)"
+      @input="selectMethod(method.name)"
     >
       <div class="shipping__label">
         {{ method.label }}
       </div>
     </SfRadio>
+      </div>
+    </SfLoader>
   </div>
 </template>
 
 <script>
-import { SfButton, SfRadio } from '@storefront-ui/vue';
-import { ref } from '@vue/composition-api';
-
-const SHIPPING_METHODS = [
-  { label: 'Visa Debit', value: 'visa_debit' },
-  { label: 'MasterCard', value: 'master_card' },
-  { label: 'VisaElectron', value: 'visa_electron' },
-  { label: 'Cash on delivery', value: 'cash' },
-  { label: 'Check', value: 'check' }
-];
+import { SfButton, SfRadio, SfLoader } from '@storefront-ui/vue';
+import { ref, onBeforeMount, computed, watch } from '@vue/composition-api';
+import { usePayment } from '@vue-storefront/prestashop';
+import { paymentProviderGetters } from '@vue-storefront/prestashop/src/getters/paymentProviderGetters';
 
 export default {
   name: 'VsfPaymentProvider',
 
   components: {
     SfButton,
-    SfRadio
+    SfRadio,
+    SfLoader
   },
 
-  setup(props, { emit }) {
+  setup(_props, context) {
     const selectedMethod = ref(null);
-
-    const selectMethod = (method) => {
+    watch(selectedMethod, (newVal) => {
+      context.emit('changeSelectedMethod', newVal);
+    });
+    const selectMethod = (method)=> {
       selectedMethod.value = method;
-      emit('status');
     };
-
+    const { load, shipping: payment, loading } = usePayment();
+    onBeforeMount(async()=>{
+      await load();
+      console.log(paymentProviderGetters.getPaymentProvidersList(payment.value))
+    });
     return {
-      shippingMethods: SHIPPING_METHODS,
+      paymentMethods: computed(()=> payment.value ? paymentProviderGetters.getPaymentProvidersList(payment.value) : []),
       selectedMethod,
-      selectMethod
+      selectMethod,
+      loading
     };
   }
 };

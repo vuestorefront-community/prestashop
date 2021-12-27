@@ -9,34 +9,123 @@ import type {
 } from '@vue-storefront/prestashop-api';
 
 const params: UseUserShippingFactoryParams<Address, AddressItem> = {
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   addAddress: async (context: Context, params) => {
-    console.log('Mocked: useUserShipping.addAddress');
-    return {};
+    const { address } = params;
+    const vsfCookieKey = context.$prestashop.config.app.$config.psCustomerCookieKey;
+    const vsfCookieValue = context.$prestashop.config.app.$config.psCustomerCookieValue;
+
+    const psCookieKey = context.$prestashop.config.app.$cookies.get(vsfCookieKey);
+    const psCookieValue = context.$prestashop.config.app.$cookies.get(vsfCookieValue);
+
+    await context.$prestashop.api.addNewAddress({address, psCookieKey, psCookieValue });
+    const { data, cookieObject } = await context.$prestashop.api.loadAddresses({ psCookieKey, psCookieValue });
+    if (data.code === 200) {
+      if (cookieObject) {
+        context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
+        context.$prestashop.config.app.$cookies.set(vsfCookieValue, cookieObject.vsfPsValCookie);
+      }
+      return data.psdata;
+    } else {
+      // add to cart failed
+      return {};
+    }
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   deleteAddress: async (context: Context, params) => {
-    console.log('Mocked: useUserShipping.deleteAddress');
-    return {};
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const { id } = params.address;
+    const vsfCookieKey = context.$prestashop.config.app.$config.psCustomerCookieKey;
+    const vsfCookieValue = context.$prestashop.config.app.$config.psCustomerCookieValue;
+
+    const psCookieKey = context.$prestashop.config.app.$cookies.get(vsfCookieKey);
+    const psCookieValue = context.$prestashop.config.app.$cookies.get(vsfCookieValue);
+
+    await context.$prestashop.api.removeAddress({id, psCookieKey, psCookieValue });
+    const { data, cookieObject } = await context.$prestashop.api.loadAddresses({ psCookieKey, psCookieValue });
+    if (data.code === 200) {
+      if (cookieObject) {
+        context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
+        context.$prestashop.config.app.$cookies.set(vsfCookieValue, cookieObject.vsfPsValCookie);
+      }
+      return data.psdata;
+    } else {
+      // add to cart failed
+      return {};
+    }
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   updateAddress: async (context: Context, params) => {
-    console.log('Mocked: useUserShipping.updateAddress');
-    return {};
+    const { address } = params;
+    const vsfCookieKey = context.$prestashop.config.app.$config.psCustomerCookieKey;
+    const vsfCookieValue = context.$prestashop.config.app.$config.psCustomerCookieValue;
+
+    const psCookieKey = context.$prestashop.config.app.$cookies.get(vsfCookieKey);
+    const psCookieValue = context.$prestashop.config.app.$cookies.get(vsfCookieValue);
+
+    await context.$prestashop.api.updateOneAddress({address, psCookieKey, psCookieValue });
+    const { data, cookieObject } = await context.$prestashop.api.loadAddresses({ psCookieKey, psCookieValue });
+    if (data.code === 200) {
+      if (cookieObject) {
+        context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
+        context.$prestashop.config.app.$cookies.set(vsfCookieValue, cookieObject.vsfPsValCookie);
+      }
+      return data.psdata;
+    } else {
+      // add to cart failed
+      return {};
+    }
   },
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  load: async (context: Context, params) => {
-    console.log('Mocked: useUserShipping.load');
-    return {};
+  load: async (context: Context) => {
+    const vsfCookieKey = context.$prestashop.config.app.$config.psCustomerCookieKey;
+    const vsfCookieValue = context.$prestashop.config.app.$config.psCustomerCookieValue;
+
+    const psCookieKey = context.$prestashop.config.app.$cookies.get(vsfCookieKey);
+    const psCookieValue = context.$prestashop.config.app.$cookies.get(vsfCookieValue);
+
+    const { data, cookieObject } = await context.$prestashop.api.loadAddresses({ psCookieKey, psCookieValue });
+    if (data.code === 200) {
+      if (cookieObject) {
+        context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
+        context.$prestashop.config.app.$cookies.set(vsfCookieValue, cookieObject.vsfPsValCookie);
+      }
+      return data.psdata;
+    } else {
+      // add to cart failed
+      return {};
+    }
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   setDefaultAddress: async (context: Context, params) => {
-    console.log('Mocked: useUserShipping.setDefaultAddress');
-    return {};
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const { id } = params.address;
+    const vsfCookieKey = context.$prestashop.config.app.$config.psCustomerCookieKey;
+    const vsfCookieValue = context.$prestashop.config.app.$config.psCustomerCookieValue;
+
+    const psCookieKey = context.$prestashop.config.app.$cookies.get(vsfCookieKey);
+    const psCookieValue = context.$prestashop.config.app.$cookies.get(vsfCookieValue);
+
+    await context.$prestashop.api.setAddress({ id, psCookieKey, psCookieValue });
+
+    const { data, cookieObject } = await context.$prestashop.api.loadAddresses({ psCookieKey, psCookieValue });
+    if (data.code === 200) {
+      if (cookieObject) {
+        context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
+        context.$prestashop.config.app.$cookies.set(vsfCookieValue, cookieObject.vsfPsValCookie);
+      }
+      return data.psdata;
+    } else {
+      // add to cart failed
+      return {};
+    }
   }
 };
 

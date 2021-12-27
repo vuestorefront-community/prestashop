@@ -1,9 +1,7 @@
 <template>
   <div>
-    <p>
-      <b>Please implement vendor-specific VsfShippingProvider component in the 'components/Checkout' directory</b>
-    </p>
-
+    <SfLoader :class="{ loading }" :loading="loading">
+      <div>
     <SfRadio
       v-e2e="'shipping-method'"
       v-for="method in shippingMethods"
@@ -24,44 +22,64 @@
         {{ method.description }}
       </div>
     </SfRadio>
-
+      </div>
+    </SfLoader>
+    <div class="summary__action">
+      <SfButton
+        type="button"
+        class="sf-button color-secondary summary__back-button"
+        @click.prevent="$emit('go-back')"
+      >
+        {{ $t('Go back') }}
+      </SfButton>
     <SfButton
       v-e2e="'continue-to-billing'"
       :disabled="!selectedMethod"
       type="button"
-      @click="$emit('submit')"
+      @click="goToPayment"
     >
-      {{ $t('Continue to billing') }}
+      {{ $t('Continue to payment') }}
     </SfButton>
+    </div>
   </div>
 </template>
 
 <script>
-import { SfButton, SfRadio } from '@storefront-ui/vue';
-import { ref } from '@vue/composition-api';
-
-const SHIPPING_METHODS = [
-  { label: 'Express US', value: 'express', description: 'Same day delivery' },
-  { label: 'Standard US', value: 'standard', description: 'Delivery in 5-6 working days' }
-];
+import { SfButton, SfRadio, SfLink, SfLoader } from '@storefront-ui/vue';
+import { ref, computed } from '@vue/composition-api';
+import { useShippingProvider } from '@vue-storefront/prestashop';
+import { shippingProviderGetters } from '@vue-storefront/prestashop/src/getters/shippingProviderGetters';
 
 export default {
   name: 'VsfShippingProvider',
-
+  props: ['selectedAddress'],
   components: {
     SfButton,
-    SfRadio
+    SfRadio,
+    SfLink,
+    SfLoader
   },
-
-  setup() {
+  setup(props, context) {
     const selectedMethod = ref(null);
-
-    const selectMethod = method => selectedMethod.value = method;
-
+    const { load, state, save, loading } = useShippingProvider();
+    const selectMethod = async(method) => {
+      selectedMethod.value = method;
+    };
+    const goToPayment = async () => {
+      await save({shippingMethodId: selectedMethod.value, addressId: props.selectedAddress });
+      context.root.$router.push({ path: 'payment' });
+    };
+    const shippingProvidersList = computed(()=> state.value ? shippingProviderGetters.getShippingProvidersList(state.value) : []);
+    const loadShippingProviders = async () => {
+      await load();
+    };
+    loadShippingProviders();
     return {
-      shippingMethods: SHIPPING_METHODS,
+      shippingMethods: shippingProvidersList,
       selectedMethod,
-      selectMethod
+      selectMethod,
+      goToPayment,
+      loading
     };
   }
 };
@@ -79,4 +97,49 @@ export default {
     --radio-description-font-size: var(--font-xs);
   }
 }
+.summary {
+  &__terms {
+    margin: var(--spacer-base) 0 0 0;
+  }
+  &__total {
+    margin: 0 0 var(--spacer-sm) 0;
+    flex: 0 0 16.875rem;
+  }
+  &__action {
+    @include for-desktop {
+      display: flex;
+      margin: var(--spacer-xl) 0 0 0;
+    }
+  }
+  &__action-button {
+    margin: 0;
+    width: 100%;
+    margin: var(--spacer-sm) 0 0 0;
+    @include for-desktop {
+      margin: 0 var(--spacer-xl) 0 0;
+      width: auto;
+    }
+    &--secondary {
+      @include for-desktop {
+        text-align: right;
+      }
+    }
+  }
+  &__back-button {
+    margin: var(--spacer-xl) 0 0 0;
+    width: 100%;
+    @include for-desktop {
+      margin: 0 var(--spacer-xl) 0 0;
+      width: auto;
+    }
+    color:  var(--c-white);
+    &:hover {
+      color:  var(--c-white);
+    }
+  }
+  &__property-total {
+    margin: var(--spacer-xl) 0 0 0;
+  }
+}
+
 </style>

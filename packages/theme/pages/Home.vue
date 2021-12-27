@@ -122,7 +122,6 @@ export default {
 
     onSSR(async () => {
       await productsSearch({ featured: true });
-      console.log(featureProducts);
     });
 
     return {
