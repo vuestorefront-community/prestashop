@@ -1,12 +1,13 @@
 <template>
   <div>
     <SfLoader :class="{ loading }" :loading="loading">
+      <div>
     <SfRadio
       v-e2e="'payment-method'"
       v-for="method in paymentMethods"
-      :key="method.value"
+      :key="method.id"
       :label="method.label"
-      :value="method.value"
+      :value="method.name"
       :description="method.description"
       :selected ="selectedMethod"
       name="shippingMethod"
@@ -17,6 +18,7 @@
         {{ method.label }}
       </div>
     </SfRadio>
+      </div>
     </SfLoader>
   </div>
 </template>
@@ -47,6 +49,7 @@ export default {
     const { load, shipping: payment, loading } = usePayment();
     onBeforeMount(async()=>{
       await load();
+      console.log(paymentProviderGetters.getPaymentProvidersList(payment.value))
     });
     return {
       paymentMethods: computed(()=> payment.value ? paymentProviderGetters.getPaymentProvidersList(payment.value) : []),

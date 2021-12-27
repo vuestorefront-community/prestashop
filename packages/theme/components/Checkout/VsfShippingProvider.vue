@@ -1,6 +1,7 @@
 <template>
   <div>
     <SfLoader :class="{ loading }" :loading="loading">
+      <div>
     <SfRadio
       v-e2e="'shipping-method'"
       v-for="method in shippingMethods"
@@ -21,6 +22,7 @@
         {{ method.description }}
       </div>
     </SfRadio>
+      </div>
     </SfLoader>
     <div class="summary__action">
       <SfButton
@@ -34,7 +36,7 @@
       v-e2e="'continue-to-billing'"
       :disabled="!selectedMethod"
       type="button"
-      @click="goToBilling"
+      @click="goToPayment"
     >
       {{ $t('Continue to payment') }}
     </SfButton>
@@ -63,7 +65,7 @@ export default {
     const selectMethod = async(method) => {
       selectedMethod.value = method;
     };
-    const goToBilling = async () => {
+    const goToPayment = async () => {
       await save({shippingMethodId: selectedMethod.value, addressId: props.selectedAddress });
       context.root.$router.push({ path: 'payment' });
     };
@@ -76,7 +78,7 @@ export default {
       shippingMethods: shippingProvidersList,
       selectedMethod,
       selectMethod,
-      goToBilling,
+      goToPayment,
       loading
     };
   }

@@ -7,9 +7,10 @@
       class="sf-heading--left sf-heading--no-underline title"
     />
     <form v-if='addressesList.length >= 1 && !addressFormVisibility' @submit.prevent="handleSelectedAddressSubmit">
+      <SfLoader :class="{ loading }" :loading="loading">
+        <div>
       <sf-address-picker v-model='selectedAddress' class='address-picker'>
         <div  v-for="address in addressesList" :key="address.id">
-          <SfLoader :class="{ loading }" :loading="loading">
         <sf-address :name="address.id" v-if='!isFormSubmitted || isSelectedAddress(address.id)'>
           <div>
           <span>{{address.alias}}</span>
@@ -37,7 +38,7 @@
             </div>
           </div>
         </sf-address>
-          </SfLoader>
+
         </div>
       </sf-address-picker>
       <div class="form" v-if="!isFormSubmitted">
@@ -60,6 +61,8 @@
           </SfButton>
         </div>
       </div>
+        </div>
+      </SfLoader>
     </form>
     <address-form v-else-if='isEdit' edit :addressForEdit='addressForEdit' :addressesCount='addressesList.length' @toggle='toggleAddressFormVisibility' />
     <address-form v-else :addressesCount='addressesList.length' @toggle='toggleAddressFormVisibility' />
