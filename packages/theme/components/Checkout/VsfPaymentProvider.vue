@@ -1,27 +1,31 @@
 <template>
   <div>
+    <SfLoader :class="{ loading }" :loading="loading">
+      <div>
     <SfRadio
       v-e2e="'payment-method'"
       v-for="method in paymentMethods"
-      :key="method.value"
+      :key="method.id"
       :label="method.label"
-      :value="method.value"
+      :value="method.name"
       :description="method.description"
       :selected ="selectedMethod"
       name="shippingMethod"
       class="form__radio shipping"
-      @input="selectMethod(method.value)"
+      @input="selectMethod(method.name)"
     >
       <div class="shipping__label">
         {{ method.label }}
       </div>
     </SfRadio>
+      </div>
+    </SfLoader>
   </div>
 </template>
 
 <script>
-import { SfButton, SfRadio } from '@storefront-ui/vue';
-import { ref, onBeforeMount, computed } from '@vue/composition-api';
+import { SfButton, SfRadio, SfLoader } from '@storefront-ui/vue';
+import { ref, onBeforeMount, computed, watch } from '@vue/composition-api';
 import { usePayment } from '@vue-storefront/prestashop';
 import { paymentProviderGetters } from '@vue-storefront/prestashop/src/getters/paymentProviderGetters';
 
@@ -30,22 +34,28 @@ export default {
 
   components: {
     SfButton,
-    SfRadio
+    SfRadio,
+    SfLoader
   },
 
-  setup() {
+  setup(_props, context) {
     const selectedMethod = ref(null);
+    watch(selectedMethod, (newVal) => {
+      context.emit('changeSelectedMethod', newVal);
+    });
     const selectMethod = (method)=> {
       selectedMethod.value = method;
     };
-    const { load, shipping: payment } = usePayment();
+    const { load, shipping: payment, loading } = usePayment();
     onBeforeMount(async()=>{
       await load();
+      console.log(paymentProviderGetters.getPaymentProvidersList(payment.value))
     });
     return {
       paymentMethods: computed(()=> payment.value ? paymentProviderGetters.getPaymentProvidersList(payment.value) : []),
       selectedMethod,
-      selectMethod
+      selectMethod,
+      loading
     };
   }
 };

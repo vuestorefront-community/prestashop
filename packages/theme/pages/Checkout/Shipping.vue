@@ -7,6 +7,8 @@
       class="sf-heading--left sf-heading--no-underline title"
     />
     <form v-if='addressesList.length >= 1 && !addressFormVisibility' @submit.prevent="handleSelectedAddressSubmit">
+      <SfLoader :class="{ loading }" :loading="loading">
+        <div>
       <sf-address-picker v-model='selectedAddress' class='address-picker'>
         <div  v-for="address in addressesList" :key="address.id">
         <sf-address :name="address.id" v-if='!isFormSubmitted || isSelectedAddress(address.id)'>
@@ -36,6 +38,7 @@
             </div>
           </div>
         </sf-address>
+
         </div>
       </sf-address-picker>
       <div class="form" v-if="!isFormSubmitted">
@@ -58,6 +61,8 @@
           </SfButton>
         </div>
       </div>
+        </div>
+      </SfLoader>
     </form>
     <address-form v-else-if='isEdit' edit :addressForEdit='addressForEdit' :addressesCount='addressesList.length' @toggle='toggleAddressFormVisibility' />
     <address-form v-else :addressesCount='addressesList.length' @toggle='toggleAddressFormVisibility' />
@@ -74,7 +79,8 @@ import {
   SfHeading,
   SfButton,
   SfAddressPicker,
-  SfLink
+  SfLink,
+  SfLoader
 } from '@storefront-ui/vue';
 import { computed, ref } from '@vue/composition-api';
 import { onSSR } from '@vue-storefront/core';
@@ -102,6 +108,7 @@ export default {
     SfButton,
     SfLink,
     SfAddressPicker,
+    SfLoader,
     ValidationObserver,
     AddressForm: () => import('../../components/AddressForm.vue'),
     VsfShippingProvider: () => import('~/components/Checkout/VsfShippingProvider')

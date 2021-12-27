@@ -63,7 +63,7 @@
           class="sf-property--full-width sf-property--large summary__property-total"
         />
 
-        <VsfPaymentProvider @status="isPaymentReady = true"/>
+        <VsfPaymentProvider @changeSelectedMethod='changeSelectedMethod' @status="isPaymentReady = true"/>
 
         <SfCheckbox v-e2e="'terms'" v-model="terms" name="terms" class="summary__terms">
           <template #label>
@@ -110,7 +110,7 @@ import {
   SfLink
 } from '@storefront-ui/vue';
 import { onSSR } from '@vue-storefront/core';
-import { ref, computed } from '@vue/composition-api';
+import { ref, computed, watch } from '@vue/composition-api';
 import { useMakeOrder, useCart, cartGetters, orderGetters } from '@vue-storefront/prestashop';
 
 export default {
@@ -133,15 +133,21 @@ export default {
     const { cart, load, setCart } = useCart();
     const { order, make, loading } = useMakeOrder();
 
+    const selectedPaymentOption = ref(null);
     const isPaymentReady = ref(false);
     const terms = ref(false);
-
+    watch(selectedPaymentOption, (newVal)=>{
+      isPaymentReady.value = Boolean(newVal);
+    });
+    const changeSelectedMethod = (selectedOption) => {
+      selectedPaymentOption.value = selectedOption;
+    };
     onSSR(async () => {
       await load();
     });
 
     const processOrder = async () => {
-      await make();
+      await make({methodName: selectedPaymentOption.value});
       const thankYouPath = { name: 'thank-you', query: { order: orderGetters.getId(order.value) }};
       context.root.$router.push(context.root.localePath(thankYouPath));
       setCart(null);
@@ -149,6 +155,7 @@ export default {
 
     return {
       isPaymentReady,
+      changeSelectedMethod,
       terms,
       loading,
       products: computed(() => cartGetters.getItems(cart.value)),
