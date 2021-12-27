@@ -1,9 +1,144 @@
 <template>
-  <b>Please implement vendor-specific CartPreview component in the 'components/Checkout' directory</b>
+  <div>
+    <div class="highlighted">
+      <SfHeading
+        :level="3"
+        :title="$t('Order summary')"
+        class="sf-heading--left sf-heading--no-underline title"
+      />
+    </div>
+    <div class="highlighted">
+      <SfProperty
+        :name="$t('Products')"
+        :value="totalItems"
+        class="sf-property--full-width sf-property--large property"
+      />
+      <SfProperty
+        :name="$t('Subtotal')"
+        :value="$n(totals.subtotal, 'currency')"
+        :class="['sf-property--full-width', 'sf-property--large property']"
+      />
+      <SfProperty
+        v-if="hasDiscounts"
+        :name="$t('Discount')"
+        :value="$n(discountsAmount, 'currency')"
+        class="sf-property--full-width sf-property--small property"
+      />
+      <SfProperty
+        :name="$t('Total')"
+        :value="$n(totals.total, 'currency')"
+        class="sf-property--full-width sf-property--large property-total"
+      />
+    </div>
+    <div class="highlighted">
+      <SfCharacteristic
+        v-for="characteristic in characteristics"
+        :key="characteristic.title"
+        :title="characteristic.title"
+        :description="characteristic.description"
+        :icon="characteristic.icon"
+        class="characteristic"
+      />
+    </div>
+  </div>
 </template>
-
 <script>
-export default {
-  name: 'CartPreview'
-};
+import { SfHeading, SfProperty, SfCharacteristic } from '@storefront-ui/vue';
+import { computed, ref, defineComponent } from '@vue/composition-api';
+import { useCart, cartGetters } from '@vue-storefront/prestashop';
+
+const CHARACTERISTICS = [
+  {
+    title: 'Safety',
+    description: 'It carefully packaged with a personal touch',
+    icon: 'safety'
+  },
+  {
+    title: 'Easy shipping',
+    description: 'You’ll receive dispatch confirmation and an arrival date',
+    icon: 'shipping'
+  },
+  {
+    title: 'Changed your mind?',
+    description: 'Rest assured, we offer free returns within 30 days',
+    icon: 'return'
+  }
+];
+
+export default defineComponent({
+  name: 'CartPreview',
+  components: {
+    SfHeading,
+    SfProperty,
+    SfCharacteristic
+  },
+  setup() {
+    const { cart, removeItem, updateItemQty } = useCart();
+
+    const listIsHidden = ref(false);
+
+    const products = computed(() => cartGetters.getItems(cart.value));
+    const totalItems = computed(() => cartGetters.getTotalItems(cart.value));
+    const totals = computed(() => cartGetters.getTotals(cart.value));
+    const discounts = computed(() => cartGetters.getDiscounts(cart.value));
+    const hasDiscounts = computed(() => discounts.value.length > 0);
+    const discountsAmount = computed(
+      () => -1 * discounts.value.reduce((a, el) => el.value + a, 0)
+    );
+
+    return {
+      cart,
+      discounts,
+      discountsAmount,
+      hasDiscounts,
+      totalItems,
+      listIsHidden,
+      products,
+      totals,
+      removeItem,
+      updateItemQty,
+      cartGetters,
+      characteristics: CHARACTERISTICS
+    };
+  }
+});
 </script>
+
+<style lang="scss" scoped>
+.highlighted {
+  box-sizing: border-box;
+  width: 100%;
+  background-color: var(--c-light);
+  padding: var(--spacer-xl) var(--spacer-xl) 0;
+
+  &:last-child {
+    padding-bottom: var(--spacer-xl);
+  }
+}
+
+.total-items {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacer-xl);
+}
+
+.property {
+  margin-bottom: var(--spacer-base);
+}
+
+.property-total {
+  margin-top: var(--spacer-xl);
+  padding-top: var(--spacer-lg);
+  font-size: var(--font-size-xl);
+  border-top: var(--c-white) 1px solid;
+  --property-name-font-weight: var(--font-weight--semibold);
+  --property-name-color: var(--c-text);
+}
+
+.characteristic {
+  &:not(:last-child) {
+    margin-bottom: var(--spacer-base);
+  }
+}
+</style>
