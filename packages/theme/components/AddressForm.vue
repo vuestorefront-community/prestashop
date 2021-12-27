@@ -161,12 +161,15 @@
            v-if="!isFormSubmitted"
            :disabled="loading"
       >
-        <SfLink
-          v-if='Boolean($props.addressesCount)'
-          @click='toggleAddNewAddress'
-        >
-          {{ $t('Go back') }}
-        </SfLink>
+        <div class="summary__action">
+          <SfButton
+            type="button"
+            class="sf-button color-secondary summary__back-button"
+            v-if='Boolean($props.addressesCount)'
+            @click='toggleAddNewAddress'
+          >
+            {{ $t('Go back') }}
+          </SfButton>
         <SfButton
           v-if='$props.edit'
           v-e2e="'select-shipping'"
@@ -183,7 +186,7 @@
         >
           {{ $t('Add address') }}
         </SfButton>
-      </div>
+        </div></div>
     </div>
   </form>
     </SfLoader>
@@ -421,4 +424,49 @@ export default {
   justify-content: space-around;
   border-top: 1px dotted grey ;
 }
+.summary {
+  &__terms {
+    margin: var(--spacer-base) 0 0 0;
+  }
+  &__total {
+    margin: 0 0 var(--spacer-sm) 0;
+    flex: 0 0 16.875rem;
+  }
+  &__action {
+    @include for-desktop {
+      display: flex;
+      margin: var(--spacer-xl) 0 0 0;
+    }
+  }
+  &__action-button {
+    margin: 0;
+    width: 100%;
+    margin: var(--spacer-sm) 0 0 0;
+    @include for-desktop {
+      margin: 0 var(--spacer-xl) 0 0;
+      width: auto;
+    }
+    &--secondary {
+      @include for-desktop {
+        text-align: right;
+      }
+    }
+  }
+  &__back-button {
+    margin: var(--spacer-xl) 0 0 0;
+    width: 100%;
+    @include for-desktop {
+      margin: 0 var(--spacer-xl) 0 0;
+      width: auto;
+    }
+    color:  var(--c-white);
+    &:hover {
+      color:  var(--c-white);
+    }
+  }
+  &__property-total {
+    margin: var(--spacer-xl) 0 0 0;
+  }
+}
+
 </style>

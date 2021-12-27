@@ -44,14 +44,15 @@ export default {
     const selectMethod = (method)=> {
       selectedMethod.value = method;
     };
-    const { load, shipping: payment } = usePayment();
+    const { load, shipping: payment, loading } = usePayment();
     onBeforeMount(async()=>{
       await load();
     });
     return {
       paymentMethods: computed(()=> payment.value ? paymentProviderGetters.getPaymentProvidersList(payment.value) : []),
       selectedMethod,
-      selectMethod
+      selectMethod,
+      loading
     };
   }
 };

@@ -22,11 +22,14 @@
       </div>
     </SfRadio>
     </SfLoader>
-    <SfLink
-      @click.prevent="$emit('go-back')"
-    >
-      {{ $t('Go back') }}
-    </SfLink>
+    <div class="summary__action">
+      <SfButton
+        type="button"
+        class="sf-button color-secondary summary__back-button"
+        @click.prevent="$emit('go-back')"
+      >
+        {{ $t('Go back') }}
+      </SfButton>
     <SfButton
       v-e2e="'continue-to-billing'"
       :disabled="!selectedMethod"
@@ -35,6 +38,7 @@
     >
       {{ $t('Continue to payment') }}
     </SfButton>
+    </div>
   </div>
 </template>
 
@@ -91,4 +95,49 @@ export default {
     --radio-description-font-size: var(--font-xs);
   }
 }
+.summary {
+  &__terms {
+    margin: var(--spacer-base) 0 0 0;
+  }
+  &__total {
+    margin: 0 0 var(--spacer-sm) 0;
+    flex: 0 0 16.875rem;
+  }
+  &__action {
+    @include for-desktop {
+      display: flex;
+      margin: var(--spacer-xl) 0 0 0;
+    }
+  }
+  &__action-button {
+    margin: 0;
+    width: 100%;
+    margin: var(--spacer-sm) 0 0 0;
+    @include for-desktop {
+      margin: 0 var(--spacer-xl) 0 0;
+      width: auto;
+    }
+    &--secondary {
+      @include for-desktop {
+        text-align: right;
+      }
+    }
+  }
+  &__back-button {
+    margin: var(--spacer-xl) 0 0 0;
+    width: 100%;
+    @include for-desktop {
+      margin: 0 var(--spacer-xl) 0 0;
+      width: auto;
+    }
+    color:  var(--c-white);
+    &:hover {
+      color:  var(--c-white);
+    }
+  }
+  &__property-total {
+    margin: var(--spacer-xl) 0 0 0;
+  }
+}
+
 </style>
