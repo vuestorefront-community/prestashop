@@ -55,7 +55,7 @@ export default {
   },
   setup(props, context) {
     const selectedMethod = ref(null);
-    const { load, state, save } = useShippingProvider();
+    const { load, state, save, loading } = useShippingProvider();
     const selectMethod = async(method) => {
       selectedMethod.value = method;
     };
@@ -72,7 +72,8 @@ export default {
       shippingMethods: shippingProvidersList,
       selectedMethod,
       selectMethod,
-      goToBilling
+      goToBilling,
+      loading
     };
   }
 };
