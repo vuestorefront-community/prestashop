@@ -12,6 +12,7 @@ export type Cart = any;
 
 export type CartItem = {
     id: string;
+    productAttributeId: string;
     name: string;
     image: string;
     regularPrice: number;
