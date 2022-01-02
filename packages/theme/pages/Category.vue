@@ -5,15 +5,6 @@
       :breadcrumbs="breadcrumbs"
     />
     <div class="navbar section">
-      <div class="navbar__aside desktop-only">
-        <LazyHydrate never>
-          <SfHeading
-            :level="3"
-            :title="$t('Categories')"
-            class="navbar__title" />
-        </LazyHydrate>
-      </div>
-
       <div class="navbar__main">
         <LazyHydrate on-interaction>
           <SfButton
@@ -86,63 +77,6 @@
     </div>
 
     <div class="main section">
-      <div class="sidebar desktop-only">
-        <LazyHydrate when-idle>
-          <SfLoader
-          :class="{ 'loading--categories': loading }"
-          :loading="loading">
-            <SfAccordion
-              :open="activeCategory"
-              :show-chevron="true"
-            >
-              <SfAccordionItem
-                v-for="(cat, i) in categoryTree && categoryTree.items"
-                :key="i"
-                :header="cat.label"
-              >
-                <template>
-                  <SfList class="list">
-                    <SfListItem class="list__item">
-                      <SfMenuItem
-                        :count="cat.count || ''"
-                        :label="cat.label"
-                      >
-                        <template #label>
-                          <nuxt-link
-                            :to="localePath(th.getCatLink(cat))"
-                            :class="cat.isCurrent ? 'sidebar--cat-selected' : ''"
-                          >
-                            All
-                          </nuxt-link>
-                        </template>
-                      </SfMenuItem>
-                    </SfListItem>
-                    <SfListItem
-                      class="list__item"
-                      v-for="(subCat, j) in cat.items"
-                      :key="j"
-                    >
-                      <SfMenuItem
-                        :count="subCat.count || ''"
-                        :label="subCat.label"
-                      >
-                        <template #label="{ label }">
-                          <nuxt-link
-                            :to="localePath(th.getCatLink(subCat))"
-                            :class="subCat.isCurrent ? 'sidebar--cat-selected' : ''"
-                          >
-                            {{ label }}
-                          </nuxt-link>
-                        </template>
-                      </SfMenuItem>
-                    </SfListItem>
-                  </SfList>
-                </template>
-              </SfAccordionItem>
-            </SfAccordion>
-          </SfLoader>
-        </LazyHydrate>
-      </div>
       <SfLoader :class="{ loading }" :loading="loading">
         <div class="products" v-if="!loading">
           <transition-group
@@ -741,7 +675,7 @@ export default {
       margin: var(--spacer-lg) 0;
     }
     &__product-card {
-      flex: 1 1 25%;
+      flex: 1 1 20%;
     }
     &__list {
       margin: 0 0 0 var(--spacer-sm);

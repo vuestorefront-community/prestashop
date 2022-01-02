@@ -86,13 +86,15 @@ function getProducts(psdata: any): PsProduct[] {
   return populateCategoryProducts(products);
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getPagination(params: FacetSearchResult<Facet>): AgnosticPagination {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars,@typescript-eslint/explicit-module-boundary-types
+function getPagination(searchResult): AgnosticPagination {
+  const pagination = searchResult.data?.pagination;
+
   return {
-    currentPage: 1,
-    totalPages: 1,
-    totalItems: 1,
-    itemsPerPage: 10,
+    currentPage: pagination.current_page,
+    totalPages: pagination.pages_count,
+    totalItems: pagination.total_items,
+    itemsPerPage: 12,
     pageOptions: []
   };
 }
