@@ -77,7 +77,12 @@ function getShippingPrice(cart: Cart): number {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getTotalItems(cart: Cart): number {
   if (cart) {
-    return cart.psdata.products.length;
+    let sum = 0;
+    for (const cartElement of cart.psdata.products) {
+      sum += parseInt(cartElement.cart_quantity);
+    }
+
+    return sum;
   }
   return 0;
 }
