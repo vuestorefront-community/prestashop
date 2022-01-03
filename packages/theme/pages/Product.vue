@@ -62,7 +62,7 @@
               <SfSelect
                 v-else
                 :key="optionKey"
-                @input="input => updateFilter({ variant: input })"
+                @input="input => updateFilter({ select: input })"
                 :label="option.name"
                 :value="selectedAttribute(optionKey)"
                 :class="`sf-select--underlined product__select-${optionKey.toLowerCase()}`"
