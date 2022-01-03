@@ -52,24 +52,25 @@
                 <SfColor
                   v-for="(color, i) in option.attributes"
                   :key="i"
+                  :selected='color.selected'
                   :color="color.html_color_code"
                   class="product__color"
-                  @click="updateFilter({color: `${i}-${color.name}`})"
+                  @click="updateFilter({ color: `${optionKey}-${i}`})"
                 />
               </div>
 
               <SfSelect
                 v-else
                 :key="optionKey"
-                @input="input => updateFilter({ input })"
+                @input="input => updateFilter({ variant: input })"
                 :label="option.name"
+                :value="selectedAttribute(optionKey)"
                 :class="`sf-select--underlined product__select-${optionKey.toLowerCase()}`"
               >
                 <SfSelectOption
                   v-for="(attribute, attributeKey) in option.attributes"
                   :key="attributeKey"
-                  :value="`${attributeKey}-${attribute.name}`"
-                  :selecte:="attribute.selected"
+                  :value="`${optionKey}-${attributeKey}`"
                 >{{attribute.name}}</SfSelectOption>
               </SfSelect>
             </template>
@@ -258,6 +259,16 @@ export default {
     const reviews = computed(() =>
       reviewGetters.getItems(productReviews.value.psdata)
     );
+    const selectedAttribute = (optionKey) => {
+      const option = options.value[Number(optionKey)];
+      const attrs = option.attributes;
+      for (const key in attrs) {
+        if (attrs[key].selected) {
+          return `${optionKey}-${key}`;
+        }
+      }
+      return null;
+    };
 
     // TODO: Breadcrumbs are temporary disabled because productGetters return undefined. We have a mocks in data
     // const breadcrumbs = computed(() => productGetters.getBreadcrumbs ? productGetters.getBreadcrumbs(product.value) : props.fallbackBreadcrumbs);
@@ -271,15 +282,21 @@ export default {
     );
 
     onSSR(async () => {
-      await search({ id });
+      let variant = context.root.$route.query;
+      if (variant && Object.keys(variant).length === 0) {
+        variant = null;
+      }
+      await search({ id, variant: variant });
       await searchRelatedProducts({ featured: true });
       await searchReviews({ productId: id, page: '1' });
     });
 
     const updateFilter = (filter) => {
+      const variant = context.root.$route.query;
       context.root.$router.push({
         path: context.root.$route.path,
         query: {
+          ...variant,
           ...filter
         }
       });
@@ -305,6 +322,7 @@ export default {
     };
 
     return {
+      selectedAttribute,
       updateFilter,
       searchReviews,
       sendNotification,
@@ -322,6 +340,7 @@ export default {
       ),
       relatedLoading,
       options,
+      categories,
       qty,
       addItem,
       loading,
