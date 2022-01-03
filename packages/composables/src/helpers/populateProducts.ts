@@ -26,6 +26,7 @@ const populateProducts = (psProducts: Array<any>) => {
         big: product.default_image.url
       }]
       ),
+    attributes: product.attributes,
     groups: product.groups,
     description: product.description,
     shortDescription: product.description_short,
