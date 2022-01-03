@@ -55,9 +55,9 @@ function getFeaturedProductsFiltered(products, filters: ProductFilter): PsProduc
   return populateFeaturedProducts(products);
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getAttributes(products: PsProduct[] | PsProduct, filterByAttributeName?: string[]): Record<string, AgnosticAttribute | string> {
-  return {};
+// eslint-disable-next-line @typescript-eslint/no-unused-vars,@typescript-eslint/explicit-module-boundary-types
+function getAttributes(products) {
+  return products?.groups;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

@@ -1,174 +1,183 @@
 <template>
-  <div id="product" v-if="!productLoading">
-    <SfBreadcrumbs class="breadcrumbs desktop-only" :breadcrumbs="breadcrumbs" />
-    <div class="product">
-      <LazyHydrate when-idle>
-        <SfGallery :images="productGallery" class="product__gallery" />
-      </LazyHydrate>
+  <SfLoader
+    :class="{ 'loading--categories': productLoading }"
+    :loading="productLoading">
+    <div id="product" >
+      <SfBreadcrumbs class="breadcrumbs desktop-only" :breadcrumbs="breadcrumbs" />
+      <div class="product">
+        <LazyHydrate when-idle>
+          <SfGallery :images="productGallery" class="product__gallery" />
+        </LazyHydrate>
 
-      <div class="product__info">
-        <div class="product__header">
-          <SfHeading
-            :title="productGetters.getName(product)"
-            :level="3"
-            class="sf-heading--no-underline sf-heading--left"
-          />
-          <SfIcon
-            icon="drag"
-            size="xxl"
-            color="var(--c-text-disabled)"
-            class="product__drag-icon smartphone-only"
-          />
-        </div>
-        <div class="product__price-and-rating">
-          <SfPrice
-            :regular="$n(productGetters.getPrice(product).regular, 'currency')"
-            :special="$n(productGetters.getPrice(product).regular, 'currency') === $n(productGetters.getPrice(product).special, 'currency')? '': $n(productGetters.getPrice(product).special, 'currency')"
-          />
-          <div>
-            <div class="product__rating">
-              <SfRating :score="averageRating" :max="5" @onClick="alert(2)" />
-              <a v-if="!!totalReviews" href="#" class="product__count">({{ totalReviews }})</a>
-            </div>
-            <SfButton class="sf-button--text">{{ $t('Read all reviews') }}</SfButton>
-          </div>
-        </div>
-        <div>
-          <p
-            class="product__description desktop-only"
-            v-html="productGetters.getShortDescription(product)"
-          ></p>
-          <SfButton class="sf-button--text desktop-only product__guide">{{ $t('Size guide') }}</SfButton>
-          <SfSelect
-            v-e2e="'size-select'"
-            v-if="options.size"
-            :value="configuration.size"
-            @input="size => updateFilter({ size })"
-            label="Size"
-            class="sf-select--underlined product__select-size"
-            :required="true"
-          >
-            <SfSelectOption
-              v-for="size in options.size"
-              :key="size.value"
-              :value="size.value"
-            >{{size.label}}</SfSelectOption>
-          </SfSelect>
-          <div
-            v-if="options.color && options.color.length > 1"
-            class="product__colors desktop-only"
-          >
-            <p class="product__color-label">{{ $t('Color') }}:</p>
-            <SfColor
-              v-for="(color, i) in options.color"
-              :key="i"
-              :color="color.value"
-              class="product__color"
-              @click="updateFilter({color})"
+        <div class="product__info">
+          <div class="product__header">
+            <SfHeading
+              :title="productGetters.getName(product)"
+              :level="3"
+              class="sf-heading--no-underline sf-heading--left"
+            />
+            <SfIcon
+              icon="drag"
+              size="xxl"
+              color="var(--c-text-disabled)"
+              class="product__drag-icon smartphone-only"
             />
           </div>
-          <SfAddToCart
-            v-e2e="'product_add-to-cart'"
-            :stock="stock"
-            v-model="qty"
-            :disabled="loading"
-            :canAddToCart="stock > 0"
-            class="product__add-to-cart"
-            @click="addingToCart({ product, quantity: parseInt(qty) })"
-          />
-        </div>
-
-        <LazyHydrate when-idle>
-          <SfTabs :open-tab="1" class="product__tabs">
-            <SfTab title="Description">
-              <div class="product__description" v-html="productGetters.getDescription(product)"></div>
-              <SfProperty
-                class="product__property"
-                name="Category"
-                :value="productGetters.getCategory(product)"
-              ></SfProperty>
-
-              <SfProperty
-                v-for="(property, i) in productGetters.getProductInfo(product)"
-                :key="i"
-                :name="property.name"
-                :value="property.value"
-                class="product__property"
+          <div class="product__price-and-rating">
+            <SfPrice
+              :regular="$n(productGetters.getPrice(product).regular, 'currency')"
+              :special="$n(productGetters.getPrice(product).regular, 'currency') === $n(productGetters.getPrice(product).special, 'currency')? '': $n(productGetters.getPrice(product).special, 'currency')"
+            />
+            <div>
+              <div class="product__rating">
+                <SfRating :score="averageRating" :max="5" @onClick="alert(2)" />
+                <a v-if="!!totalReviews" href="#" class="product__count">({{ totalReviews }})</a>
+              </div>
+              <SfButton class="sf-button--text">{{ $t('Read all reviews') }}</SfButton>
+            </div>
+          </div>
+          <div>
+            <p
+              class="product__description desktop-only"
+              v-html="productGetters.getShortDescription(product)"
+            ></p>
+            <template
+              v-for="(option, optionKey) in options"
+            >
+              <div
+                v-if="option.group_type === 'color'"
+                class="product__colors desktop-only"
               >
-                <template v-if="property.name === 'Category'" #value>
-                  <SfButton class="product__property__button sf-button--text">{{ property.value }}</SfButton>
-                </template>
-              </SfProperty>
-            </SfTab>
-            <SfTab title="Read reviews">
-              <SfButton
-              v-if="isAuthenticated"
-                class="before-results__button"
-                style="margin-bottom:60px"
-                @click="addReviewModal=true"
-              >ADD REVIEW</SfButton>
-            <p  v-else>You must be logged in to write comment</p>
-<!--              TODO: loop over review type instead of API structure -->
-              <SfReview
-                v-for="review in reviews"
-                :key="reviewGetters.getReviewId(review)"
-                :author="reviewGetters.getReviewAuthor(review)"
-                :date="reviewGetters.getReviewDate(review)"
-                :message="reviewGetters.getReviewMessage(review)"
-                :rating="reviewGetters.getReviewRating(review)"
-                read-more-text="Read more"
-                hide-full-text="Read less"
-                class="product__review"
-              />
-              <LazyHydrate>
-                <SfPagination
-                  v-if="Math.ceil(totalReviews/totalReviewPerPage) > 1"
-                  class="products__pagination desktop-only"
-                  :current="currentPage"
-                  :total="Math.ceil(totalReviews/totalReviewPerPage)"
-                  :visible="5"
+                <p class="product__color-label">{{ $t('Color') }}:</p>
+                <SfColor
+                  v-for="(color, i) in option.attributes"
+                  :key="i"
+                  :selected='color.selected'
+                  :color="color.html_color_code"
+                  class="product__color"
+                  @click="updateFilter({ color: `${optionKey}-${i}`})"
+                />
+              </div>
+
+              <SfSelect
+                v-else
+                :key="optionKey"
+                @input="input => updateFilter({ select: input })"
+                :label="option.name"
+                :value="selectedAttribute(optionKey)"
+                :class="`sf-select--underlined product__select-${optionKey.toLowerCase()}`"
+              >
+                <SfSelectOption
+                  v-for="(attribute, attributeKey) in option.attributes"
+                  :key="attributeKey"
+                  :value="`${optionKey}-${attributeKey}`"
+                >{{attribute.name}}</SfSelectOption>
+              </SfSelect>
+            </template>
+
+            <SfAddToCart
+              v-e2e="'product_add-to-cart'"
+              :stock="stock"
+              v-model="qty"
+              :disabled="loading"
+              :canAddToCart="stock > 0"
+              class="product__add-to-cart"
+              @click="addingToCart({ product, quantity: parseInt(qty) })"
+            />
+          </div>
+
+          <LazyHydrate when-idle>
+            <SfTabs :open-tab="1" class="product__tabs">
+              <SfTab title="Description">
+                <div class="product__description" v-html="productGetters.getDescription(product)"></div>
+                <SfProperty
+                  class="product__property"
+                  name="Category"
+                  :value="productGetters.getCategory(product)"
+                ></SfProperty>
+
+                <SfProperty
+                  v-for="(property, i) in productGetters.getProductInfo(product)"
+                  :key="i"
+                  :name="property.name"
+                  :value="property.value"
+                  class="product__property"
                 >
-                  <template #number="{page}">
+                  <template v-if="property.name === 'Category'" #value>
+                    <SfButton class="product__property__button sf-button--text">{{ property.value }}</SfButton>
+                  </template>
+                </SfProperty>
+              </SfTab>
+              <SfTab title="Read reviews">
+                <SfButton
+                  v-if="isAuthenticated"
+                  class="before-results__button"
+                  style="margin-bottom:60px"
+                  @click="addReviewModal=true"
+                >ADD REVIEW</SfButton>
+                <p  v-else>You must be logged in to write comment</p>
+                <!--              TODO: loop over review type instead of API structure -->
+                <SfReview
+                  v-for="review in reviews"
+                  :key="reviewGetters.getReviewId(review)"
+                  :author="reviewGetters.getReviewAuthor(review)"
+                  :date="reviewGetters.getReviewDate(review)"
+                  :message="reviewGetters.getReviewMessage(review)"
+                  :rating="reviewGetters.getReviewRating(review)"
+                  read-more-text="Read more"
+                  hide-full-text="Read less"
+                  class="product__review"
+                />
+                <LazyHydrate>
+                  <SfPagination
+                    v-if="Math.ceil(totalReviews/totalReviewPerPage) > 1"
+                    class="products__pagination desktop-only"
+                    :current="currentPage"
+                    :total="Math.ceil(totalReviews/totalReviewPerPage)"
+                    :visible="5"
+                  >
+                    <template #number="{page}">
                     <span
                       class="sf-pagination__item arrow"
                       :class="{'current': currentPage === page}"
                       @click="goNext(page)"
                     >{{page}}</span>
-                  </template>
+                    </template>
 
-                  <template #next="{isDisabled, go, next}">
-                    <span @click="goNext(currentPage + 1)" class="arrow">&#8594</span>
-                  </template>
+                    <template #next="{isDisabled, go, next}">
+                      <span @click="goNext(currentPage + 1)" class="arrow">&#8594</span>
+                    </template>
 
-                  <template #prev="{isDisabled, go, prev}">
-                    <span @click="goNext(currentPage - 1)" class="arrow">&#8592</span>
-                  </template>
-                </SfPagination>
-              </LazyHydrate>
-            </SfTab>
-            <SfTab title="Additional Information" class="product__additional-info">
-              <div class="product__additional-info">
-                <p class="product__additional-info__title">{{ $t('Brand') }}</p>
-                <p>{{ productGetters.getBrand(product) }}</p>
-              </div>
-            </SfTab>
-          </SfTabs>
-        </LazyHydrate>
+                    <template #prev="{isDisabled, go, prev}">
+                      <span @click="goNext(currentPage - 1)" class="arrow">&#8592</span>
+                    </template>
+                  </SfPagination>
+                </LazyHydrate>
+              </SfTab>
+              <SfTab title="Additional Information" class="product__additional-info">
+                <div class="product__additional-info">
+                  <p class="product__additional-info__title">{{ $t('Brand') }}</p>
+                  <p>{{ productGetters.getBrand(product) }}</p>
+                </div>
+              </SfTab>
+            </SfTabs>
+          </LazyHydrate>
+        </div>
       </div>
+
+      <LazyHydrate when-visible>
+        <RelatedProducts :products="relatedProducts" :loading="relatedLoading" title="Match it with" />
+      </LazyHydrate>
+
+      <LazyHydrate v-if="addReviewModal" >
+        <AddReview :productId="productGetters.getId(product)" @close="addReviewModal = false" />
+      </LazyHydrate>
+
+      <LazyHydrate when-visible>
+        <InstagramFeed />
+      </LazyHydrate>
     </div>
-
-    <LazyHydrate when-visible>
-      <RelatedProducts :products="relatedProducts" :loading="relatedLoading" title="Match it with" />
-    </LazyHydrate>
-
-    <LazyHydrate v-if="addReviewModal" >
-      <AddReview :productId="productGetters.getId(product)" @close="addReviewModal = false" />
-    </LazyHydrate>
-
-    <LazyHydrate when-visible>
-      <InstagramFeed />
-    </LazyHydrate>
-  </div>
+  </SfLoader>
 </template>
 <script>
 import {
@@ -189,7 +198,8 @@ import {
   SfBreadcrumbs,
   SfButton,
   SfColor,
-  SfPagination
+  SfPagination,
+  SfLoader
 } from '@storefront-ui/vue';
 
 import InstagramFeed from '~/components/InstagramFeed.vue';
@@ -241,10 +251,7 @@ export default {
         })[0]
     );
     const options = computed(() =>
-      productGetters.getAttributes(products.value, ['color', 'size'])
-    );
-    const configuration = computed(() =>
-      productGetters.getAttributes(product.value, ['color', 'size'])
+      productGetters.getAttributes(product.value)
     );
     const categories = computed(() =>
       productGetters.getCategoryIds(product.value)
@@ -252,6 +259,16 @@ export default {
     const reviews = computed(() =>
       reviewGetters.getItems(productReviews.value.psdata)
     );
+    const selectedAttribute = (optionKey) => {
+      const option = options.value[Number(optionKey)];
+      const attrs = option.attributes;
+      for (const key in attrs) {
+        if (attrs[key].selected) {
+          return `${optionKey}-${key}`;
+        }
+      }
+      return null;
+    };
 
     // TODO: Breadcrumbs are temporary disabled because productGetters return undefined. We have a mocks in data
     // const breadcrumbs = computed(() => productGetters.getBreadcrumbs ? productGetters.getBreadcrumbs(product.value) : props.fallbackBreadcrumbs);
@@ -265,16 +282,21 @@ export default {
     );
 
     onSSR(async () => {
-      await search({ id });
+      let variant = context.root.$route.query;
+      if (variant && Object.keys(variant).length === 0) {
+        variant = null;
+      }
+      await search({ id, variant: variant });
       await searchRelatedProducts({ featured: true });
       await searchReviews({ productId: id, page: '1' });
     });
 
     const updateFilter = (filter) => {
+      const variant = context.root.$route.query;
       context.root.$router.push({
         path: context.root.$route.path,
         query: {
-          ...configuration.value,
+          ...variant,
           ...filter
         }
       });
@@ -300,10 +322,10 @@ export default {
     };
 
     return {
+      selectedAttribute,
       updateFilter,
       searchReviews,
       sendNotification,
-      configuration,
       product,
       reviews,
       productReviews,
@@ -318,6 +340,7 @@ export default {
       ),
       relatedLoading,
       options,
+      categories,
       qty,
       addItem,
       loading,
@@ -364,7 +387,8 @@ export default {
     InstagramFeed,
     AddReview,
     RelatedProducts,
-    LazyHydrate
+    LazyHydrate,
+    SfLoader
   },
   data() {
     return {

@@ -2,11 +2,13 @@
 export default async function getProduct(context, params) {
   if (params.id) {
     const url = new URL('/rest/productdetail', context.config.api.url);
-
     params.id && url.searchParams.set('product_id', params.id);
-    // params.catId && url.searchParams.set('catId', params.catId);
-    // params.limit && url.searchParams.set('limit', params.limit);
-
+    if (params.refresh) {
+      params.refresh && url.searchParams.set('refresh', params.refresh);
+      for (const i in params.variantObj) {
+        url.searchParams.set(`group[${i}]`, params.variantObj[i]);
+      }
+    }
     const { data } = await context.client.get(url.href);
     return data;
   } else if (params.featured) {

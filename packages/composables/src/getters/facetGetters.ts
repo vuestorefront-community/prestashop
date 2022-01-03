@@ -88,6 +88,11 @@ function getProducts(psdata: any): PsProduct[] {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars,@typescript-eslint/explicit-module-boundary-types
 function getPagination(searchResult): AgnosticPagination {
+  if (!searchResult.data) {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    return {};
+  }
   const pagination = searchResult.data?.pagination;
 
   return {
