@@ -13,13 +13,21 @@ const populateProducts = (psProducts: Array<any>) => {
     coverImageSmall: product.cover_image,
     coverImageMedium: product.cover_image,
     coverImageLarge: product.cover_image,
-    images: product.images.map(
-      (image)=>(<AgnosticMediaGalleryItem>{
+    images: product.images ? product.images.map(
+      (image) => (<AgnosticMediaGalleryItem>{
         small: image.src,
         normal: image.src,
         big: image.src
       }
-      )),
+      ))
+      : ([{
+        small: product.default_image.url,
+        normal: product.default_image.url,
+        big: product.default_image.url
+      }]
+      ),
+    attributes: product.attributes,
+    groups: product.groups,
     description: product.description,
     shortDescription: product.description_short,
     brand: product.manufacturer_name,
