@@ -86,11 +86,11 @@
                 />
               </template>
             </SfProperty>
-            <nuxt-link :to="isAuthenticated ? localePath({ name: 'shipping' }) : localePath({ name: 'user-account' })">
+            <nuxt-link :to="isAuthenticated ? localePath({ name: 'shipping' }) : ''">
               <SfButton
                 v-e2e="'go-to-checkout-btn'"
                 class="sf-button--full-width color-secondary"
-                @click="toggleCartSidebar"
+                @click="goToCheckout"
               >
                 {{ $t('Go to checkout') }}
               </SfButton>
@@ -139,7 +139,7 @@ export default {
     SfQuantitySelector
   },
   setup() {
-    const { isCartSidebarOpen, toggleCartSidebar } = useUiState();
+    const { isCartSidebarOpen, toggleCartSidebar, toggleLoginModal } = useUiState();
     const { cart, removeItem, updateItemQty, load: loadCart, loading } = useCart();
     const { isAuthenticated } = useUser();
     const products = computed(() => cartGetters.getItems(cart.value));
@@ -149,6 +149,13 @@ export default {
     onSSR(async () => {
       await loadCart();
     });
+
+    const goToCheckout = async () => {
+      if (!isAuthenticated.value) {
+        toggleLoginModal();
+      }
+      toggleCartSidebar();
+    };
 
     return {
       loading,
@@ -160,7 +167,8 @@ export default {
       toggleCartSidebar,
       totals,
       totalItems,
-      cartGetters
+      cartGetters,
+      goToCheckout
     };
   }
 };
