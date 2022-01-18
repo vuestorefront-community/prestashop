@@ -52,7 +52,7 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   register: async (context: Context, { email, password, firstName, lastName }) => {
-    const {data, cookieObject} = await context.$prestashop.api.login({email, password, firstName, lastName});
+    const {data, cookieObject} = await context.$prestashop.api.register({email, password, firstName, lastName});
 
     const cookieKey = context.$prestashop.config.app.$config.psCustomerCookieKey;
     const cookieValue = context.$prestashop.config.app.$config.psCustomerCookieValue;
