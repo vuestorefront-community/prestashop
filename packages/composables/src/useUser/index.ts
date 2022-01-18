@@ -22,6 +22,7 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
       if (result.code === 410) {
         return null;
       }
+      return result.psdata;
     } else {
       return null;
     }
@@ -35,9 +36,6 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
     const cookieKey = context.$prestashop.config.app.$config.psCustomerCookieKey;
     const cookieValue = context.$prestashop.config.app.$config.psCustomerCookieValue;
 
-    const key = context.$prestashop.config.app.$cookies.get(cookieKey);
-    const value = context.$prestashop.config.app.$cookies.get(cookieValue);
-
     context.$prestashop.config.app.$cookies.remove(cookieKey);
     context.$prestashop.config.app.$cookies.remove(cookieValue);
 
@@ -46,8 +44,27 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   updateUser: async (context: Context, { currentUser, updatedUserData }) => {
-    console.log('Mocked: useUser.updateUser');
-    return {};
+    const vsfCookieKey = context.$prestashop.config.app.$config.psCustomerCookieKey;
+    const vsfCookieValue = context.$prestashop.config.app.$config.psCustomerCookieValue;
+
+    const psCookieKey = context.$prestashop.config.app.$cookies.get(vsfCookieKey);
+    const psCookieValue = context.$prestashop.config.app.$cookies.get(vsfCookieValue);
+    const { data, cookieObject } = await context.$prestashop.api.updateCustomer({ psCookieKey, psCookieValue, updatedUserData });
+    if (data.success) {
+      if (cookieObject) {
+        context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
+        context.$prestashop.config.app.$cookies.set(vsfCookieValue, cookieObject.vsfPsValCookie);
+      }
+      const cookieKey = context.$prestashop.config.app.$config.psCustomerCookieKey;
+      const cookieValue = context.$prestashop.config.app.$config.psCustomerCookieValue;
+
+      const key = context.$prestashop.config.app.$cookies.get(cookieKey);
+      const value = context.$prestashop.config.app.$cookies.get(cookieValue);
+      if (key && value) {
+        const result: any = await context.$prestashop.api.loadCustomer({key, value});
+        return result.psdata;
+      }
+    }
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -92,9 +109,34 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  changePassword: async (context: Context, { currentUser, currentPassword, newPassword }) => {
-    console.log('Mocked: useUser.changePassword');
-    return {};
+  changePassword: async (context: Context, { currentUser, currentPassword, newPassword, customQuery }) => {
+    const updatedUserData = {
+      password: currentPassword,
+      // eslint-disable-next-line camelcase
+      new_password: newPassword,
+      ...customQuery
+    };
+    const vsfCookieKey = context.$prestashop.config.app.$config.psCustomerCookieKey;
+    const vsfCookieValue = context.$prestashop.config.app.$config.psCustomerCookieValue;
+
+    const psCookieKey = context.$prestashop.config.app.$cookies.get(vsfCookieKey);
+    const psCookieValue = context.$prestashop.config.app.$cookies.get(vsfCookieValue);
+    const { data, cookieObject } = await context.$prestashop.api.updateCustomer({ psCookieKey, psCookieValue, updatedUserData });
+    if (data.success) {
+      if (cookieObject) {
+        context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
+        context.$prestashop.config.app.$cookies.set(vsfCookieValue, cookieObject.vsfPsValCookie);
+      }
+      const cookieKey = context.$prestashop.config.app.$config.psCustomerCookieKey;
+      const cookieValue = context.$prestashop.config.app.$config.psCustomerCookieValue;
+
+      const key = context.$prestashop.config.app.$cookies.get(cookieKey);
+      const value = context.$prestashop.config.app.$cookies.get(cookieValue);
+      if (key && value) {
+        const result: any = await context.$prestashop.api.loadCustomer({key, value});
+        return result.psdata;
+      }
+    }
   }
 };
 
