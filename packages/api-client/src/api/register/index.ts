@@ -12,16 +12,7 @@ export default async function register(context, params) {
     lastName: lastName
   });
 
-  // to get the latest Auth cookie - normally there are two PrestaShop cookies
-  const numberOfCookies = headers['set-cookie'].length;
-  let cookieString = null;
-  for (let i = 0; i < numberOfCookies; i++) {
-    if (headers['set-cookie'][i].includes('PrestaShop')) {
-      cookieString = headers['set-cookie'][i];
-    }
-  }
-
-  const cookieObject = cookieParser(cookieString);
+  const cookieObject = cookieParser(headers);
 
   return {data, cookieObject};
 }
