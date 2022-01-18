@@ -105,7 +105,7 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
       // authentication failed
     }
 
-    return {};
+    return data.psdata.user;
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
