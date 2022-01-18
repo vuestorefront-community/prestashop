@@ -49,7 +49,6 @@ export default {
     const { load, shipping: payment, loading } = usePayment();
     onBeforeMount(async()=>{
       await load();
-      console.log(paymentProviderGetters.getPaymentProvidersList(payment.value))
     });
     return {
       paymentMethods: computed(()=> payment.value ? paymentProviderGetters.getPaymentProvidersList(payment.value) : []),
