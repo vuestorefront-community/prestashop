@@ -69,18 +69,24 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   register: async (context: Context, { email, password, firstName, lastName }) => {
-    const {data, cookieObject} = await context.$prestashop.api.register({email, password, firstName, lastName});
+    const vsfCookieKey = context.$prestashop.config.app.$config.psCustomerCookieKey;
+    const vsfCookieValue = context.$prestashop.config.app.$config.psCustomerCookieValue;
 
-    const cookieKey = context.$prestashop.config.app.$config.psCustomerCookieKey;
-    const cookieValue = context.$prestashop.config.app.$config.psCustomerCookieValue;
+    const psCookieKey = context.$prestashop.config.app.$cookies.get(vsfCookieKey);
+    const psCookieValue = context.$prestashop.config.app.$cookies.get(vsfCookieValue);
+
+    const {data, cookieObject} = await context.$prestashop.api.register({email, password, firstName, lastName, psCookieKey, psCookieValue});
+
     const code = data.code;
 
     if (code === 200) {
-      context.$prestashop.config.app.$cookies.set(cookieKey, cookieObject.vsfPsKeyCookie);
-      context.$prestashop.config.app.$cookies.set(cookieValue, cookieObject.vsfPsValCookie);
+      context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
+      context.$prestashop.config.app.$cookies.set(vsfCookieValue, cookieObject.vsfPsValCookie);
 
     } else if (code === 306) {
-      // authentication failed
+      throw {
+        message: 'Registration failed'
+      };
     }
 
     return {};
@@ -102,7 +108,9 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
       context.$prestashop.config.app.$cookies.set(vsfCookieValue, cookieObject.vsfPsValCookie);
 
     } else if (code === 306) {
-      // authentication failed
+      throw {
+        message: 'The provided credentials are invalid'
+      };
     }
 
     return data.psdata.user;
