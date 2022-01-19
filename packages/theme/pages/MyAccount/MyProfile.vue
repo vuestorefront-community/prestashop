@@ -51,13 +51,18 @@ extend('min', {
 });
 
 extend('password', {
-  validate: value => String(value).length >= 8 && String(value).match(/[A-Za-z]/gi) && String(value).match(/[0-9]/gi),
-  message: 'Password must have at least 8 characters including one letter and a number'
+  validate: value => String(value).length >= 8,
+  message: 'Password must have at least 8 characters'
 });
 
 extend('confirmed', {
   ...confirmed,
   message: 'Passwords don\'t match'
+});
+
+extend('nothavenumber', {
+  validate: value => String(value).match(/^([^0-9]*)$/),
+  message: 'Bad format - Cannot contain a number'
 });
 
 export default {
@@ -84,7 +89,7 @@ export default {
     };
 
     const updatePersonalData = ({ form, onComplete, onError }) => formHandler(() => updateUser({ user: form.value }), onComplete, onError);
-    const updatePassword = ({ form, onComplete, onError }) => formHandler(() => changePassword({ current: form.value.currentPassword, new: form.value.newPassword }), onComplete, onError);
+    const updatePassword = ({ form, onComplete, onError }) => formHandler(() => changePassword({ current: form.value.currentPassword, new: form.value.newPassword, customQuery: form.value.currentUser }), onComplete, onError);
 
     return {
       updatePersonalData,
