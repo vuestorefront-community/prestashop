@@ -37,21 +37,6 @@
       <div class="form__horizontal">
         <ValidationProvider
           v-slot="{ errors }"
-          rules="required"
-          class="form__element"
-        >
-          <SfSelect
-            v-model="form.gender"
-            label="gender"
-            required
-          >
-            <SfSelectOption v-for="option of genderOptions" :key="option.value" :value="option.value">
-              {{option.label}}
-            </SfSelectOption>
-          </SfSelect>
-        </ValidationProvider>
-        <ValidationProvider
-          v-slot="{ errors }"
           rules="required|email"
           class="form__element"
         >
@@ -122,7 +107,9 @@ export default defineComponent({
     }
   },
   emits: ['submit'],
-  setup(props, { emit }) {
+  setup(props, context) {
+    const emit = context.emit;
+    const { $router } = context.root;
     const currentPassword = ref('');
     const genderOptions = [
       { value: 1, label: 'male' },
@@ -143,14 +130,7 @@ export default defineComponent({
       const onComplete = () => {
         form.value = resetForm();
         currentPassword.value = '';
-        sendNotification({
-          id: Symbol('user_updated'),
-          message: 'The user account data was successfully created!',
-          type: 'success',
-          icon: 'check',
-          persist: false,
-          title: 'User Account Update'
-        });
+        $router.push(context.root.localePath({ name: 'shipping' }));
         resetValidationFn();
       };
       const onError = () => {
