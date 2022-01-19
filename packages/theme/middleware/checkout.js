@@ -10,7 +10,7 @@ export default async ({ app, $vsf }) => {
 
   switch (currentPath) {
     case 'payment':
-      const customer = await $vsf.$prestashop.api.loadCustomer({psCookieKey, psCookieValue});
+      const customer = await $vsf.$prestashop.api.loadCustomer({key: psCookieKey, value: psCookieValue});
       if (customer.code === 410) {
         app.context.redirect('/checkout/user-account');
       }
@@ -26,7 +26,7 @@ export default async ({ app, $vsf }) => {
       }
       break;
     case 'shipping':
-      const result = await $vsf.$prestashop.api.loadCustomer({psCookieKey, psCookieValue});
+      const result = await $vsf.$prestashop.api.loadCustomer({key: psCookieKey, value: psCookieValue});
       if (result.code === 410) {
         app.context.redirect('/checkout/user-account');
       }
