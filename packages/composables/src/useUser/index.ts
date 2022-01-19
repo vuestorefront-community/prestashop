@@ -80,7 +80,9 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
       context.$prestashop.config.app.$cookies.set(cookieValue, cookieObject.vsfPsValCookie);
 
     } else if (code === 306) {
-      // authentication failed
+      throw {
+        message: 'Registration failed'
+      };
     }
 
     return {};
@@ -102,7 +104,9 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
       context.$prestashop.config.app.$cookies.set(vsfCookieValue, cookieObject.vsfPsValCookie);
 
     } else if (code === 306) {
-      // authentication failed
+      throw {
+        message: 'The provided credentials are invalid'
+      };
     }
 
     return data.psdata.user;
