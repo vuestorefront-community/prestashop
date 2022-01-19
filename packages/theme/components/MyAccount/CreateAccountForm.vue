@@ -125,7 +125,6 @@ export default defineComponent({
       send: sendNotification
     } = useUiNotification();
     const form = ref(resetForm());
-    console.log(form);
     const submitForm = (resetValidationFn) => () => {
       const onComplete = () => {
         form.value = resetForm();

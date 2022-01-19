@@ -1,7 +1,6 @@
 
 export default async ({ app, $vsf }) => {
   const currentPath = app.context.route.fullPath.split('/checkout/')[1];
-  console.log(currentPath);
 
   const vsfCookieKey = $vsf.$prestashop.config.app.$config.psCustomerCookieKey;
   const vsfCookieValue = $vsf.$prestashop.config.app.$config.psCustomerCookieValue;
