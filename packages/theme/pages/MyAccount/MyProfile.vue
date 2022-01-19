@@ -60,6 +60,11 @@ extend('confirmed', {
   message: 'Passwords don\'t match'
 });
 
+extend('nothavenumber', {
+  validate: value => String(value).match(/^([^0-9]*)$/),
+  message: 'Bad format - Cannot contain a number'
+});
+
 export default {
   name: 'PersonalDetails',
 
