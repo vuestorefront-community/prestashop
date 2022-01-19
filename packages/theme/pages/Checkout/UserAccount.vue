@@ -187,7 +187,7 @@
       </form>
     </div>
     <div v-if="isAuthenticated">
-      You are logged in. <SfLink >Log out</SfLink>
+      You are logged in. <SfLink @click="logOut" >Log out</SfLink>
     </div>
   </ValidationObserver>
 </template>
@@ -239,11 +239,12 @@ export default {
     ValidationObserver,
     VsfShippingProvider: () => import('~/components/Checkout/VsfShippingProvider')
   },
-  setup () {
+  setup (props, context) {
+    const { $router } = context.root;
     const isFormSubmitted = ref(false);
     const { load, save, loading } = useShipping();
     const { toggleLoginModal } = useUiState();
-    const { isAuthenticated } = useUser();
+    const { isAuthenticated, logout } = useUser();
 
     const form = ref({
       firstName: '',
@@ -270,8 +271,14 @@ export default {
       toggleLoginModal();
     };
 
+    const logOut = async () => {
+      await logout();
+      $router.push(context.root.localePath({ name: 'home' }));
+    };
+
     return {
       isAuthenticated,
+      logOut,
       handleAccountClick,
       loading,
       isFormSubmitted,
