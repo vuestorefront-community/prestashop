@@ -151,13 +151,19 @@ export default defineComponent({
           type: 'success',
           icon: 'check',
           persist: false,
-          title: 'User Account'
+          title: 'User Account Update'
         });
         resetValidationFn();
       };
       const onError = () => {
-        form.value = resetForm();
-        currentPassword.value = '';
+        sendNotification({
+          id: Symbol('user_update_failed'),
+          message: 'Could not update user! Check password or lastname, firstname format.',
+          type: 'danger',
+          icon: 'error',
+          persist: false,
+          title: 'User Account Update'
+        });
       };
       if (currentPassword.value) {
         form.value.password = currentPassword.value;
