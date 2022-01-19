@@ -7,184 +7,14 @@
       class="sf-heading--left sf-heading--no-underline title"
     />
     <div v-if="!isAuthenticated">
-      Order as a Guest | <SfLink @click="handleAccountClick">Sign in - Register</SfLink>
-      <form @submit.prevent="handleSubmit(handleFormSubmit)">
-        <div class="form">
-          <ValidationProvider
-            name="firstName"
-            rules="required|min:2"
-            v-slot="{ errors }"
-            slim
-          >
-            <SfInput
-              v-e2e="'shipping-firstName'"
-              v-model="form.firstName"
-              label="First name"
-              name="firstName"
-              class="form__element form__element--half"
-              required
-              :valid="!errors[0]"
-              :errorMessage="errors[0]"
-            />
-          </ValidationProvider>
-          <ValidationProvider
-            name="lastName"
-            rules="required|min:2"
-            v-slot="{ errors }"
-            slim
-          >
-            <SfInput
-              v-e2e="'shipping-lastName'"
-              v-model="form.lastName"
-              label="Last name"
-              name="lastName"
-              class="form__element form__element--half form__element--half-even"
-              required
-              :valid="!errors[0]"
-              :errorMessage="errors[0]"
-            />
-          </ValidationProvider>
-          <ValidationProvider
-            name="streetName"
-            rules="required"
-            v-slot="{ errors }"
-            slim
-          >
-            <SfInput
-              v-e2e="'shipping-streetName'"
-              v-model="form.streetName"
-              label="Street name"
-              name="streetName"
-              class="form__element form__element--half"
-              required
-              :valid="!errors[0]"
-              :errorMessage="errors[0]"
-            />
-          </ValidationProvider>
-          <ValidationProvider
-            name="apartment"
-            rules="required"
-            v-slot="{ errors }"
-            slim
-          >
-            <SfInput
-              v-e2e="'shipping-apartment'"
-              v-model="form.apartment"
-              label="House/Apartment number"
-              name="apartment"
-              class="form__element form__element--half form__element--half-even"
-              required
-              :valid="!errors[0]"
-              :errorMessage="errors[0]"
-            />
-          </ValidationProvider>
-          <ValidationProvider
-            name="city"
-            rules="required"
-            v-slot="{ errors }"
-            slim
-          >
-            <SfInput
-              v-e2e="'shipping-city'"
-              v-model="form.city"
-              label="City"
-              name="city"
-              class="form__element form__element--half"
-              required
-              :valid="!errors[0]"
-              :errorMessage="errors[0]"
-            />
-          </ValidationProvider>
-          <ValidationProvider
-            name="state"
-            slim
-          >
-            <SfInput
-              v-e2e="'shipping-state'"
-              v-model="form.state"
-              label="State/Province"
-              name="state"
-              class="form__element form__element--half form__element--half-even"
-            />
-          </ValidationProvider>
-          <ValidationProvider
-            name="country"
-            rules="required|min:2"
-            v-slot="{ errors }"
-            slim
-          >
-            <SfSelect
-              v-e2e="'shipping-country'"
-              v-model="form.country"
-              label="Country"
-              name="country"
-              class="form__element form__element--half form__select sf-select--underlined"
-              required
-              :valid="!errors[0]"
-              :errorMessage="errors[0]"
-            >
-              <SfSelectOption
-                v-for="countryOption in countries"
-                :key="countryOption.key"
-                :value="countryOption.key"
-              >
-                {{ countryOption.label }}
-              </SfSelectOption>
-            </SfSelect>
-          </ValidationProvider>
-          <ValidationProvider
-            name="zipCode"
-            rules="required|min:2"
-            v-slot="{ errors }"
-            slim
-          >
-            <SfInput
-              v-e2e="'shipping-zipcode'"
-              v-model="form.postalCode"
-              label="Zip-code"
-              name="zipCode"
-              class="form__element form__element--half form__element--half-even"
-              required
-              :valid="!errors[0]"
-              :errorMessage="errors[0]"
-            />
-          </ValidationProvider>
-          <ValidationProvider
-            name="phone"
-            rules="required|digits:9"
-            v-slot="{ errors }"
-            slim
-          >
-            <SfInput
-              v-e2e="'shipping-phone'"
-              v-model="form.phone"
-              label="Phone number"
-              name="phone"
-              class="form__element form__element--half"
-              required
-              :valid="!errors[0]"
-              :errorMessage="errors[0]"
-            />
-          </ValidationProvider>
-        </div>
-        <div class="form">
-          <div class="form__action">
-            <SfButton
-              v-e2e="'select-shipping'"
-              v-if="!isFormSubmitted"
-              :disabled="loading"
-              class="form__action-button"
-              type="submit"
-            >
-              {{ $t('Select shipping method') }}
-            </SfButton>
-          </div>
-        </div>
-        <VsfShippingProvider
-          v-if="isFormSubmitted"
-          @submit="$router.push(localePath({ name: 'billing' }))"
-        />
-      </form>
+      <div class="mb-20">
+        Register |
+        <SfButton class="sf-button--text" @click="handleAccountClick">
+          {{ $t('Sign in') }}
+        </SfButton>
+      </div>
+
+      <CreateAccountForm @submit="updatePersonalData"/>
     </div>
     <div v-if="isAuthenticated">
       You are logged in. <SfLink @click="logOut" >Log out</SfLink>
@@ -206,6 +36,7 @@ import { onSSR } from '@vue-storefront/core';
 import {useShipping, useUser} from '@vue-storefront/prestashop';
 import { required, min, digits } from 'vee-validate/dist/rules';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
+import CreateAccountForm from '~/components/MyAccount/CreateAccountForm';
 
 const COUNTRIES = [
   { key: 'US', label: 'United States' },
@@ -237,6 +68,7 @@ export default {
     SfLink,
     ValidationProvider,
     ValidationObserver,
+    CreateAccountForm,
     VsfShippingProvider: () => import('~/components/Checkout/VsfShippingProvider')
   },
   setup (props, context) {
@@ -244,7 +76,7 @@ export default {
     const isFormSubmitted = ref(false);
     const { load, save, loading } = useShipping();
     const { toggleLoginModal } = useUiState();
-    const { isAuthenticated, logout } = useUser();
+    const { isAuthenticated, logout, register } = useUser();
 
     const form = ref({
       firstName: '',
@@ -276,6 +108,17 @@ export default {
       $router.push(context.root.localePath({ name: 'home' }));
     };
 
+    const formHandler = async (fn, onComplete, onError) => {
+      try {
+        const data = await fn();
+        await onComplete(data);
+      } catch (error) {
+        onError(error);
+      }
+    };
+
+    const updatePersonalData = ({ form, onComplete, onError }) => formHandler(() => register({ user: form.value }), onComplete, onError);
+
     return {
       isAuthenticated,
       logOut,
@@ -284,7 +127,8 @@ export default {
       isFormSubmitted,
       form,
       countries: COUNTRIES,
-      handleFormSubmit
+      handleFormSubmit,
+      updatePersonalData
     };
   }
 };
@@ -373,5 +217,9 @@ export default {
 
 .title {
   margin: var(--spacer-xl) 0 var(--spacer-base) 0;
+}
+
+.mb-20{
+  margin-bottom: 20px;
 }
 </style>
