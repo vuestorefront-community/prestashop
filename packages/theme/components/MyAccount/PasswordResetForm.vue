@@ -80,8 +80,7 @@ export default defineComponent({
         firstName: userGetters.getFirstName(user.value),
         lastName: userGetters.getLastName(user.value),
         email: userGetters.getEmailAddress(user.value),
-        gender: userGetters.getGender(user.value),
-        birthday: userGetters.getBirthday(user.value)
+        gender: userGetters.getGender(user.value)
       },
       currentPassword: '',
       newPassword: '',
