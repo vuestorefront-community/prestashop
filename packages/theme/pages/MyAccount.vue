@@ -19,18 +19,6 @@
         <SfContentPage title="Shipping details">
           <ShippingDetails />
         </SfContentPage>
-
-        <SfContentPage title="Billing details">
-          <BillingDetails />
-        </SfContentPage>
-
-<!--        <SfContentPage title="Loyalty card">-->
-<!--          <LoyaltyCard />-->
-<!--        </SfContentPage>-->
-
-<!--        <SfContentPage title="My newsletter">-->
-<!--          <MyNewsletter />-->
-<!--        </SfContentPage>-->
       </SfContentCategory>
 
       <SfContentCategory title="Order details">
