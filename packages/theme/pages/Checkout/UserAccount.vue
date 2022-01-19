@@ -34,7 +34,7 @@ import { ref } from '@vue/composition-api';
 import { useUiState } from '~/composables';
 import { onSSR } from '@vue-storefront/core';
 import {useShipping, useUser} from '@vue-storefront/prestashop';
-import { required, min, digits } from 'vee-validate/dist/rules';
+import {required, min, digits, email, confirmed} from 'vee-validate/dist/rules';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 import CreateAccountForm from '~/components/MyAccount/CreateAccountForm';
 
@@ -45,17 +45,34 @@ const COUNTRIES = [
   { key: 'PL', label: 'Poland' }
 ];
 
+extend('email', {
+  ...email,
+  message: 'Invalid email'
+});
+
 extend('required', {
   ...required,
   message: 'This field is required'
 });
+
 extend('min', {
   ...min,
   message: 'The field should have at least {length} characters'
 });
-extend('digits', {
-  ...digits,
-  message: 'Please provide a valid phone number'
+
+extend('password', {
+  validate: value => String(value).length >= 8,
+  message: 'Password must have at least 8 characters'
+});
+
+extend('confirmed', {
+  ...confirmed,
+  message: 'Passwords don\'t match'
+});
+
+extend('nothavenumber', {
+  validate: value => String(value).match(/^([^0-9]*)$/),
+  message: 'Bad format - Cannot contain a number'
 });
 
 export default {

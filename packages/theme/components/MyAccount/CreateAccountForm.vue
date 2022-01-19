@@ -86,7 +86,7 @@
       <SfButton
         class="form__button"
       >
-        {{ $t('Update personal data') }}
+        {{ $t('Submit') }}
       </SfButton>
     </form>
   </ValidationObserver>
@@ -95,7 +95,6 @@
 <script>
 import { defineComponent, ref } from '@nuxtjs/composition-api';
 import { ValidationProvider, ValidationObserver } from 'vee-validate';
-import { useUser, userGetters } from '@vue-storefront/prestashop';
 import {
   SfInput,
   SfButton,
@@ -124,17 +123,16 @@ export default defineComponent({
   },
   emits: ['submit'],
   setup(props, { emit }) {
-    const { user } = useUser();
     const currentPassword = ref('');
     const genderOptions = [
       { value: 1, label: 'male' },
       { value: 2, label: 'female' }
     ];
     const resetForm = () => ({
-      firstName: userGetters.getFirstName(user.value),
-      lastName: userGetters.getLastName(user.value),
-      email: userGetters.getEmailAddress(user.value),
-      gender: userGetters.getGender(user.value)
+      firstName: '',
+      lastName: '',
+      email: '',
+      gender: ''
     });
     const {
       send: sendNotification
@@ -147,7 +145,7 @@ export default defineComponent({
         currentPassword.value = '';
         sendNotification({
           id: Symbol('user_updated'),
-          message: 'The user account data was successfully updated!',
+          message: 'The user account data was successfully created!',
           type: 'success',
           icon: 'check',
           persist: false,
