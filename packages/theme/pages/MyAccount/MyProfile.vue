@@ -51,8 +51,8 @@ extend('min', {
 });
 
 extend('password', {
-  validate: value => String(value).length >= 8 && String(value).match(/[A-Za-z]/gi) && String(value).match(/[0-9]/gi),
-  message: 'Password must have at least 8 characters including one letter and a number'
+  validate: value => String(value).length >= 8,
+  message: 'Password must have at least 8 characters'
 });
 
 extend('confirmed', {
