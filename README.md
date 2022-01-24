@@ -4,7 +4,7 @@
 
 ## Vue Storefront 2 integration with PrestaShop
 
-This integration is being maintained by [Binshops](https://www.binshops.com)
+This integration is being maintained by [Binshops](https://www.binshops.com).
 
 ------
 
@@ -33,7 +33,7 @@ Want to contribute? Ping us on `prestashop` channel on [our Discord](https://dis
 
 ## Resources
 
-- [Vue Storeftont Tutorial](https://www.binshops.com/tutorial/vue-storefront-tutorial) If you are new to Vue Storefront, you follow this tutorial.
+- [Vue Storeftont Tutorial](https://www.binshops.com/tutorial/vue-storefront-tutorial) If you are new to Vue Storefront, you can check this tutorial.
 - [Vue Storefront Documentation](https://docs.vuestorefront.io/v2/)
 - [PrestaShop integration Documentation](https://docs.vuestorefront.io/prestashop)
 - [Community Chat](https://discord.vuestorefront.io)
