@@ -17,13 +17,9 @@ This integration is being maintained by [Binshops](https://www.binshops.com).
    ```
     git clone https://github.com/vuestorefront-community/prestashop.git
     ```
-3. Rename your project, replace `{YOUR INTEGRATION NAME}` with yours:
-   ```
-   grep -rl '<% INTEGRATION %>' ./ | xargs sed -i '' 's/<% INTEGRATION %>/{YOUR INTEGRATION NAME}/g' 
-   ```
-4. Run `yarn` to install dependencies
-5. Change the API url to your shop in this file: `packages/theme/middleware.config.js`
-6. Run these commands to build `yarn build` and run `yarn dev` your project.
+3. Run `yarn` to install dependencies
+4. Change the API url to your shop in this file: `packages/theme/middleware.config.js`
+5. Run these commands to build `yarn build` and run `yarn dev` your project.
 
 - If you need HMR on Api Client/Composables run `yarn dev:api-client` or `yarn dev:composables` on a separate terminal window.
 
