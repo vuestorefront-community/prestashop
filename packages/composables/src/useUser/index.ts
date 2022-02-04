@@ -83,6 +83,12 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
       context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
       context.$prestashop.config.app.$cookies.set(vsfCookieValue, cookieObject.vsfPsValCookie);
 
+      const result: any = await context.$prestashop.api.loadCustomer({key: cookieObject.vsfPsKeyCookie, value: cookieObject.vsfPsValCookie});
+      if (result.code === 410) {
+        return {};
+      }
+      return result.psdata;
+
     } else if (code === 306) {
       throw {
         message: 'Registration failed'
