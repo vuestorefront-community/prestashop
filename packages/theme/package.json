@@ -1,6 +1,6 @@
 {
   "name": "@vue-storefront/prestashop-theme",
-  "version": "2.4.3",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "build": "nuxt build -m",
@@ -20,13 +20,13 @@
   },
   "dependencies": {
     "@nuxtjs/pwa": "^3.3.5",
-    "@storefront-ui/vue": "0.11.0-rc.1",
-    "@vue-storefront/middleware": "~2.4.3",
-    "@vue-storefront/nuxt": "~2.4.3",
-    "@vue-storefront/nuxt-theme": "~2.4.3",
-    "@vue-storefront/prestashop": "~2.4.3",
+    "@storefront-ui/vue": "^0.12.1",
+    "@vue-storefront/middleware": "~2.5.4",
+    "@vue-storefront/nuxt": "~2.5.4",
+    "@vue-storefront/nuxt-theme": "~2.5.4",
+    "@vue-storefront/prestashop": "1.0.0",
     "cookie-universal-nuxt": "^2.1.5",
-    "core-js": "^3.16.1",
+    "core-js": "^3.19.0",
     "nuxt": "^2.15.7",
     "nuxt-i18n": "^6.5.0",
     "vee-validate": "^3.4.11",

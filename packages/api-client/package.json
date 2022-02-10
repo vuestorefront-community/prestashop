@@ -1,6 +1,6 @@
 {
   "name": "@vue-storefront/prestashop-api",
-  "version": "2.4.3",
+  "version": "1.0.0",
   "private": true,
   "sideEffects": false,
   "server": "server/index.js",
@@ -17,7 +17,7 @@
     "update:update": "ncu -u"
   },
   "dependencies": {
-    "@vue-storefront/core": "~2.4.3",
+    "@vue-storefront/core": "~2.5.4",
     "axios": "^0.23.0"
   },
   "devDependencies": {
