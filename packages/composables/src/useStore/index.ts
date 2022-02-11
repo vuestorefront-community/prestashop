@@ -1,4 +1,4 @@
-import { Store } from '@vue-storefront/__replace_me__-api';
+import { Store } from '@vue-storefront/prestashop-api';
 import { Context, useStoreFactory } from '@vue-storefront/core';
 
 export const useStore = useStoreFactory<Store>({
