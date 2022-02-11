@@ -102,7 +102,6 @@
               :link="localePath(`/p/${productGetters.getId(product)}/${productGetters.getSlug(product)}`)"
               class="products__product-card"
               @click:add-to-cart="HandleAddToCart({ product, quantity:1 })"
-              :wishlist-icon="[]"
             />
           </transition-group>
           <transition-group
