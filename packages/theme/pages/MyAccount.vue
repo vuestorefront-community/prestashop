@@ -16,8 +16,8 @@
           <MyProfile />
         </SfContentPage>
 
-        <SfContentPage title="Shipping details">
-          <ShippingDetails />
+        <SfContentPage title="Addresses">
+          <Addresses />
         </SfContentPage>
       </SfContentCategory>
 
@@ -40,7 +40,7 @@ import { SfBreadcrumbs, SfContentPages } from '@storefront-ui/vue';
 import { computed, onBeforeUnmount } from '@vue/composition-api';
 import { useUser } from '@vue-storefront/prestashop';
 import MyProfile from './MyAccount/MyProfile';
-import ShippingDetails from './MyAccount/ShippingDetails';
+import Addresses from './MyAccount/Addresses';
 import BillingDetails from './MyAccount/BillingDetails';
 import LoyaltyCard from './MyAccount/LoyaltyCard';
 import MyNewsletter from './MyAccount/MyNewsletter';
@@ -57,7 +57,7 @@ export default {
     SfBreadcrumbs,
     SfContentPages,
     MyProfile,
-    ShippingDetails,
+    Addresses,
     BillingDetails,
     LoyaltyCard,
     MyNewsletter,
