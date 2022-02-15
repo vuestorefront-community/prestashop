@@ -1,85 +1,69 @@
 <template>
-  <transition name="fade">
-    <SfTabs
-      v-if="edittingAddress"
-      key="edit-address"
-      :open-tab="1"
-      class="tab-orphan"
+  <ValidationObserver v-slot="{ handleSubmit }">
+    <SfHeading
+      v-e2e="'addresses-heading'"
+      :level="3"
+      :title="$t('Addresses')"
+      class="sf-heading--left sf-heading--no-underline title"
+    />
+
+    <div
+      v-if='addressesList.length >= 1 && !addressFormVisibility'
     >
-      <SfTab
-        :title="isNewAddress ? 'Add the address' : 'Update the address'">
-        <p class="message">
-          {{ $t('Contact details updated') }}
-        </p>
-
-        <ShippingAddressForm
-          :address="activeAddress"
-          :isNew="isNewAddress"
-          @submit="saveAddress" />
-      </SfTab>
-    </SfTabs>
-
-    <SfTabs
-      v-else
-      :open-tab="1"
-      key="address-list"
-      class="tab-orphan">
-      <SfTab title="Shipping details">
-        <p class="message">
-          {{ $t('Manage shipping addresses') }}
-        </p>
-        <transition-group tag="div" name="fade" class="shipping-list">
-          <div
-            v-for="address in addresses"
-            :key="userShippingGetters.getId(address)"
-            class="shipping">
-            <div class="shipping__content">
-              <div class="shipping__address">
-                <UserShippingAddress :address="address" />
-              </div>
-            </div>
-            <div class="shipping__actions">
-              <SfIcon
-                icon="cross"
-                color="gray"
-                size="14px"
-                role="button"
-                class="smartphone-only"
-                @click="removeAddress(address)"
-              />
-              <SfButton
-                @click="changeAddress(address)">
-                {{ $t('Change') }}
-              </SfButton>
-
-              <SfButton
-                class="color-light shipping__button-delete desktop-only"
-                @click="removeAddress(address)">
-                {{ $t('Delete') }}
-              </SfButton>
+      <SfLoader :class="{ loading }" :loading="loading">
+        <div
+          v-for="address in addressesList"
+          :key="address.id"
+          class="shipping">
+          <div class="shipping__content">
+            <div class="shipping__address">
+              <UserShippingAddress :address="address" />
             </div>
           </div>
-        </transition-group>
-        <SfButton
-          class="action-button"
-          @click="changeAddress()">
-          {{ $t('Add new address') }}
-        </SfButton>
-      </SfTab>
-    </SfTabs>
-  </transition>
+          <div class="shipping__actions">
+            <SfIcon
+              icon="cross"
+              color="gray"
+              size="14px"
+              role="button"
+              class="smartphone-only"
+              @click="removeAddress(address)"
+            />
+            <SfButton
+              @click="editAddress(address)">
+              {{ $t('Change') }}
+            </SfButton>
+
+            <SfButton
+              class="color-light shipping__button-delete desktop-only"
+              @click="removeAddress(address)">
+              {{ $t('Delete') }}
+            </SfButton>
+          </div>
+        </div>
+      </SfLoader>
+    </div>
+
+      <address-form v-else-if='isEdit' edit :addressForEdit='addressForEdit' :addressesCount='addressesList.length' @toggle='toggleAddressFormVisibility' />
+      <address-form v-else :addressesCount='addressesList.length' @toggle='toggleAddressFormVisibility' />
+
+  </ValidationObserver>
 </template>
 <script>
 import {
+  SfHeading,
   SfTabs,
   SfButton,
-  SfIcon
+  SfIcon,
+  SfLoader,
+  SfAddressPicker
 } from '@storefront-ui/vue';
 import UserShippingAddress from '~/components/UserShippingAddress';
 import ShippingAddressForm from '~/components/MyAccount/ShippingAddressForm';
 import { useUserShipping, userShippingGetters } from '@vue-storefront/prestashop';
 import { ref, computed } from '@vue/composition-api';
 import { onSSR } from '@vue-storefront/core';
+import { ValidationObserver, extend } from 'vee-validate';
 
 export default {
   name: 'Addresses',
@@ -88,48 +72,62 @@ export default {
     SfButton,
     SfIcon,
     UserShippingAddress,
-    ShippingAddressForm
+    ShippingAddressForm,
+    ValidationObserver,
+    SfHeading,
+    SfLoader,
+    SfAddressPicker,
+    AddressForm: () => import('../../components/AddressForm.vue')
   },
   setup() {
-    const { shipping, load: loadUserShipping, addAddress, deleteAddress, updateAddress } = useUserShipping();
-    const addresses = computed(() => userShippingGetters.getAddresses(shipping.value));
-    const edittingAddress = ref(false);
-    const activeAddress = ref(undefined);
-    const isNewAddress = computed(() => !activeAddress.value);
-
-    const changeAddress = (address = undefined) => {
-      activeAddress.value = address;
-      edittingAddress.value = true;
+    const isFormSubmitted = ref(false);
+    const { shipping, load, setDefaultAddress, loading, deleteAddress } = useUserShipping();
+    const selectedAddress = ref(null);
+    const addressFormVisibility = ref(false);
+    const addressForEdit = ref(null);
+    const isEdit = ref(false);
+    const addressesList = computed(()=> shipping.value ? userShippingGetters.getAddresses(shipping.value) : []);
+    const toggleAddressFormVisibility = (() => addressFormVisibility.value = !addressFormVisibility.value);
+    const removeAddress = async (id) => {
+      await deleteAddress({address: {id: id} });
     };
 
-    const removeAddress = address => deleteAddress({ address });
-
-    const saveAddress = async ({ form, onComplete, onError }) => {
-      try {
-        const actionMethod = isNewAddress.value ? addAddress : updateAddress;
-        const data = await actionMethod({ address: form });
-        edittingAddress.value = false;
-        activeAddress.value = undefined;
-        await onComplete(data);
-      } catch (error) {
-        onError(error);
-      }
+    const addNewAddress = () => {
+      addressForEdit.value = null;
+      isEdit.value = false;
+      toggleAddressFormVisibility();
+    };
+    const editAddress = (address) => {
+      addressForEdit.value = address;
+      isEdit.value = true;
+      toggleAddressFormVisibility();
+    };
+    const handleSelectedAddressSubmit = async() => {
+      await setDefaultAddress({address: {id: selectedAddress.value} });
+      isFormSubmitted.value = true;
+    };
+    const goBack = () => {
+      isFormSubmitted.value = false;
     };
 
     onSSR(async () => {
-      await loadUserShipping();
+      await load();
     });
 
     return {
-      changeAddress,
-      updateAddress,
+      addressesList,
+      selectedAddress,
+      loading,
+      isFormSubmitted,
+      addressFormVisibility,
+      toggleAddressFormVisibility,
+      handleSelectedAddressSubmit,
       removeAddress,
-      saveAddress,
-      userShippingGetters,
-      addresses,
-      edittingAddress,
-      activeAddress,
-      isNewAddress
+      editAddress,
+      isEdit,
+      addNewAddress,
+      addressForEdit,
+      goBack
     };
   }
 };
@@ -209,5 +207,16 @@ export default {
       }
     }
   }
+}
+
+.flex-row{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  border-top: 1px dotted grey ;
+}
+
+.address-picker{
+  margin-bottom:2rem
 }
 </style>
