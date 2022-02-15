@@ -26,9 +26,6 @@
           <OrderHistory />
         </SfContentPage>
 
-<!--        <SfContentPage title="My reviews">-->
-<!--          <MyReviews />-->
-<!--        </SfContentPage>-->
       </SfContentCategory>
 
       <SfContentPage title="Log out" />
