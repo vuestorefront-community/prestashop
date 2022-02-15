@@ -11,7 +11,7 @@
       >
         <SfInput
           v-e2e="'shipping-alias'"
-          v-model.trim="form.alias"
+          v-model="form.alias"
           label="alias"
           name="alias"
           class="form__element form__element--half"
@@ -97,7 +97,7 @@
       >
         <SfInput
           v-e2e="'shipping-city'"
-          v-model.trim="form.city"
+          v-model="form.city"
           label="City"
           name="city"
           class="form__element form__element--half"
@@ -131,7 +131,7 @@
       >
         <SfInput
           v-e2e="'shipping-address'"
-          v-model.trim="form.address1"
+          v-model="form.address1"
           label="Address"
           name="address"
           class="form__element form__element--half"
@@ -147,7 +147,7 @@
       >
         <SfInput
           v-e2e="'shipping-address2'"
-          v-model.trim="form.address2"
+          v-model="form.address2"
           label="Address2"
           name="address2"
           class="form__element form__element--half form__element--half-even"
