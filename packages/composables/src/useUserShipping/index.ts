@@ -28,7 +28,6 @@ const params: UseUserShippingFactoryParams<Address, AddressItem> = {
       }
       return data.psdata;
     } else {
-      // add to cart failed
       return {};
     }
   },
@@ -53,7 +52,6 @@ const params: UseUserShippingFactoryParams<Address, AddressItem> = {
       }
       return data.psdata;
     } else {
-      // add to cart failed
       return {};
     }
   },
@@ -76,7 +74,6 @@ const params: UseUserShippingFactoryParams<Address, AddressItem> = {
       }
       return data.psdata;
     } else {
-      // add to cart failed
       return {};
     }
   },
@@ -96,7 +93,6 @@ const params: UseUserShippingFactoryParams<Address, AddressItem> = {
       }
       return data.psdata;
     } else {
-      // add to cart failed
       return {};
     }
   },
@@ -123,7 +119,6 @@ const params: UseUserShippingFactoryParams<Address, AddressItem> = {
       }
       return data.psdata;
     } else {
-      // add to cart failed
       return {};
     }
   }

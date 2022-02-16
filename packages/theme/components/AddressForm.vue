@@ -108,7 +108,7 @@
       </ValidationProvider>
       <ValidationProvider
         name="zipCode"
-        rules="required|min:2"
+        :rules="`${needZipCode ? 'required|zipcode:' + zipCodeFormat : ''}`"
         v-slot="{ errors }"
         slim
       >
@@ -221,6 +221,21 @@ extend('digits', {
   message: 'Please provide a valid phone number'
 });
 
+extend('zipcode', (data, input) => {
+  let format = input[0];
+  format = format.replace(/N/g, '\\d');
+  format = format.replace(/L/g, '[a-zA-Z]');
+
+  const regexStr = '^' + format + '$';
+
+  const re = new RegExp(regexStr);
+  if (re.test(data)) {
+    return true;
+  } else {
+    return 'Zip Code format: ' + input[0];
+  }
+});
+
 export default {
   name: 'AddressForm',
   components: {
@@ -289,6 +304,11 @@ export default {
     });
     const countriesList = computed(() => countries.value ? countryGetters.getCountriesList(countries.value.countries) : []);
     const statesList = computed(() => selectedCountry.value && countriesList.value.length >= 1 ? countriesList.value.find(el => el.id === selectedCountry.value).states : []);
+
+    const zipCodeFormat = computed(() => selectedCountry.value && countriesList.value.length >= 1 ? countriesList.value.find(el => el.id === selectedCountry.value).zipCodeFormat : []);
+
+    const needZipCode = computed(() => selectedCountry.value && countriesList.value.length >= 1 ? countriesList.value.find(el => el.id === selectedCountry.value).needZipCode : []);
+
     const isStatesRequired = computed(() => (statesList.value && statesList.value.length >= 1));
     const removeAddress = async (id) => {
       await deleteAddress({ address: { id: id } });
@@ -328,7 +348,9 @@ export default {
       handleFormSubmit,
       isStatesRequired,
       removeAddress,
-      toggleAddNewAddress
+      toggleAddNewAddress,
+      zipCodeFormat,
+      needZipCode
     };
   }
 };

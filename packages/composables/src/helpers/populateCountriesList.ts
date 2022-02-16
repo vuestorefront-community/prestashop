@@ -9,7 +9,8 @@ const populateCountriesList = (countriesObs) => {
       name: country.name,
       iso: country.iso_code,
       needZipCode: country.need_zip_code,
-      states: country.states
+      states: country.states,
+      zipCodeFormat: country.zip_code_format
     };
     populatedCountriesList.push(features);
   }
