@@ -11,7 +11,7 @@
       >
         <SfInput
           v-e2e="'shipping-alias'"
-          v-model.trim="form.alias"
+          v-model="form.alias"
           label="alias"
           name="alias"
           class="form__element form__element--half"
@@ -97,7 +97,7 @@
       >
         <SfInput
           v-e2e="'shipping-city'"
-          v-model.trim="form.city"
+          v-model="form.city"
           label="City"
           name="city"
           class="form__element form__element--half"
@@ -108,7 +108,7 @@
       </ValidationProvider>
       <ValidationProvider
         name="zipCode"
-        rules="required|min:2"
+        :rules="`${needZipCode ? 'required|zipcode:' + zipCodeFormat : ''}`"
         v-slot="{ errors }"
         slim
       >
@@ -131,7 +131,7 @@
       >
         <SfInput
           v-e2e="'shipping-address'"
-          v-model.trim="form.address1"
+          v-model="form.address1"
           label="Address"
           name="address"
           class="form__element form__element--half"
@@ -147,7 +147,7 @@
       >
         <SfInput
           v-e2e="'shipping-address2'"
-          v-model.trim="form.address2"
+          v-model="form.address2"
           label="Address2"
           name="address2"
           class="form__element form__element--half form__element--half-even"
@@ -221,6 +221,21 @@ extend('digits', {
   message: 'Please provide a valid phone number'
 });
 
+extend('zipcode', (data, input) => {
+  let format = input[0];
+  format = format.replace(/N/g, '\\d');
+  format = format.replace(/L/g, '[a-zA-Z]');
+
+  const regexStr = '^' + format + '$';
+
+  const re = new RegExp(regexStr);
+  if (re.test(data)) {
+    return true;
+  } else {
+    return 'Zip Code format: ' + input[0];
+  }
+});
+
 export default {
   name: 'AddressForm',
   components: {
@@ -289,6 +304,11 @@ export default {
     });
     const countriesList = computed(() => countries.value ? countryGetters.getCountriesList(countries.value.countries) : []);
     const statesList = computed(() => selectedCountry.value && countriesList.value.length >= 1 ? countriesList.value.find(el => el.id === selectedCountry.value).states : []);
+
+    const zipCodeFormat = computed(() => selectedCountry.value && countriesList.value.length >= 1 ? countriesList.value.find(el => el.id === selectedCountry.value).zipCodeFormat : []);
+
+    const needZipCode = computed(() => selectedCountry.value && countriesList.value.length >= 1 ? countriesList.value.find(el => el.id === selectedCountry.value).needZipCode : []);
+
     const isStatesRequired = computed(() => (statesList.value && statesList.value.length >= 1));
     const removeAddress = async (id) => {
       await deleteAddress({ address: { id: id } });
@@ -328,7 +348,9 @@ export default {
       handleFormSubmit,
       isStatesRequired,
       removeAddress,
-      toggleAddNewAddress
+      toggleAddNewAddress,
+      zipCodeFormat,
+      needZipCode
     };
   }
 };
