@@ -3304,18 +3304,18 @@
   dependencies:
     "@sinonjs/commons" "^1.7.0"
 
-"@storefront-ui/shared@0.12.1":
-  version "0.12.1"
-  resolved "https://registry.yarnpkg.com/@storefront-ui/shared/-/shared-0.12.1.tgz#28828dfdcd43474a4693139bccb6ece1b2608026"
-  integrity sha512-/Awv/ZuTYpQryBGWy5Kem1YMxYyKtPWKNSlXOohmUk1lY6aExXrWhV+caRMngiNjIvqAzcjyk0cEJFizMW2QnQ==
+"@storefront-ui/shared@0.11.4":
+  version "0.11.4"
+  resolved "https://registry.yarnpkg.com/@storefront-ui/shared/-/shared-0.11.4.tgz#a56c1e7379b0398d9529ea316abe9581051e4c48"
+  integrity sha512-w7/Vng6YaNDJHMksdQc6tPOeCSuU7hgglXwvQzyekKbSSnObd+U31O1GzcdWS/bkmt1rzP87bX0pkNHs0Z5GTg==
 
-"@storefront-ui/vue@^0.12.1":
-  version "0.12.1"
-  resolved "https://registry.yarnpkg.com/@storefront-ui/vue/-/vue-0.12.1.tgz#cdd2afd59bf7b931cb68573e3bd6ba2aaad4cca6"
-  integrity sha512-mfb8JmEc8Yt2wgIhirsY28/BdtSVuvJ3Zlf4arA+anmWlIX6QhDwLeja/cRNzjEUKXYRrFln9XZMxF4MPs4/Aw==
+"@storefront-ui/vue@0.11.4":
+  version "0.11.4"
+  resolved "https://registry.yarnpkg.com/@storefront-ui/vue/-/vue-0.11.4.tgz#81cdbe947d13dfd67ceb7484c46b6d3e2d6cee87"
+  integrity sha512-sc3hOEgusyEH1AO8SOfD6m6t/38B6K8FKyYtYpIHdnxvC7fYPFWSsz8AUbGZvbaI2TQDUaZB23d6dQ2ROQOF/g==
   dependencies:
     "@glidejs/glide" "^3.3.0"
-    "@storefront-ui/shared" "0.12.1"
+    "@storefront-ui/shared" "0.11.4"
     body-scroll-lock "^3.0.1"
     cloudinary-build-url "^0.1.1"
     core-js "^3.6.5"
