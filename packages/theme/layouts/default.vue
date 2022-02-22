@@ -3,16 +3,13 @@
     <LazyHydrate when-visible>
       <TopBar class="desktop-only" />
     </LazyHydrate>
-    <LazyHydrate when-idle>
-      <AppHeader />
-    </LazyHydrate>
+
+    <AppHeader />
 
     <div id="layout">
       <nuxt :key="$route.fullPath"/>
 
-      <LazyHydrate when-visible>
-        <BottomNavigation />
-      </LazyHydrate>
+      <BottomNavigation />
       <CartSidebar />
       <WishlistSidebar />
       <LoginModal />
@@ -34,24 +31,13 @@ import WishlistSidebar from '~/components/WishlistSidebar.vue';
 import LoginModal from '~/components/LoginModal.vue';
 import LazyHydrate from 'vue-lazy-hydration';
 import Notification from '~/components/Notification';
-import {
-  useBootstrap
-} from '@vue-storefront/prestashop';
 import { onSSR } from '@vue-storefront/core';
+import { useRoute } from '@nuxtjs/composition-api';
+import { useCart, useStore, useUser, useWishlist, useBootstrap } from '@vue-storefront/prestashop';
 
 export default {
   name: 'DefaultLayout',
 
-  setup() {
-    const {
-      boot: boot
-    } = useBootstrap();
-
-    onSSR(async () => {
-      await boot();
-    });
-
-  },
   components: {
     LazyHydrate,
     TopBar,
@@ -62,6 +48,35 @@ export default {
     WishlistSidebar,
     LoginModal,
     Notification
+  },
+
+  setup() {
+    const route = useRoute();
+    const { load: loadStores } = useStore();
+    const { load: loadUser } = useUser();
+    const { load: loadCart } = useCart();
+    const { load: loadWishlist } = useWishlist();
+
+    const {
+      boot: boot
+    } = useBootstrap();
+
+    onSSR(async () => {
+      await boot();
+    });
+
+    onSSR(async () => {
+      await Promise.all([
+        loadStores(),
+        loadUser(),
+        loadCart(),
+        loadWishlist()
+      ]);
+    });
+
+    return {
+      route
+    };
   }
 };
 </script>
