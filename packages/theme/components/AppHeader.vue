@@ -8,7 +8,7 @@
       <!-- TODO: add mobile view buttons after SFUI team PR -->
       <template #logo>
         <nuxt-link :to="localePath({ name: 'home' })" class="sf-header__logo">
-          <SfImage src="/icons/logo.svg" alt="Vue Storefront Next" class="sf-header__logo-image"/>
+          <SfImage :src="addBasePath('/icons/logo.svg')" alt="Vue Storefront Next" class="sf-header__logo-image"/>
         </nuxt-link>
       </template>
       <template #navigation>
@@ -30,7 +30,17 @@
             />
           </SfButton>
           <SfButton
-            v-e2e="'app-header-cart'"
+            class="sf-button--pure sf-header__action"
+            aria-label="Toggle wishlist sidebar"
+            @click="toggleWishlistSidebar"
+          >
+            <SfIcon
+              class="sf-header__icon"
+              icon="heart"
+              size="1.25rem"
+            />
+          </SfButton>
+          <SfButton
             class="sf-button--pure sf-header__action"
             aria-label="Toggle cart sidebar"
             @click="toggleCartSidebar"
@@ -97,7 +107,7 @@
 import { SfHeader, SfImage, SfIcon, SfButton, SfBadge, SfSearchBar, SfOverlay } from '@storefront-ui/vue';
 import { useUiState } from '~/composables';
 import { useCart, useUser, cartGetters, useFacet, facetGetters } from '@vue-storefront/prestashop';
-import { computed, ref, onBeforeUnmount, watch } from '@vue/composition-api';
+import { computed, ref, watch, onBeforeUnmount, useRouter } from '@nuxtjs/composition-api';
 import { useUiHelpers } from '~/composables';
 import LocaleSelector from './LocaleSelector';
 import SearchResults from '~/components/SearchResults';
@@ -108,6 +118,7 @@ import {
   unMapMobileObserver
 } from '@storefront-ui/vue/src/utilities/mobile-observer.js';
 import debounce from 'lodash.debounce';
+import { addBasePath } from '@vue-storefront/core';
 
 export default {
   components: {
@@ -124,9 +135,10 @@ export default {
   },
   directives: { clickOutside },
   setup(props, { root }) {
+    const router = useRouter();
     const { toggleCartSidebar, toggleWishlistSidebar, toggleLoginModal, isMobileMenuOpen } = useUiState();
     const { setTermForUrl, getFacetsFromURL } = useUiHelpers();
-    const { isAuthenticated, load: loadUser } = useUser();
+    const { isAuthenticated } = useUser();
     const { cart } = useCart();
     const term = ref(getFacetsFromURL().phrase);
     const isSearchOpen = ref(false);
@@ -143,20 +155,20 @@ export default {
 
     const accountIcon = computed(() => isAuthenticated.value ? 'profile_fill' : 'profile');
 
-    loadUser();
-
     // TODO: https://github.com/DivanteLtd/vue-storefront/issues/4927
     const handleAccountClick = async () => {
       if (isAuthenticated.value) {
         const localeAccountPath = root.localePath({ name: 'my-account' });
-        return root.$router.push(localeAccountPath);
+        return router.push(localeAccountPath);
       }
 
       toggleLoginModal();
     };
 
     const closeSearch = () => {
-      if (!isSearchOpen.value) return;
+      const wishlistClassName = 'sf-product-card__wishlist-icon';
+      const isWishlistIconClicked = event.path.find(p => wishlistClassName.search(p.className) > 0);
+      if (isWishlistIconClicked || !isSearchOpen.value) return;
 
       term.value = '';
       isSearchOpen.value = false;
@@ -218,7 +230,8 @@ export default {
       searchBarRef,
       isMobile,
       isMobileMenuOpen,
-      removeSearchResults
+      removeSearchResults,
+      addBasePath
     };
   }
 };
