@@ -55,14 +55,14 @@
                   :selected='color.selected'
                   :color="color.html_color_code"
                   class="product__color"
-                  @click="updateFilter({ color: `${optionKey}-${i}`})"
+                  @click="updateFilter({ [option.name.replace(/\s+/g, '_').toLowerCase()]: `${optionKey}-${i}`})"
                 />
               </div>
 
               <SfSelect
                 v-else
                 :key="optionKey"
-                @input="input => updateFilter({ select: input })"
+                @input="input => updateFilter({ [option.name.replace(/\s+/g, '_').toLowerCase()]: input})"
                 :label="option.name"
                 :value="selectedAttribute(optionKey)"
                 :class="`sf-select--underlined product__select-${optionKey.toLowerCase()}`"
