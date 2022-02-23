@@ -2,7 +2,7 @@
   <SfTabs :open-tab="1">
     <SfTab title="My orders">
       <div v-if="currentOrder">
-        <SfButton class="sf-button--text all-orders" @click="currentOrder = null">All Orders</SfButton>
+        <SfButton class="sf-button--text all-orders" @click="backToAllOrders">All Orders</SfButton>
         <div class="highlighted highlighted--total">
           <SfProperty
             name="Order ID"
@@ -28,7 +28,7 @@
         <order-items :order='currentOrder'></order-items>
       </div>
       <SfLoader :class="{ loading }" :loading="loading">
-        <div v-show='currentOrder === null'>
+        <div v-if='currentOrder === null'>
           <p class="message">
             {{ $t('Details and status orders') }}
           </p>
@@ -124,7 +124,10 @@ export default {
           return '';
       }
     };
-
+    const backToAllOrders = async () => {
+      currentOrder.value = null;
+      await search({orderId: null});
+    };
     return {
       tableHeaders,
       ordersList,
@@ -132,7 +135,8 @@ export default {
       getStatusTextClass,
       orderGetters,
       currentOrder,
-      loading
+      loading,
+      backToAllOrders
     };
   }
 };
