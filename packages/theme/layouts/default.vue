@@ -62,11 +62,8 @@ export default {
     } = useBootstrap();
 
     onSSR(async () => {
-      await boot();
-    });
-
-    onSSR(async () => {
       await Promise.all([
+        boot(),
         loadStores(),
         loadUser(),
         loadCart(),

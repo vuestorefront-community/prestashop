@@ -53,7 +53,7 @@ export default {
     } = useBootstrap();
 
     const { isMobileMenuOpen, toggleMobileMenu } = useUiState();
-    const categories = menuItems;
+    const categories = menuItems.value;
 
     return {
       categories,
