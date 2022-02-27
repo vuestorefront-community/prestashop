@@ -99,6 +99,10 @@ export default {
     },
     result: {
       type: Array
+    },
+    term: {
+      type: String,
+      default: ''
     }
   },
   setup(props, { emit }) {
