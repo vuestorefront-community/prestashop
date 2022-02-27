@@ -5,8 +5,8 @@
       class="banner"
       title="Thank you for your order!"
       :image="{
-        mobile: '/thankyou/bannerM.png',
-        desktop: '/thankyou/bannerD.png',
+        mobile: addBasePath('/thankyou/bannerM.png'),
+        desktop: addBasePath('/thankyou/bannerD.png'),
       }"
     >
       <template #description>
@@ -40,7 +40,7 @@
           </div>
         </div>
         <SfButton class="order__notifications-button button-size"
-          >{{ $t('Allow order notifications') }}</SfButton
+        >{{ $t('Allow order notifications') }}</SfButton
         >
       </div>
       <div class="additional-info">
@@ -65,20 +65,21 @@
           </p>
           <SfButton
             class="feedback-button color-secondary sf-button--full-width button-size"
-            >{{ $t('Send my feedback') }}</SfButton
+          >{{ $t('Send my feedback') }}</SfButton
           >
         </div>
       </div>
     </section>
     <SfButton class="back-button color-secondary button-size"
-      >{{ $t('Go back to shop') }}</SfButton
+    >{{ $t('Go back to shop') }}</SfButton
     >
   </div>
 </template>
 
 <script>
 import { SfHeading, SfButton, SfCallToAction } from '@storefront-ui/vue';
-import { ref } from '@vue/composition-api';
+import { ref } from '@nuxtjs/composition-api';
+import { addBasePath } from '@vue-storefront/core';
 
 export default {
   components: {
@@ -98,6 +99,7 @@ export default {
     const orderNumber = ref('80932031-030-00');
 
     return {
+      addBasePath,
       companyDetails,
       orderNumber
     };
@@ -123,7 +125,7 @@ export default {
   margin: 0;
   color: var(--c-link);
   font: var(--font-weight--normal) var(--font-size--base) / 1.6
-    var(--font-family--primary);
+  var(--font-family--primary);
   @include for-desktop {
     font-weight: var(--font-weight--light);
     font-size: var(--font-size--sm);
@@ -142,7 +144,7 @@ export default {
     display: flex;
     flex-direction: column;
     font: var(--font-weight--light) var(--font-size--sm) / 1.4
-      var(--font-family--primary);
+    var(--font-family--primary);
     @include for-desktop {
       flex-direction: row;
       font-size: var(--font-size--normal);
@@ -165,7 +167,7 @@ export default {
   @include for-desktop {
     width: 100%;
     padding: var(--spacer-xl) var(--spacer-xl) var(--spacer-2xl)
-      var(--spacer-2xl);
+    var(--spacer-2xl);
   }
   &__heading {
     --heading-title-font-weight: var(--font-weight--bold);
@@ -206,7 +208,7 @@ export default {
 .contact {
   color: var(--c-dark-variant);
   font: var(--font-weight--light) var(--font-size--base) / 1.6
-    var(--font-family--secondary);
+  var(--font-family--secondary);
   @include for-desktop {
     font-weight: var(--font-weight--normal);
     font-size: var(--font-size--sm);
@@ -240,7 +242,7 @@ export default {
     flex-direction: column;
     justify-content: space-between;
     padding: var(--spacer-xl) var(--spacer-xl) var(--spacer-2xl)
-      var(--spacer-2xl);
+    var(--spacer-2xl);
   }
 }
 .feedback-button {
