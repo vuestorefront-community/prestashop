@@ -78,7 +78,7 @@ import {
 import UserBillingAddress from '~/components/UserBillingAddress';
 import BillingAddressForm from '~/components/MyAccount/BillingAddressForm';
 import { useUserBilling, userBillingGetters } from '@vue-storefront/prestashop';
-import { ref, computed } from '@vue/composition-api';
+import { ref, computed } from '@nuxtjs/composition-api';
 import { onSSR } from '@vue-storefront/core';
 
 export default {

@@ -8,6 +8,7 @@ export default {
     port: 3000,
     host: '0.0.0.0'
   },
+
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     title: 'Vue Storefront',
@@ -17,7 +18,8 @@ export default {
       { hid: 'description', name: 'description', content: process.env.npm_package_description || '' }
     ],
     link: [
-      { rel: 'icon',
+      {
+        rel: 'icon',
         type: 'image/x-icon',
         href: '/favicon.ico'
       },
@@ -32,12 +34,16 @@ export default {
       }
     ]
   },
+
   loading: { color: '#fff' },
+
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [],
+
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
     // to core
+    '@nuxtjs/composition-api/module',
     '@nuxt/typescript-build',
     '@nuxtjs/style-resources',
     ['@vue-storefront/nuxt', {
@@ -71,6 +77,7 @@ export default {
     project-only-end */
     ['@vue-storefront/prestashop/nuxt', {}]
   ],
+
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     ['nuxt-i18n', {
@@ -80,6 +87,7 @@ export default {
     'vue-scrollto/nuxt',
     '@vue-storefront/middleware/nuxt'
   ],
+
   i18n: {
     currency: 'USD',
     country: 'US',
@@ -120,9 +128,11 @@ export default {
       cookieKey: VSF_LOCALE_COOKIE
     }
   },
+
   styleResources: {
     scss: [require.resolve('@storefront-ui/shared/styles/_helpers.scss', { paths: [process.cwd()] })]
   },
+
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
     babel: {
@@ -143,6 +153,7 @@ export default {
       })
     ]
   },
+
   router: {
     extendRoutes(routes) {
       getRoutes(`${__dirname}/_theme`)
@@ -161,5 +172,10 @@ export default {
     theme,
     psCustomerCookieKey: 'ps-customer-cookie-key',
     psCustomerCookieValue: 'ps-customer-cookie-value'
+  },
+  pwa: {
+    meta: {
+      theme_color: '#5ECE7B'
+    }
   }
 };

@@ -1,5 +1,9 @@
+import Vue from 'vue';
 import { computed } from '@vue/composition-api';
+import VueCompositionApi from '@vue/composition-api';
 import { sharedRef, useVSFContext, Logger } from '@vue-storefront/core';
+
+Vue.use(VueCompositionApi);
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const useBootstrap = () => {

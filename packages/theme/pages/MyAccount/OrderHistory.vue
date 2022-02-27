@@ -83,7 +83,7 @@ import {
   SfLink,
   SfLoader
 } from '@storefront-ui/vue';
-import { computed, ref } from '@vue/composition-api';
+import { computed, ref } from '@nuxtjs/composition-api';
 import { useUserOrder, orderGetters } from '@vue-storefront/prestashop';
 import { AgnosticOrderStatus } from '@vue-storefront/core';
 import { onSSR } from '@vue-storefront/core';
@@ -107,12 +107,14 @@ export default {
     onSSR(async () => {
       await search({orderId: null});
     });
+
     const tableHeaders = [
       'Order ID',
       'Payment date',
       'Amount',
       'Status'
     ];
+
     const getStatusTextClass = (order) => {
       const status = orderGetters.getStatus(order);
       switch (status) {

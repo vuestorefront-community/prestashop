@@ -24,7 +24,7 @@
                   :regular-price="$n(productGetters.getPrice(product).regular, 'currency')"
                   :score-rating="productGetters.getAverageRating(product)"
                   :reviews-count="7"
-                  :image="productGetters.getCoverImage(product)"
+                  :image="addBasePath(productGetters.getCoverImage(product))"
                   :alt="productGetters.getName(product)"
                   :title="productGetters.getName(product)"
                   :link="`/p/${productGetters.getId(product)}/${productGetters.getSlug(product)}`"
@@ -39,7 +39,7 @@
                 :regular-price="$n(productGetters.getPrice(product).regular, 'currency')"
                 :score-rating="productGetters.getAverageRating(product)"
                 :reviews-count="7"
-                :image="productGetters.getCoverImage(product)"
+                :image="addBasePath(productGetters.getCoverImage(product))"
                 :alt="productGetters.getName(product)"
                 :title="productGetters.getName(product)"
                 :link="`/p/${productGetters.getId(product)}/${productGetters.getSlug(product)}`"
@@ -51,9 +51,14 @@
           </div>
         </div>
         <div v-else key="no-results" class="before-results">
-          <SfImage src="/error/error.svg" class="before-results__picture" alt="error" loading="lazy"/>
-          <p class="before-results__paragraph">{{ $t('You haven’t searched for items yet') }}</p>
-          <p class="before-results__paragraph">{{ $t('Let’s start now – we’ll help you') }}</p>
+          <SfImage :src="addBasePath('/error/error.svg')" class="before-results__picture" alt="error" loading="lazy"/>
+          <template v-if="term">
+            <p class="before-results__paragraph">{{ $t('We haven’t found any results for given phrase') }}</p>
+          </template>
+          <template v-else>
+            <p class="before-results__paragraph">{{ $t('You haven’t searched for items yet') }}</p>
+            <p class="before-results__paragraph">{{ $t('Let’s start now – we’ll help you') }}</p>
+          </template>
           <SfButton class="before-results__button color-secondary smartphone-only" @click="$emit('close')">{{ $t('Go back') }}</SfButton>
         </div>
       </transition>
@@ -71,8 +76,9 @@ import {
   SfButton,
   SfImage
 } from '@storefront-ui/vue';
-import { ref, watch, computed } from '@vue/composition-api';
+import { ref, watch, computed } from '@nuxtjs/composition-api';
 import { productGetters } from '@vue-storefront/prestashop';
+import { addBasePath } from '@vue-storefront/core';
 
 export default {
   name: 'SearchResults',
@@ -112,7 +118,8 @@ export default {
     return {
       isSearchOpen,
       productGetters,
-      products
+      products,
+      addBasePath
     };
   }
 };
