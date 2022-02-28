@@ -2,7 +2,7 @@ import { getCurrentInstance } from '@vue/composition-api';
 
 const getContext = () => {
   const vm = getCurrentInstance();
-  return vm.$root as any;
+  return vm.root.proxy;
 };
 
 const nonFilters = ['page', 'sort', 'term', 'itemsPerPage'];
@@ -29,36 +29,33 @@ const useUiHelpers = () => {
   const context = getContext();
 
   const getFacetsFromURL = () => {
-    const { query, params } = context.$router.history.current;
+    const { query, params } = context.$router.currentRoute;
     const categorySlug = Object.keys(params).reduce((prev, curr) => params[curr] || prev, params.slug_1);
 
     return {
       rootCatSlug: params.slug_1,
       categorySlug,
-      page: parseInt(query.page, 10) || 1,
+      page: parseInt(query.page as string, 10) || 1,
       sort: query.sort || 'latest',
       filters: getFiltersDataFromUrl(context, true),
-      itemsPerPage: parseInt(query.itemsPerPage, 12) || 20,
+      itemsPerPage: parseInt(query.itemsPerPage as string, 12) || 20,
       term: query.term
     };
   };
 
   // eslint-disable-next-line
   const getCatLink = (category): string => {
-    console.warn('[VSF] please implement useUiHelpers.getCatLink.');
-
-    return '/';
+    return `/c/${category.slug}`;
   };
 
   // eslint-disable-next-line
-  const changeSorting = (sort) => {
-    console.warn('[VSF] please implement useUiHelpers.changeSorting.');
-
-    return 'latest';
+  const changeSorting = (sort: string) => {
+    const { query } = context.$router.currentRoute;
+    context.$router.push({ query: { ...query, sort } });
   };
 
   // eslint-disable-next-line
-  const changeFilters = (filters) => {
+  const changeFilters = (filters: any) => {
     context.$router.push({
       query: {
         ...getFiltersDataFromUrl(context, false),

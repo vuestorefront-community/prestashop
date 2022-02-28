@@ -1,18 +1,16 @@
-import Vue from 'vue';
-import VueCompositionAPI, { reactive, computed } from '@vue/composition-api';
-
-// We need to register it again because of Vue instance instantiation issues
-Vue.use(VueCompositionAPI);
+import { reactive, computed } from '@nuxtjs/composition-api';
 
 const state = reactive({
   isCartSidebarOpen: false,
   isWishlistSidebarOpen: false,
   isLoginModalOpen: false,
+  isNewsletterModalOpen: false,
   isCategoryGridView: true,
   isFilterSidebarOpen: false,
   isMobileMenuOpen: false
 });
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const useUiState = () => {
   const isMobileMenuOpen = computed(() => state.isMobileMenuOpen);
   const toggleMobileMenu = () => {
@@ -37,6 +35,11 @@ const useUiState = () => {
     state.isLoginModalOpen = !state.isLoginModalOpen;
   };
 
+  const isNewsletterModalOpen = computed(() => state.isNewsletterModalOpen);
+  const toggleNewsletterModal = () => {
+    state.isNewsletterModalOpen = !state.isNewsletterModalOpen;
+  };
+
   const isCategoryGridView = computed(() => state.isCategoryGridView);
   const changeToCategoryGridView = () => {
     state.isCategoryGridView = true;
@@ -54,12 +57,14 @@ const useUiState = () => {
     isCartSidebarOpen,
     isWishlistSidebarOpen,
     isLoginModalOpen,
+    isNewsletterModalOpen,
     isCategoryGridView,
     isFilterSidebarOpen,
     isMobileMenuOpen,
     toggleCartSidebar,
     toggleWishlistSidebar,
     toggleLoginModal,
+    toggleNewsletterModal,
     changeToCategoryGridView,
     changeToCategoryListView,
     toggleFilterSidebar,

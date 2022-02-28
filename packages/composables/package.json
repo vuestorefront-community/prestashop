@@ -1,6 +1,6 @@
 {
   "name": "@vue-storefront/prestashop",
-  "version": "2.4.3",
+  "version": "1.0.0",
   "private": true,
   "sideEffects": false,
   "main": "lib/index.cjs.js",
@@ -16,15 +16,15 @@
     "update:update": "ncu -u"
   },
   "dependencies": {
-    "@vue-storefront/prestashop-api": "~2.4.3",
-    "@vue-storefront/core": "~2.4.3"
+    "@vue-storefront/prestashop-api": "1.0.0",
+    "@vue-storefront/core": "~2.5.4"
   },
   "devDependencies": {
-    "rollup-plugin-typescript2": "^0.30.0",
-    "@rollup/plugin-node-resolve": "^13.0.0"
+    "@rollup/plugin-node-resolve": "^13.0.6",
+    "rollup-plugin-typescript2": "^0.30.0"
   },
   "peerDependencies": {
-    "@vue/composition-api": "1.0.0-beta.21"
+    "@nuxtjs/composition-api": "^0.29.3"
   },
   "files": [
     "lib/**/*"
