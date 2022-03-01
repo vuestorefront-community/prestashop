@@ -23,7 +23,7 @@
         class="table__row"
       >
         <SfTableData class="table__image">
-          <SfImage :src="cartGetters.getItemImage(product)" :alt="cartGetters.getItemName(product)" />
+          <SfImage :src="addBasePath(cartGetters.getItemImage(product))" :alt="cartGetters.getItemName(product)" />
         </SfTableData>
         <SfTableData class="table__data table__description table__data">
           <div class="product-title">{{ cartGetters.getItemName(product) }}</div>
@@ -67,16 +67,15 @@
           </template>
         </SfCheckbox>
 
-        <div class="summary__action">
+        <div v-e2e="'payment-summary-buttons'" class="summary__action">
           <SfButton
             type="button"
             class="sf-button color-secondary summary__back-button"
-            @click="$router.push('/checkout/shipping')"
+            @click="router.push('/checkout/shipping')"
           >
             {{ $t('Go back') }}
           </SfButton>
           <SfButton
-            v-e2e="'make-an-order'"
             :disabled="loading || !isPaymentReady || !terms"
             class="summary__action-button"
             @click="processOrder"
@@ -104,8 +103,9 @@ import {
   SfLink
 } from '@storefront-ui/vue';
 import { onSSR } from '@vue-storefront/core';
-import { ref, computed, watch } from '@vue/composition-api';
+import { ref, computed, useRouter, watch } from '@nuxtjs/composition-api';
 import { useMakeOrder, useCart, cartGetters, orderGetters } from '@vue-storefront/prestashop';
+import { addBasePath } from '@vue-storefront/core';
 
 export default {
   name: 'ReviewOrder',
@@ -124,6 +124,7 @@ export default {
     VsfPaymentProvider: () => import('~/components/Checkout/VsfPaymentProvider')
   },
   setup(props, context) {
+    const router = useRouter();
     const { cart, load, setCart } = useCart();
     const { order, make, loading } = useMakeOrder();
 
@@ -143,11 +144,13 @@ export default {
     const processOrder = async () => {
       await make({methodName: selectedPaymentOption.value});
       const thankYouPath = { name: 'thank-you', query: { order: orderGetters.getId(order.value) }};
-      context.root.$router.push(context.root.localePath(thankYouPath));
+      router.push(context.root.localePath(thankYouPath));
       setCart(null);
     };
 
     return {
+      addBasePath,
+      router,
       isPaymentReady,
       changeSelectedMethod,
       terms,

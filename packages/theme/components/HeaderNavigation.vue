@@ -21,7 +21,7 @@
           :label="category.label"
           class="sf-header-navigation-item__menu-item"
           :link="localePath(`/c/${category}`)"
-          @click.native="toggleMobileMenu"
+          @click="toggleMobileMenu"
         />
       </template>
     </SfHeaderNavigationItem>
@@ -53,7 +53,7 @@ export default {
     } = useBootstrap();
 
     const { isMobileMenuOpen, toggleMobileMenu } = useUiState();
-    const categories = menuItems;
+    const categories = menuItems.value;
 
     return {
       categories,
