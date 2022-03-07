@@ -24,7 +24,6 @@
             :loading="loading">
             <SfAccordion
               v-e2e="'categories-accordion'"
-              :open="activeCategory"
               :show-chevron="true"
             >
               <SfAccordionItem
@@ -242,17 +241,6 @@ export default {
     const sortBy = computed(() => facetGetters.getSortOptions(result.value));
     const facets = computed(() => facetGetters.getGrouped(result.value));
     const pagination = computed(() => facetGetters.getPagination(result.value));
-    const activeCategory = computed(() => {
-      const items = categoryTree.value.items;
-
-      if (!items || !items.length) {
-        return '';
-      }
-
-      const category = items.find(({ isCurrent, items }) => isCurrent || items.find(({ isCurrent }) => isCurrent));
-
-      return category?.label || items[0].label;
-    });
 
     const selectedFilters = ref({});
     const setSelectedFilters = () => {
@@ -320,7 +308,6 @@ export default {
       loading,
       productGetters,
       pagination,
-      activeCategory,
       sortBy,
       facets,
       breadcrumbs,
