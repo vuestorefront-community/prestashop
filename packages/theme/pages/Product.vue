@@ -55,14 +55,14 @@
                   :selected='color.selected'
                   :color="color.html_color_code"
                   class="product__color"
-                  @click="updateFilter({ [option.name.replace(/\s+/g, '_').toLowerCase()]: `${optionKey}-${i}`})"
+                  @click="updateFilter({ [option.name.replace(/\s+/g, '_')]: `${optionKey}-${i}-${color.name.replace(/[\s&/#,+()$~%.':*?<>{}]/g, '_')}`})"
                 />
               </div>
 
               <SfSelect
                 v-else
                 :key="optionKey"
-                @input="input => updateFilter({ [option.name.replace(/\s+/g, '_').toLowerCase()]: input})"
+                @input="input => updateFilter({ [option.name.replace(/\s+/g, '_')]: input})"
                 :label="option.name"
                 :value="selectedAttribute(optionKey)"
                 :class="`sf-select--underlined product__select-${optionKey.toLowerCase()}`"
@@ -70,7 +70,7 @@
                 <SfSelectOption
                   v-for="(attribute, attributeKey) in option.attributes"
                   :key="attributeKey"
-                  :value="`${optionKey}-${attributeKey}`"
+                  :value="`${optionKey}-${attributeKey}-${attribute.name.replace(/[\s&/#,+()$~%.':*?<>{}]/g, '_')}`"
                 >{{attribute.name}}</SfSelectOption>
               </SfSelect>
             </template>
@@ -264,7 +264,7 @@ export default {
       const attrs = option.attributes;
       for (const key in attrs) {
         if (attrs[key].selected) {
-          return `${optionKey}-${key}`;
+          return `${optionKey}-${key}-${attrs[key].name.replace(/[\s&/#,+()$~%.':*?<>{}]/g, '_')}`;
         }
       }
       return null;
