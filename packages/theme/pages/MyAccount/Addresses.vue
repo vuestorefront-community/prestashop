@@ -61,9 +61,9 @@ import {
 import UserShippingAddress from '~/components/UserShippingAddress';
 import ShippingAddressForm from '~/components/MyAccount/ShippingAddressForm';
 import { useUserShipping, userShippingGetters } from '@vue-storefront/prestashop';
-import { ref, computed } from '@vue/composition-api';
+import { ref, computed } from '@nuxtjs/composition-api';
 import { onSSR } from '@vue-storefront/core';
-import { ValidationObserver, extend } from 'vee-validate';
+import { ValidationObserver } from 'vee-validate';
 
 export default {
   name: 'Addresses',
