@@ -42,17 +42,12 @@ import {
   SfTextarea,
   SfSelect
 } from '@storefront-ui/vue';
-import { ref, computed } from '@vue/composition-api';
-import {
-  useForgotPassword,
-  forgotPasswordGetters
-} from '@vue-storefront/prestashop';
+import { ref } from '@nuxtjs/composition-api';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 import { required } from 'vee-validate/dist/rules';
 import { useReview } from '@vue-storefront/prestashop';
-const { send: sendNotification } = useUiNotification();
-import { onSSR } from '@vue-storefront/core';
 import useUiNotification from '~/composables/useUiNotification';
+const { send: sendNotification } = useUiNotification();
 
 extend('required', {
   ...required,
@@ -79,7 +74,7 @@ export default {
       required: true
     }
   },
-  setup(props, context) {
+  setup() {
     const form = ref({});
 
     const { reviews: productReviews, addReview } = useReview();
@@ -102,8 +97,11 @@ export default {
   methods: {
     addingReviewFunc() {
       const comment = {
+        // eslint-disable-next-line camelcase
         id_product: this.productId,
+        // eslint-disable-next-line camelcase
         comment_content: this.comment,
+        // eslint-disable-next-line camelcase
         comment_title: this.title,
         criterion: this.rate.toString()
       };

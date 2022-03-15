@@ -82,7 +82,7 @@ import {
   SfLink,
   SfLoader
 } from '@storefront-ui/vue';
-import { computed, ref } from '@vue/composition-api';
+import { computed, ref } from '@nuxtjs/composition-api';
 import { onSSR } from '@vue-storefront/core';
 import { userShippingGetters, useUserShipping } from '@vue-storefront/prestashop';
 import { required, min, digits } from 'vee-validate/dist/rules';

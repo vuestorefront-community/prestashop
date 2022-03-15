@@ -30,11 +30,11 @@ import {
   SfSelect,
   SfLink
 } from '@storefront-ui/vue';
-import { ref } from '@vue/composition-api';
+import { ref } from '@nuxtjs/composition-api';
 import { useUiState } from '~/composables';
 import { onSSR } from '@vue-storefront/core';
 import {useShipping, useUser} from '@vue-storefront/prestashop';
-import {required, min, digits, email, confirmed} from 'vee-validate/dist/rules';
+import {required, min, email, confirmed} from 'vee-validate/dist/rules';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 import CreateAccountForm from '~/components/MyAccount/CreateAccountForm';
 

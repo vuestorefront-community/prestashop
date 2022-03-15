@@ -8,6 +8,7 @@ import populateAddressesList from './populateAddressesList';
 import populateCountriesList from './populateCountriesList';
 import populateShippingProvidersList from './populateShippingProvidersList';
 import populatePaymentProvidersList from './populatePaymentProvidersList';
+import populateCategoryTree from './populateCategoryTree';
 
 export {
   populateCategoryProducts,
@@ -19,6 +20,7 @@ export {
   populateAddressesList,
   populateCountriesList,
   populateShippingProvidersList,
-  populatePaymentProvidersList
+  populatePaymentProvidersList,
+  populateCategoryTree
 };
 
