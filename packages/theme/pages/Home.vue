@@ -122,7 +122,7 @@ import LazyHydrate from 'vue-lazy-hydration';
 import { useUiState } from '../composables';
 import cacheControl from './../helpers/cacheControl';
 import { onSSR, addBasePath } from '@vue-storefront/core';
-import { computed } from '@vue/composition-api';
+import { computed } from '@nuxtjs/composition-api';
 import { useUiNotification } from '~/composables';
 
 import {

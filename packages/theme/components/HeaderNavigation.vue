@@ -20,7 +20,7 @@
         <SfMenuItem
           :label="category.label"
           class="sf-header-navigation-item__menu-item"
-          :link="localePath(`/c/${category}`)"
+          :link="localePath(`/c/${category.slug}`)"
           @click="toggleMobileMenu"
         />
       </template>

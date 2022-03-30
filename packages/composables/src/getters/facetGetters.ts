@@ -10,6 +10,7 @@ import {
 } from '@vue-storefront/core';
 import type { PsProduct, Facet, FacetSearchCriteria } from '@vue-storefront/prestashop-api';
 import { populateCategoryProducts } from '../helpers';
+import { populateCategoryTree } from '../helpers';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getAll(params: FacetSearchResult<Facet>, criteria?: FacetSearchCriteria): AgnosticFacet[] {
@@ -55,7 +56,11 @@ function buildFacets(facets = []) {
 function getGrouped(searchResult, criteria?: FacetSearchCriteria): AgnosticGroupedFacet[] {
   const facets = searchResult?.data?.facets;
 
-  return buildFacets(facets);
+  if (facets !== null) {
+    return buildFacets(facets);
+  }
+
+  return [];
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -66,15 +71,14 @@ function getSortOptions(params: FacetSearchResult<Facet>): AgnosticSort {
   };
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getCategoryTree(params: FacetSearchResult<Facet>): AgnosticCategoryTree {
-  return {
-    label: '',
-    slug: '',
-    items: null,
-    isCurrent: false,
-    count: 0
-  };
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+function getCategoryTree(psdata: any): AgnosticCategoryTree {
+
+  if (!psdata.data) {
+    return {isCurrent: false, items: [], label: ''};
+  }
+
+  return populateCategoryTree(psdata.data.categories);
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars,@typescript-eslint/explicit-module-boundary-types

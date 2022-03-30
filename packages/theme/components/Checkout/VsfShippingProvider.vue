@@ -46,7 +46,7 @@
 
 <script>
 import { SfButton, SfRadio, SfLink, SfLoader } from '@storefront-ui/vue';
-import { ref, computed } from '@vue/composition-api';
+import { ref, computed } from '@nuxtjs/composition-api';
 import { useShippingProvider } from '@vue-storefront/prestashop';
 import { shippingProviderGetters } from '@vue-storefront/prestashop/src/getters/shippingProviderGetters';
 

@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import { onBeforeMount, ref, computed } from '@vue/composition-api';
+import { onBeforeMount, ref, computed } from '@nuxtjs/composition-api';
 import { useUserOrder, orderGetters } from '@vue-storefront/prestashop';
 import {
   SfTable
