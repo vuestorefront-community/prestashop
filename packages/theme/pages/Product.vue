@@ -82,7 +82,7 @@
               :disabled="loading"
               :canAddToCart="stock > 0"
               class="product__add-to-cart"
-              @click="addingToCart({ product, quantity: parseInt(qty) })"
+              @click="addingToCart({ product, quantity: parseInt(qty) } )"
             />
           </div>
 
