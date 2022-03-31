@@ -7,6 +7,7 @@ const populateProducts = (psProducts: Array<any>) => {
     id: product.id_product,
     name: product.name,
     slug: 'todo-back',
+    attributeId: product.id_product_attribute,
     regularPrice: product.float_price,
     // eslint-disable-next-line line-comment-position
     discountPrice: product.float_price, // todo

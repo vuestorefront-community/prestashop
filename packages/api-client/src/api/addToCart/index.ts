@@ -7,6 +7,7 @@ export default async function addToCart(context, params) {
 
   url.searchParams.set('id_product', product.id);
   url.searchParams.set('qty', quantity);
+  url.searchParams.set('id_product_attribute', product.attributeId);
   url.searchParams.set('op', 'up');
   url.searchParams.set('update', '1');
   url.searchParams.set('action', 'update');
