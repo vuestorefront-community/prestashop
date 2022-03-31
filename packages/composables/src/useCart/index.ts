@@ -35,7 +35,6 @@ const params: UseCartFactoryParams<Cart, CartItem, PsProduct> = {
 
     const psCookieKey = context.$prestashop.config.app.$cookies.get(vsfCookieKey);
     const psCookieValue = context.$prestashop.config.app.$cookies.get(vsfCookieValue);
-
     const { data, cookieObject } = await context.$prestashop.api.addToCart({ psCookieKey, psCookieValue, product, quantity });
 
     if (data.code === 200) {

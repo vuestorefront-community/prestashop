@@ -3,14 +3,14 @@ import {
   AgnosticPrice,
   AgnosticTotals,
   AgnosticCoupon,
-  AgnosticDiscount,
-  AgnosticAttribute
+  AgnosticDiscount
 } from '@vue-storefront/core';
 import type { Cart, CartItem } from '@vue-storefront/prestashop-api';
 import { populateCartItems } from '../helpers';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getItems (cart: Cart): CartItem[] {
+  console.log(cart.psdata.products);
   return populateCartItems(cart.psdata.products);
 }
 
@@ -38,10 +38,11 @@ function getItemQty(item: CartItem): number {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getItemAttributes(item: CartItem, filterByAttributeName?: Array<string>): Record<string, AgnosticAttribute | string> {
-  return {
-    color: 'red'
-  };
+function getItemAttributes(item: CartItem, filterByAttributeName?: Array<string>):any {
+  console.log(item);
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  return item.attributesArray;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
