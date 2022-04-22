@@ -49,11 +49,10 @@ export default {
   },
   setup() {
     const {
-      menuItems: menuItems
+      menuItems: categories
     } = useBootstrap();
 
     const { isMobileMenuOpen, toggleMobileMenu } = useUiState();
-    const categories = menuItems.value;
 
     return {
       categories,
