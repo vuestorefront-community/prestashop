@@ -37,13 +37,10 @@ module.exports = {
     editLinks: true,
     docsDir: 'docs',
     docsBranch: 'develop',
-    editLinkText: 'Edit this page',
-    logo: 'https://user-images.githubusercontent.com/1626923/137092657-fb398d20-b592-4661-a1f9-4135db0b61d5.png',
     nav: [
       { text: 'Vue Storefront', link: 'https://vuestorefront.io/' },
-      { text: 'Core Documentation', link: 'https://docs.vuestorefront.io/v2/' },
-      // { text: 'Demo', link: '' },
-      { text: 'GitHub', link: 'https://github.com/vuestorefront-community/prestashop'},
+      { text: 'Core Doc', link: 'https://docs.vuestorefront.io/v2/' },
+      { text: 'PrestaShop REST API', link: 'https://www.binshops.com/prestashop-api' },
     ],
     sidebar: [
       {
@@ -52,18 +49,16 @@ module.exports = {
         children: [
           ['/', 'Introduction'],
           ['/guide/getting-started', 'Getting started'],
-          ['/guide/configuration', 'Configuration'],
           ['/guide/about', 'About'],
         ]
       },
       {
         title: 'Composables',
-        path: '/composables/'
-      },
-      {
-        title: 'API Client',
-        path: '/api-client/'
-      },
+        collapsable: true,
+        children: [
+          ['/guide/composables/bootstrap', 'bootstrap'],
+        ]
+      }
     ]
   }
 }
