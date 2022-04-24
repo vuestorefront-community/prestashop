@@ -56,7 +56,23 @@ module.exports = {
         title: 'Composables',
         collapsable: true,
         children: [
-          ['/guide/composables/bootstrap', 'bootstrap'],
+          ['/guide/composables/useBootstrap', 'useBootstrap'],
+          ['/guide/composables/useCart', 'useCart'],
+          ['/guide/composables/useCountryList', 'useCountryList'],
+          ['/guide/composables/useFacet', 'useFacet'],
+          ['/guide/composables/useMakeOrder', 'useMakeOrder'],
+          ['/guide/composables/usePayment', 'usePayment'],
+          ['/guide/composables/useProduct', 'useProduct'],
+          ['/guide/composables/useReview', 'useReview'],
+          ['/guide/composables/useUser', 'useUser'],
+          ['/guide/composables/useUserShipping', 'useUserShipping'],
+        ]
+      },
+      {
+        title: 'Releases',
+        collapsable: true,
+        children: [
+          ['/guide/releases/v1.0.0', 'v1.0.0'],
         ]
       }
     ]
