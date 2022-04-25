@@ -5,7 +5,7 @@ import { sharedRef, useVSFContext, Logger } from '@vue-storefront/core';
 export const useBootstrap = () => {
   const context = useVSFContext();
 
-  const result = sharedRef(null, 'bootstrap');
+  const menuItems = sharedRef(null, 'menuItems');
 
   const loading = sharedRef(false, 'bootstrap-loading');
 
@@ -19,10 +19,10 @@ export const useBootstrap = () => {
     try {
       loading.value = true;
       const { data, cookieObject } = await context.$prestashop.api.bootstrap();
-      result.value = data;
       error.value.boot = null;
 
       if (data.code === 200) {
+        menuItems.value = data.psdata.menuItems;
         const vsfCookieKey = context.$prestashop.config.app.$config.psCustomerCookieKey;
         const vsfCookieValue = context.$prestashop.config.app.$config.psCustomerCookieValue;
 
@@ -45,7 +45,7 @@ export const useBootstrap = () => {
 
   return {
     boot,
-    menuItems: computed(() => result.value.psdata.menuItems),
+    menuItems: menuItems,
     loading: computed(() => loading.value),
     error: computed(() => error.value)
   };

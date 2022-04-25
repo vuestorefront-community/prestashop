@@ -46,7 +46,7 @@ export default {
     const selectMethod = (method)=> {
       selectedMethod.value = method;
     };
-    const { load, shipping: payment, loading } = usePayment();
+    const { load, payment, loading } = usePayment();
     onBeforeMount(async()=>{
       await load();
     });
