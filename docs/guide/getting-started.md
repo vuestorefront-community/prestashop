@@ -1,15 +1,41 @@
 # Getting Started
 
+## Requirements
+- PrestaShop version 1.7.7.x and higher
+- Node 14
+
 ## How to start if you want to try out the integration
+1. First we need to expose our PrestaShop REST API endpoints. Download and install [PrestaShop REST API](https://www.binshops.com/prestashop-api) just like any other PrestaShop module.
 
+2. Clone the PrestaShop integration repository:
 ```
-yarn global add @vue-storefront/cli
-```
-```
-vsf init <project_name> && cd <project_name> && yarn && yarn dev
+git clone git@github.com:vuestorefront-community/prestashop.git
 ```
 
-## How to start if you want to contribute?
+3. Install dependencies: 
+```
+yarn install
+```
 
-Want to contribute? Ping us on `prestashop` channel on [our Discord](https://discord.vuestorefront.io)!
+4. Change API url in this file: 
 
+```js
+module.exports = {
+    integrations: {
+        prestashop: {
+            location: '@vue-storefront/prestashop-api/server',
+            configuration: {
+                api: {
+                    url: 'Your Shop URL'
+                }
+            }
+        }
+    }
+};
+```
+5. Build and Run the project:
+```sh
+yarn install
+
+yarn dev
+```
