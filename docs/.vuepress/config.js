@@ -34,7 +34,7 @@ module.exports = {
   ],
   themeConfig: {
     repo: 'https://github.com/vuestorefront-community/prestashop',
-    editLinks: true,
+    editLinks: false,
     docsDir: 'docs',
     docsBranch: 'develop',
     nav: [
