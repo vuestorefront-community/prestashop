@@ -1,6 +1,6 @@
 {
   "name": "@vue-storefront/prestashop-api",
-  "version": "1.0.0-rc.1",
+  "version": "1.0.0-rc.2",
   "private": false,
   "sideEffects": false,
   "server": "server/index.js",
@@ -25,7 +25,9 @@
     "rollup-plugin-typescript2": "^0.30.0"
   },
   "files": [
-    "lib/**/*"
+    "lib/**/*",
+    "server/**/*",
+    "types/**/*"
   ],
   "publishConfig": {
     "access": "public"
