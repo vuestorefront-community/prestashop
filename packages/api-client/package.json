@@ -1,7 +1,7 @@
 {
   "name": "@vue-storefront/prestashop-api",
   "version": "1.0.0-rc.1",
-  "private": true,
+  "private": false,
   "sideEffects": false,
   "server": "server/index.js",
   "main": "lib/index.cjs.js",
