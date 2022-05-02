@@ -10,36 +10,37 @@
     />
   </div>
   <SfModal v-else :visible="isMobileMenuOpen">
-    <SfHeaderNavigationItem
-      v-for="(category, index) in categories"
-      :key="index"
-      class="nav-item"
-      v-e2e="`app-header-url_${category.slug}`"
-    >
-      <template #mobile-navigation-item>
-        <SfMenuItem
-          :label="category.label"
-          class="sf-header-navigation-item__menu-item"
-          :link="localePath(`/c/${category.slug}`)"
-          @click="toggleMobileMenu"
-        />
-      </template>
-    </SfHeaderNavigationItem>
+    <SfList>
+      <SfHeaderNavigationItem
+        v-for="(category, index) in categories"
+        :key="category.label"
+        class="nav-item"
+        v-e2e="`app-header-url_${category.slug}`"
+      >
+        <template #mobile-navigation-item>
+          <SfMenuItem
+            :label="category.label"
+            class="sf-header-navigation-item__menu-item"
+            :link="localePath(`/c/${category.slug}`)"
+            @click.native="toggleMobileMenu"
+          />
+        </template>
+      </SfHeaderNavigationItem>
+    </SfList>
   </SfModal>
 </template>
 
 <script>
-import { SfMenuItem, SfModal } from '@storefront-ui/vue';
+import { SfMenuItem, SfModal, SfList } from '@storefront-ui/vue';
 import { useUiState } from '~/composables';
-import {
-  useBootstrap
-} from '@vue-storefront/prestashop';
+import { useBootstrap } from '@vue-storefront/prestashop';
 
 export default {
   name: 'HeaderNavigation',
   components: {
     SfMenuItem,
-    SfModal
+    SfModal,
+    SfList
   },
   props: {
     isMobile: {
@@ -48,10 +49,7 @@ export default {
     }
   },
   setup() {
-    const {
-      menuItems: categories
-    } = useBootstrap();
-
+    const { menuItems: categories } = useBootstrap();
     const { isMobileMenuOpen, toggleMobileMenu } = useUiState();
 
     return {
