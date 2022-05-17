@@ -16,7 +16,7 @@ This integration is being maintained by [Binshops](https://www.binshops.com).
 ------
 
 ## [Quick Start Video](https://youtu.be/WkhiWemU43E)
-[![PrestaShop Vue Storefront](http://img.youtube.com/vi/N9NpFUqbftA/0.jpg)](https://youtu.be/WkhiWemU43E)
+[![PrestaShop Vue Storefront](https://i1.ytimg.com/vi/WkhiWemU43E/hqdefault.jpg)](https://youtu.be/WkhiWemU43E)
 
 ### Requirements:
 - NodeJS v14 or later
