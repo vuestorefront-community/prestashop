@@ -1,6 +1,6 @@
 {
   "name": "@vue-storefront/prestashop",
-  "version": "1.0.0-rc.3",
+  "version": "1.0.0",
   "private": false,
   "sideEffects": false,
   "main": "lib/index.cjs.js",
@@ -16,7 +16,7 @@
     "update:update": "ncu -u"
   },
   "dependencies": {
-    "@vue-storefront/prestashop-api": "1.0.0-rc.3",
+    "@vue-storefront/prestashop-api": "1.0.0",
     "@vue-storefront/core": "~2.5.4"
   },
   "devDependencies": {
