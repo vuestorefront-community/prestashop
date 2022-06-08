@@ -1,5 +1,5 @@
 import {
-  Context,
+  Context, Logger,
   useUserFactory,
   UseUserFactoryParams
 } from '@vue-storefront/core';
@@ -110,8 +110,10 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
     const code = data.code;
 
     if (code === 200) {
-      context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
-      context.$prestashop.config.app.$cookies.set(vsfCookieValue, cookieObject.vsfPsValCookie);
+      if (cookieObject) {
+        context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
+        context.$prestashop.config.app.$cookies.set(vsfCookieValue, cookieObject.vsfPsValCookie);
+      }
 
     } else if (code === 306) {
       throw {

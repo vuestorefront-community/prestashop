@@ -1,3 +1,5 @@
+import {logger} from './logging';
+
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const parsePsCookie = (str) =>
   str
@@ -13,16 +15,25 @@ const parsePsCookie = (str) =>
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const cookieParser = (headers) => {
   // to get the latest Auth cookie - normally there are two PrestaShop cookies
-  if (headers['set-cookie']) {
-    const numberOfCookies = headers['set-cookie'].length;
+  // TODO: This could be done much more efficently
+  if (headers['set-cookie'] || headers['Set-Cookie']) {
+    logger.info(headers);
+
+    const numberOfCookies = headers['set-cookie'].length + headers['Set-Cookie'].length;
+    logger.info(numberOfCookies);
+
     let cookieString = null;
     for (let i = 0; i < numberOfCookies; i++) {
       // prestashop cookies start with PrestaShop
       if (headers['set-cookie'][i].includes('PrestaShop')) {
         cookieString = headers['set-cookie'][i];
+      } else if (headers['Set-Cookie'][i].includes('JSESSIONID')) {
+        cookieString = headers['Set-Cookie'][i];
       }
+      logger.info(cookieString);
     }
 
+    logger.info(parsePsCookie(cookieString));
     return parsePsCookie(cookieString);
   } else {
     return null;

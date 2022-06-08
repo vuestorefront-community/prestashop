@@ -19,6 +19,8 @@ export const useBootstrap = () => {
     try {
       loading.value = true;
       const { data, cookieObject } = await context.$prestashop.api.bootstrap();
+      Logger.debug(data);
+      Logger.debug(cookieObject);
       error.value.boot = null;
 
       if (data.code === 200) {
