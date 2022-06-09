@@ -1,6 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export default async function getReview(context, params) {
-  const url = new URL(context.config.api.url + '/rest/listcomments');
+  const url = new URL(context.config.api.url + context.config.api.restPath + '/listcomments');
   params.productId && url.searchParams.set('id_product', params.productId);
   params.productId && url.searchParams.set('page', params.page);
 

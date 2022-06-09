@@ -5,7 +5,7 @@ export default async function setShippingMethod(context, params) {
   const { shippingMethodId, addressId } = params;
   // eslint-disable-next-line camelcase
   const body = { id_address: addressId, id_carrier: shippingMethodId };
-  const url = new URL(context.config.api.url + '/rest/setcarriercheckout');
+  const url = new URL(context.config.api.url + context.config.api.restPath + '/setcarriercheckout');
 
   const { data, headers } = await context.client.post(url.href, body, {
     headers: {

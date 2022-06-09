@@ -4,7 +4,7 @@ import { cookieParser } from '../../helpers/cookieParser';
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export default async function updateCustomer(context, params) {
   const { updatedUserData } = params;
-  const url = new URL(context.config.api.url + '/rest/accountedit');
+  const url = new URL(context.config.api.url + context.config.api.restPath + '/accountedit');
   const { data, headers } = await context.client.post(url.href, updatedUserData, {
     headers: {
       Cookie: params.psCookieKey + '=' + params.psCookieValue + ';'
