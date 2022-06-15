@@ -443,3 +443,10 @@ export default {
 }
 
 </style>
+
+<style lang="scss">
+.sf-circle-icon{
+  z-index: 10;
+  bottom: var(--product-card-add-button-bottom, 0rem);
+}
+</style>
