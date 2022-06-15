@@ -170,6 +170,7 @@ export default {
   },
   publicRuntimeConfig: {
     theme,
+    baseURL: process.env.BASE_URL,
     psCustomerCookieKey: 'ps-customer-cookie-key',
     psCustomerCookieValue: 'ps-customer-cookie-value'
   },

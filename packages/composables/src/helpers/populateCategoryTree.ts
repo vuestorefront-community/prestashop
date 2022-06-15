@@ -1,14 +1,14 @@
 import {AgnosticCategoryTree} from '@vue-storefront/core';
 
 const slugify = (url) => {
-  const lastPart = url.substring(url.lastIndexOf('/') + 1);
-  return lastPart.match(/^[0-9]+-(.*)$/)[1];
+  const lastPart = url?.substring(url.lastIndexOf('/') + 1);
+  return lastPart?.match(/^[0-9]+-(.*)$/)[1];
 };
 
 const treeObject = (category, items) : AgnosticCategoryTree => {
   return {
-    label: category.name,
-    slug: slugify(category.link),
+    label: category?.name,
+    slug: slugify(category?.link),
     items: items,
     isCurrent: false,
     count: 0

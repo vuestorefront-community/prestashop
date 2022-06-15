@@ -237,7 +237,9 @@ export default {
     const productsQuantity = ref({});
     const products = computed(() => facetGetters.getProducts(result.value));
     const categoryTree = computed(() => facetGetters.getCategoryTree(result.value));
+    // Not used
     const breadcrumbs = computed(() => facetGetters.getBreadcrumbs(result.value));
+    // Not used
     const sortBy = computed(() => facetGetters.getSortOptions(result.value));
     const facets = computed(() => facetGetters.getGrouped(result.value));
     const pagination = computed(() => facetGetters.getPagination(result.value));

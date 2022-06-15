@@ -6,6 +6,7 @@ export default async function bootstrap(context) {
   const url = new URL(context.config.api.url + context.config.api.restPath + '/lightbootstrap');
 
   url.searchParams.set('menu_with_images', 'single');
+  url.searchParams.set('requestHostName', context?.req?.headers?.host);
 
   logger.info('Calling rest data from: ' + url.href);
   const { data, headers } = await context.client.get(url.href);
