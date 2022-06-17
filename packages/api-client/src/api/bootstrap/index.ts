@@ -8,15 +8,15 @@ export default async function bootstrap(context) {
   url.searchParams.set('menu_with_images', 'single');
   url.searchParams.set('requestHostName', context?.req?.headers?.host);
 
-  logger.info('Calling rest data from: ' + url.href);
+  // logger.info('Calling rest data from: ' + url.href);
   const { data, headers } = await context.client.get(url.href);
-  logger.info('Data');
-  logger.info(data);
-  logger.warn('Headers');
-  logger.warn(headers);
+  // logger.info('Data');
+  // logger.info(data);
+  // logger.warn('Headers');
+  // logger.warn(headers);
   const cookieObject = cookieParser(headers);
-  logger.info('cookieParser\'s cookieObject');
-  logger.info(cookieObject);
+  // logger.info('cookieParser\'s cookieObject');
+  // logger.info(cookieObject);
 
   return {data, cookieObject};
 }

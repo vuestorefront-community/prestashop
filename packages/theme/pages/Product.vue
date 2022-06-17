@@ -260,7 +260,7 @@ export default {
       reviewGetters.getItems(productReviews.value.psdata)
     );
     const selectedAttribute = (optionKey) => {
-      const option = options.value[Number(optionKey)];
+      const option = options.value[optionKey];
       const attrs = option.attributes;
       for (const key in attrs) {
         if (attrs[key].selected) {

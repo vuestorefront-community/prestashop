@@ -1,4 +1,5 @@
 import {facetParams} from '../../helpers/facetParams';
+import {logger} from '../../helpers/logging';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export default async function getCategoryProducts(context, params) {
@@ -14,6 +15,8 @@ export default async function getCategoryProducts(context, params) {
 
     const facetsUrl = facetParams(params.input.filters);
 
+    // logger.info('Calling rest data from: ' + url.href);
+
     url.searchParams.set('slug', params.input.categorySlug);
     url.searchParams.set('q', facetsUrl);
     url.searchParams.set('page', params.input.page);
@@ -21,6 +24,11 @@ export default async function getCategoryProducts(context, params) {
     url.searchParams.set('with_category_tree', '1');
 
     const { data } = await context.client.get(url.href);
+    // logger.info('Data');
+    // logger.info(data);
+    // logger.info('Data.pagination');
+    // logger.info(data.psdata.pagination);
+
     return data;
   }
 }
