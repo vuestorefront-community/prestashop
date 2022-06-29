@@ -17,8 +17,9 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
 
     const key = context.$prestashop.config.app.$cookies.get(cookieKey);
     const value = context.$prestashop.config.app.$cookies.get(cookieValue);
+    const moquiSessionToken = context.$prestashop.config.app.$cookies.get('moquiSessionToken');
     if (key && value) {
-      const result: any = await context.$prestashop.api.loadCustomer({key, value});
+      const result: any = await context.$prestashop.api.loadCustomer({key, value, moquiSessionToken});
       if (result.code === 410) {
         return null;
       }
@@ -49,11 +50,14 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
 
     const psCookieKey = context.$prestashop.config.app.$cookies.get(vsfCookieKey);
     const psCookieValue = context.$prestashop.config.app.$cookies.get(vsfCookieValue);
-    const { data, cookieObject } = await context.$prestashop.api.updateCustomer({ psCookieKey, psCookieValue, updatedUserData });
+    const moquiSessionToken = context.$prestashop.config.app.$cookies.get('moquiSessionToken');
+
+    const { data, cookieObject } = await context.$prestashop.api.updateCustomer({ psCookieKey, psCookieValue, updatedUserData, moquiSessionToken });
+
     if (data.success) {
       if (cookieObject) {
-        context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
-        context.$prestashop.config.app.$cookies.set(vsfCookieValue, cookieObject.vsfPsValCookie);
+        await context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
+        await context.$prestashop.config.app.$cookies.set(vsfCookieValue, cookieObject.vsfPsValCookie);
       }
       const cookieKey = context.$prestashop.config.app.$config.psCustomerCookieKey;
       const cookieValue = context.$prestashop.config.app.$config.psCustomerCookieValue;
@@ -75,15 +79,29 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
     const psCookieKey = context.$prestashop.config.app.$cookies.get(vsfCookieKey);
     const psCookieValue = context.$prestashop.config.app.$cookies.get(vsfCookieValue);
 
-    const {data, cookieObject} = await context.$prestashop.api.register({email, password, firstName, lastName, psCookieKey, psCookieValue});
+    Logger.error("user 1 context.$prestashop.config.app.$cookies.get('moquiSessionToken');"+JSON.stringify(await context.$prestashop.config.app.$cookies.get('moquiSessionToken')));
 
-    const code = data.code;
+    let moquiSessionToken = await context.$prestashop.config.app.$cookies.get('moquiSessionToken');
+
+    const {data, headers, cookieObject} = await context.$prestashop.api.register({email, password, firstName, lastName, psCookieKey, psCookieValue, moquiSessionToken});
+    const code = data?.code;
+
+    Logger.error("user headers['moquisessiontoken']: "+JSON.stringify(headers['moquisessiontoken']));
+
+    moquiSessionToken = headers['moquisessiontoken'] ? headers['moquisessiontoken'] : headers['x-csrf-token'];
+    await context.$prestashop.config.app.$cookies.set('moquiSessionToken', moquiSessionToken);
+
+    Logger.error("user 2 context.$prestashop.config.app.$cookies.get('moquiSessionToken'): "+JSON.stringify(await context.$prestashop.config.app.$cookies.get('moquiSessionToken')));
 
     if (code === 200) {
-      context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
-      context.$prestashop.config.app.$cookies.set(vsfCookieValue, cookieObject.vsfPsValCookie);
+      console.log("this "+JSON.stringify(this));
+      console.log(context);
 
-      const result: any = await context.$prestashop.api.loadCustomer({key: cookieObject.vsfPsKeyCookie, value: cookieObject.vsfPsValCookie});
+      await context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
+      await context.$prestashop.config.app.$cookies.set(vsfCookieValue, cookieObject.vsfPsValCookie);
+
+      const result: any = await context.$prestashop.api.loadCustomer({key: cookieObject.vsfPsKeyCookie, value: cookieObject.vsfPsValCookie, moquiSessionToken});
+
       if (result.code === 410) {
         return {};
       }
@@ -105,16 +123,16 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
 
     const psCookieKey = context.$prestashop.config.app.$cookies.get(vsfCookieKey);
     const psCookieValue = context.$prestashop.config.app.$cookies.get(vsfCookieValue);
+    const moquiSessionToken = context.$prestashop.config.app.$cookies.get('moquiSessionToken');
 
-    const {data, cookieObject} = await context.$prestashop.api.login({username, password, psCookieKey, psCookieValue});
+    const {data, cookieObject} = await context.$prestashop.api.login({username, password, psCookieKey, psCookieValue, moquiSessionToken});
     const code = data.code;
 
     if (code === 200) {
       if (cookieObject) {
-        context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
-        context.$prestashop.config.app.$cookies.set(vsfCookieValue, cookieObject.vsfPsValCookie);
+        await context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
+        await context.$prestashop.config.app.$cookies.set(vsfCookieValue, cookieObject.vsfPsValCookie);
       }
-
     } else if (code === 306) {
       throw {
         message: 'The provided credentials are invalid'
@@ -137,11 +155,13 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
 
     const psCookieKey = context.$prestashop.config.app.$cookies.get(vsfCookieKey);
     const psCookieValue = context.$prestashop.config.app.$cookies.get(vsfCookieValue);
-    const { data, cookieObject } = await context.$prestashop.api.updateCustomer({ psCookieKey, psCookieValue, updatedUserData });
+    const moquiSessionToken = context.$prestashop.config.app.$cookies.get('moquiSessionToken');
+
+    const { data, cookieObject } = await context.$prestashop.api.updateCustomer({ psCookieKey, psCookieValue, updatedUserData, moquiSessionToken });
     if (data.success) {
       if (cookieObject) {
-        context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
-        context.$prestashop.config.app.$cookies.set(vsfCookieValue, cookieObject.vsfPsValCookie);
+        await context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
+        await context.$prestashop.config.app.$cookies.set(vsfCookieValue, cookieObject.vsfPsValCookie);
       }
       const cookieKey = context.$prestashop.config.app.$config.psCustomerCookieKey;
       const cookieValue = context.$prestashop.config.app.$config.psCustomerCookieValue;

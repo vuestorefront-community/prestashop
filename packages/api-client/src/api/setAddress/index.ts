@@ -9,7 +9,8 @@ export default async function setAddress(context, params) {
 
   const { data, headers } = await context.client.post(url.href, body, {
     headers: {
-      Cookie: params.psCookieKey + '=' + params.psCookieValue + ';'
+      Cookie: params.psCookieKey + '=' + params.psCookieValue + ';',
+      moquiSessionToken: params.moquiSessionToken
     }
   }
   );

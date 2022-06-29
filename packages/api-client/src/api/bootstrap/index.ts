@@ -14,9 +14,19 @@ export default async function bootstrap(context) {
   // logger.info(data);
   // logger.warn('Headers');
   // logger.warn(headers);
+
+  // logger.warn('Client');
+  // logger.warn(context.client);
+
+  // logger.warn('Client Headers');
+  // logger.warn(context.client.defaults.headers);
+
+  // logger.warn('context.$prestashop.config');
+  // logger.warn(context.$prestashop.config.app);
+
   const cookieObject = cookieParser(headers);
   // logger.info('cookieParser\'s cookieObject');
   // logger.info(cookieObject);
 
-  return {data, cookieObject};
+  return {data, headers, cookieObject};
 }

@@ -5,7 +5,9 @@ import axios from 'axios';
 
 const onCreate = (settings) => {
   const client = axios.create({
-    baseURL: settings.api.url
+    baseURL: settings.api.url,
+    // xsrfHeaderName: 'x-csrf-token'
+    xsrfHeaderName: 'X-CSRF-Token'
   });
 
   return {

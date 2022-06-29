@@ -16,15 +16,16 @@ const params: UseUserShippingFactoryParams<Address, AddressItem> = {
     const vsfCookieKey = context.$prestashop.config.app.$config.psCustomerCookieKey;
     const vsfCookieValue = context.$prestashop.config.app.$config.psCustomerCookieValue;
 
-    const psCookieKey = context.$prestashop.config.app.$cookies.get(vsfCookieKey);
-    const psCookieValue = context.$prestashop.config.app.$cookies.get(vsfCookieValue);
+    const psCookieKey = await context.$prestashop.config.app.$cookies.get(vsfCookieKey);
+    const psCookieValue = await context.$prestashop.config.app.$cookies.get(vsfCookieValue);
+    const moquiSessionToken = await context.$prestashop.config.app.$cookies.get('moquiSessionToken');
 
-    await context.$prestashop.api.addNewAddress({address, psCookieKey, psCookieValue });
-    const { data, cookieObject } = await context.$prestashop.api.loadAddresses({ psCookieKey, psCookieValue });
+    await context.$prestashop.api.addNewAddress({address, psCookieKey, psCookieValue, moquiSessionToken });
+    const { data, cookieObject } = await context.$prestashop.api.loadAddresses({ psCookieKey, psCookieValue, moquiSessionToken });
     if (data.code === 200) {
       if (cookieObject) {
-        context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
-        context.$prestashop.config.app.$cookies.set(vsfCookieValue, cookieObject.vsfPsValCookie);
+        await context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
+        await context.$prestashop.config.app.$cookies.set(vsfCookieValue, cookieObject.vsfPsValCookie);
       }
       return data.psdata;
     } else {
@@ -40,15 +41,16 @@ const params: UseUserShippingFactoryParams<Address, AddressItem> = {
     const vsfCookieKey = context.$prestashop.config.app.$config.psCustomerCookieKey;
     const vsfCookieValue = context.$prestashop.config.app.$config.psCustomerCookieValue;
 
-    const psCookieKey = context.$prestashop.config.app.$cookies.get(vsfCookieKey);
-    const psCookieValue = context.$prestashop.config.app.$cookies.get(vsfCookieValue);
+    const psCookieKey = await context.$prestashop.config.app.$cookies.get(vsfCookieKey);
+    const psCookieValue = await context.$prestashop.config.app.$cookies.get(vsfCookieValue);
+    const moquiSessionToken = await context.$prestashop.config.app.$cookies.get('moquiSessionToken');
 
-    await context.$prestashop.api.removeAddress({id, psCookieKey, psCookieValue });
+    await context.$prestashop.api.removeAddress({id, psCookieKey, psCookieValue, moquiSessionToken });
     const { data, cookieObject } = await context.$prestashop.api.loadAddresses({ psCookieKey, psCookieValue });
     if (data.code === 200) {
       if (cookieObject) {
-        context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
-        context.$prestashop.config.app.$cookies.set(vsfCookieValue, cookieObject.vsfPsValCookie);
+        await context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
+        await context.$prestashop.config.app.$cookies.set(vsfCookieValue, cookieObject.vsfPsValCookie);
       }
       return data.psdata;
     } else {
@@ -62,15 +64,16 @@ const params: UseUserShippingFactoryParams<Address, AddressItem> = {
     const vsfCookieKey = context.$prestashop.config.app.$config.psCustomerCookieKey;
     const vsfCookieValue = context.$prestashop.config.app.$config.psCustomerCookieValue;
 
-    const psCookieKey = context.$prestashop.config.app.$cookies.get(vsfCookieKey);
-    const psCookieValue = context.$prestashop.config.app.$cookies.get(vsfCookieValue);
+    const psCookieKey = await context.$prestashop.config.app.$cookies.get(vsfCookieKey);
+    const psCookieValue = await context.$prestashop.config.app.$cookies.get(vsfCookieValue);
+    const moquiSessionToken = await context.$prestashop.config.app.$cookies.get('moquiSessionToken');
 
-    await context.$prestashop.api.updateOneAddress({address, psCookieKey, psCookieValue });
+    await context.$prestashop.api.updateOneAddress({address, psCookieKey, psCookieValue, moquiSessionToken });
     const { data, cookieObject } = await context.$prestashop.api.loadAddresses({ psCookieKey, psCookieValue });
     if (data.code === 200) {
       if (cookieObject) {
-        context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
-        context.$prestashop.config.app.$cookies.set(vsfCookieValue, cookieObject.vsfPsValCookie);
+        await context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
+        await context.$prestashop.config.app.$cookies.set(vsfCookieValue, cookieObject.vsfPsValCookie);
       }
       return data.psdata;
     } else {
@@ -82,14 +85,15 @@ const params: UseUserShippingFactoryParams<Address, AddressItem> = {
     const vsfCookieKey = context.$prestashop.config.app.$config.psCustomerCookieKey;
     const vsfCookieValue = context.$prestashop.config.app.$config.psCustomerCookieValue;
 
-    const psCookieKey = context.$prestashop.config.app.$cookies.get(vsfCookieKey);
-    const psCookieValue = context.$prestashop.config.app.$cookies.get(vsfCookieValue);
+    const psCookieKey = await context.$prestashop.config.app.$cookies.get(vsfCookieKey);
+    const psCookieValue = await context.$prestashop.config.app.$cookies.get(vsfCookieValue);
+    const moquiSessionToken = await context.$prestashop.config.app.$cookies.get('moquiSessionToken');
 
-    const { data, cookieObject } = await context.$prestashop.api.loadAddresses({ psCookieKey, psCookieValue });
+    const { data, cookieObject } = await context.$prestashop.api.loadAddresses({ psCookieKey, psCookieValue, moquiSessionToken });
     if (data.code === 200) {
       if (cookieObject) {
-        context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
-        context.$prestashop.config.app.$cookies.set(vsfCookieValue, cookieObject.vsfPsValCookie);
+        await context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
+        await context.$prestashop.config.app.$cookies.set(vsfCookieValue, cookieObject.vsfPsValCookie);
       }
       return data.psdata;
     } else {
@@ -106,16 +110,17 @@ const params: UseUserShippingFactoryParams<Address, AddressItem> = {
     const vsfCookieKey = context.$prestashop.config.app.$config.psCustomerCookieKey;
     const vsfCookieValue = context.$prestashop.config.app.$config.psCustomerCookieValue;
 
-    const psCookieKey = context.$prestashop.config.app.$cookies.get(vsfCookieKey);
-    const psCookieValue = context.$prestashop.config.app.$cookies.get(vsfCookieValue);
+    const psCookieKey = await context.$prestashop.config.app.$cookies.get(vsfCookieKey);
+    const psCookieValue = await context.$prestashop.config.app.$cookies.get(vsfCookieValue);
+    const moquiSessionToken = await context.$prestashop.config.app.$cookies.get('moquiSessionToken');
 
-    await context.$prestashop.api.setAddress({ id, psCookieKey, psCookieValue });
+    await context.$prestashop.api.setAddress({ id, psCookieKey, psCookieValue, moquiSessionToken });
 
-    const { data, cookieObject } = await context.$prestashop.api.loadAddresses({ psCookieKey, psCookieValue });
+    const { data, cookieObject } = await context.$prestashop.api.loadAddresses({ psCookieKey, psCookieValue, moquiSessionToken });
     if (data.code === 200) {
       if (cookieObject) {
-        context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
-        context.$prestashop.config.app.$cookies.set(vsfCookieValue, cookieObject.vsfPsValCookie);
+        await context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
+        await context.$prestashop.config.app.$cookies.set(vsfCookieValue, cookieObject.vsfPsValCookie);
       }
       return data.psdata;
     } else {

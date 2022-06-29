@@ -30,8 +30,8 @@ export const useCountryList = () => {
         const psCookieValue = context.$prestashop.config.app.$cookies.get(vsfCookieValue);
 
         if (cookieObject && !psCookieKey && !psCookieValue) {
-          context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
-          context.$prestashop.config.app.$cookies.set(vsfCookieValue, cookieObject.vsfPsValCookie);
+          await context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
+          await context.$prestashop.config.app.$cookies.set(vsfCookieValue, cookieObject.vsfPsValCookie);
         }
         return data;
       }

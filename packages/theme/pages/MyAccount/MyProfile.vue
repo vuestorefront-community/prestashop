@@ -19,7 +19,7 @@
       <p class="message">
         {{ $t('Change password your account') }}:<br />
         {{ $t('Your current email address is') }}
-        <span class="message__label">example@email.com</span>
+        <span class="message__label">{{ emailAddress }}</span>
       </p>
 
       <PasswordResetForm @submit="updatePassword" />
@@ -33,7 +33,7 @@ import { email, required, min, confirmed } from 'vee-validate/dist/rules';
 import ProfileUpdateForm from '~/components/MyAccount/ProfileUpdateForm';
 import PasswordResetForm from '~/components/MyAccount/PasswordResetForm';
 import { SfTabs, SfInput, SfButton } from '@storefront-ui/vue';
-import { useUser } from '@vue-storefront/prestashop';
+import { useUser, userGetters } from '@vue-storefront/prestashop';
 
 extend('email', {
   ...email,
@@ -77,8 +77,9 @@ export default {
   },
 
   setup() {
-    const { updateUser, changePassword } = useUser();
+    const { user, updateUser, changePassword } = useUser();
 
+    const emailAddress = userGetters.getEmailAddress(user.value);
     const formHandler = async (fn, onComplete, onError) => {
       try {
         const data = await fn();
@@ -93,7 +94,8 @@ export default {
 
     return {
       updatePersonalData,
-      updatePassword
+      updatePassword,
+      emailAddress
     };
   }
 };

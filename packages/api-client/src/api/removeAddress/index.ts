@@ -8,7 +8,9 @@ export default async function removeAddress(context, params) {
   // eslint-disable-next-line camelcase
   const { data, headers } = await context.client.delete(url.href, {
     headers: {
-      Cookie: params.psCookieKey + '=' + params.psCookieValue + ';'
+      Cookie: params.psCookieKey + '=' + params.psCookieValue + ';',
+      moquiSessionToken: params.moquiSessionToken
+
     }, // eslint-disable-next-line camelcase
     data: { id_address: id }
   }

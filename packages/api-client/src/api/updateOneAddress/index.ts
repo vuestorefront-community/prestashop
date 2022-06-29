@@ -8,7 +8,8 @@ export default async function updateOneAddress(context, params) {
 
   const { data, headers } = await context.client.post(url.href, address, {
     headers: {
-      Cookie: params.psCookieKey + '=' + params.psCookieValue + ';'
+      Cookie: params.psCookieKey + '=' + params.psCookieValue + ';',
+      moquiSessionToken: params.moquiSessionToken
     }
   }
   );

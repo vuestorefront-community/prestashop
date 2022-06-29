@@ -4,7 +4,8 @@ export default async function loadCustomer(context, params) {
 
   const { data } = await context.client.get(url.href, {
     headers: {
-      Cookie: params.key + '=' + params.value + ';'
+      Cookie: params.key + '=' + params.value + ';',
+      moquiSessionToken: params.moquiSessionToken
     }
   });
 

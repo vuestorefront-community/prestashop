@@ -12,8 +12,8 @@ function getLastName(user: any): string {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getFullName(user: User): string {
-  return '';
+function getFullName(user: any): string {
+  return user.firstname + ' ' + user.lastname;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars,@typescript-eslint/explicit-module-boundary-types

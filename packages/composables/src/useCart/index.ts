@@ -21,8 +21,8 @@ const params: UseCartFactoryParams<Cart, CartItem, PsProduct> = {
     const { data, cookieObject } = await context.$prestashop.api.getCartItems({ psCookieKey, psCookieValue });
 
     if (cookieObject) {
-      context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
-      context.$prestashop.config.app.$cookies.set(vsfCookieValue, cookieObject.vsfPsValCookie);
+      await context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
+      await context.$prestashop.config.app.$cookies.set(vsfCookieValue, cookieObject.vsfPsValCookie);
     }
 
     if (data && data.code === 200) {
@@ -44,8 +44,8 @@ const params: UseCartFactoryParams<Cart, CartItem, PsProduct> = {
 
     if (data.code === 200) {
       if (cookieObject) {
-        context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
-        context.$prestashop.config.app.$cookies.set(vsfCookieValue, cookieObject.vsfPsValCookie);
+        await context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
+        await context.$prestashop.config.app.$cookies.set(vsfCookieValue, cookieObject.vsfPsValCookie);
       }
       return data;
     } else {
@@ -66,8 +66,8 @@ const params: UseCartFactoryParams<Cart, CartItem, PsProduct> = {
 
     if (data.code === 200) {
       if (cookieObject) {
-        context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
-        context.$prestashop.config.app.$cookies.set(vsfCookieValue, cookieObject.vsfPsValCookie);
+        await context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
+        await context.$prestashop.config.app.$cookies.set(vsfCookieValue, cookieObject.vsfPsValCookie);
       }
       return data;
     } else {
@@ -95,8 +95,8 @@ const params: UseCartFactoryParams<Cart, CartItem, PsProduct> = {
 
     if (data.code === 200) {
       if (cookieObject) {
-        context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
-        context.$prestashop.config.app.$cookies.set(vsfCookieValue, cookieObject.vsfPsValCookie);
+        await context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
+        await context.$prestashop.config.app.$cookies.set(vsfCookieValue, cookieObject.vsfPsValCookie);
       }
       return data;
     } else {

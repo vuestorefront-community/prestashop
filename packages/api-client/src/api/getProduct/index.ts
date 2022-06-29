@@ -9,17 +9,21 @@ export default async function getProduct(context, params) {
       params.refresh && url.searchParams.set('refresh', params.refresh);
       logger.warn(JSON.stringify(params.variantObj));
 
-      // url.searchParams.set('group', JSON.stringify(params.variantObj));
+      // for (const i in params.variantObj) {
+      //   url.searchParams.set(`group[${i}]`, params.variantObj[i]);
+      // }
+
+      url.searchParams.set('group', JSON.stringify(params.variantObj));
     }
+    logger.info('url.searchParams.toString()');
+    logger.info(url.searchParams.toString());
 
     logger.info('Calling rest data from: ' + url.href);
     const { data } = await context.client.get(url.href, {
       group: params.variantObj
     });
-    logger.info('Data');
-    logger.info(data);
-    logger.info('data.groups');
-    logger.info(data.groups);
+    // logger.info('Data');
+    // logger.info(data);
 
     return data;
   } else if (params.featured) {

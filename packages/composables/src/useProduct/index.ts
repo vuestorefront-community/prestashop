@@ -12,6 +12,7 @@ const params: UseProductFactoryParams<Product, SearchParams> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   productsSearch: async (context: Context, params) => {
     const { variant } = params;
+
     if (variant) {
       const variantObj = { };
       params.refresh = true;
