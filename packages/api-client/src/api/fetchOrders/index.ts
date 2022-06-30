@@ -2,7 +2,7 @@
 import { cookieParser } from '../../helpers/cookieParser';
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export default async function fetchOrders(context, params) {
-  const {psCookieKey, psCookieValue, orderId} = params;
+  const {psCookieKey, psCookieValue, orderId, moquiSessionToken} = params;
   const url = new URL(context.config.api.url + context.config.api.restPath + '/orderhistory');
 
   if (orderId) {
@@ -13,7 +13,8 @@ export default async function fetchOrders(context, params) {
     // It's not possible to get cart items without cookies (or any operation on cart)
     const { data, headers } = await context.client.get(url.href, {
       headers: {
-        Cookie: psCookieKey + '=' + psCookieValue + ';'
+        Cookie: psCookieKey + '=' + psCookieValue + ';',
+        moquiSessionToken: moquiSessionToken
       }
     });
 

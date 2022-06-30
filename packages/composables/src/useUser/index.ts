@@ -15,9 +15,9 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
     const cookieKey = context.$prestashop.config.app.$config.psCustomerCookieKey;
     const cookieValue = context.$prestashop.config.app.$config.psCustomerCookieValue;
 
-    const key = context.$prestashop.config.app.$cookies.get(cookieKey);
-    const value = context.$prestashop.config.app.$cookies.get(cookieValue);
-    const moquiSessionToken = context.$prestashop.config.app.$cookies.get('moquiSessionToken');
+    const key = await context.$prestashop.config.app.$cookies.get(cookieKey);
+    const value = await context.$prestashop.config.app.$cookies.get(cookieValue);
+    const moquiSessionToken = await context.$prestashop.config.app.$cookies.get('moquiSessionToken');
     if (key && value) {
       const result: any = await context.$prestashop.api.loadCustomer({key, value, moquiSessionToken});
       if (result.code === 410) {
@@ -48,9 +48,9 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
     const vsfCookieKey = context.$prestashop.config.app.$config.psCustomerCookieKey;
     const vsfCookieValue = context.$prestashop.config.app.$config.psCustomerCookieValue;
 
-    const psCookieKey = context.$prestashop.config.app.$cookies.get(vsfCookieKey);
-    const psCookieValue = context.$prestashop.config.app.$cookies.get(vsfCookieValue);
-    const moquiSessionToken = context.$prestashop.config.app.$cookies.get('moquiSessionToken');
+    const psCookieKey = await context.$prestashop.config.app.$cookies.get(vsfCookieKey);
+    const psCookieValue = await context.$prestashop.config.app.$cookies.get(vsfCookieValue);
+    const moquiSessionToken = await context.$prestashop.config.app.$cookies.get('moquiSessionToken');
 
     const { data, cookieObject } = await context.$prestashop.api.updateCustomer({ psCookieKey, psCookieValue, updatedUserData, moquiSessionToken });
 
@@ -62,8 +62,8 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
       const cookieKey = context.$prestashop.config.app.$config.psCustomerCookieKey;
       const cookieValue = context.$prestashop.config.app.$config.psCustomerCookieValue;
 
-      const key = context.$prestashop.config.app.$cookies.get(cookieKey);
-      const value = context.$prestashop.config.app.$cookies.get(cookieValue);
+      const key = await context.$prestashop.config.app.$cookies.get(cookieKey);
+      const value = await context.$prestashop.config.app.$cookies.get(cookieValue);
       if (key && value) {
         const result: any = await context.$prestashop.api.loadCustomer({key, value});
         return result.psdata;
@@ -76,8 +76,8 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
     const vsfCookieKey = context.$prestashop.config.app.$config.psCustomerCookieKey;
     const vsfCookieValue = context.$prestashop.config.app.$config.psCustomerCookieValue;
 
-    const psCookieKey = context.$prestashop.config.app.$cookies.get(vsfCookieKey);
-    const psCookieValue = context.$prestashop.config.app.$cookies.get(vsfCookieValue);
+    const psCookieKey = await context.$prestashop.config.app.$cookies.get(vsfCookieKey);
+    const psCookieValue = await context.$prestashop.config.app.$cookies.get(vsfCookieValue);
 
     Logger.error("user 1 context.$prestashop.config.app.$cookies.get('moquiSessionToken');"+JSON.stringify(await context.$prestashop.config.app.$cookies.get('moquiSessionToken')));
 
@@ -121,9 +121,9 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
     const vsfCookieKey = context.$prestashop.config.app.$config.psCustomerCookieKey;
     const vsfCookieValue = context.$prestashop.config.app.$config.psCustomerCookieValue;
 
-    const psCookieKey = context.$prestashop.config.app.$cookies.get(vsfCookieKey);
-    const psCookieValue = context.$prestashop.config.app.$cookies.get(vsfCookieValue);
-    const moquiSessionToken = context.$prestashop.config.app.$cookies.get('moquiSessionToken');
+    const psCookieKey = await context.$prestashop.config.app.$cookies.get(vsfCookieKey);
+    const psCookieValue = await context.$prestashop.config.app.$cookies.get(vsfCookieValue);
+    const moquiSessionToken = await context.$prestashop.config.app.$cookies.get('moquiSessionToken');
 
     const {data, cookieObject} = await context.$prestashop.api.login({username, password, psCookieKey, psCookieValue, moquiSessionToken});
     const code = data.code;
@@ -153,9 +153,9 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
     const vsfCookieKey = context.$prestashop.config.app.$config.psCustomerCookieKey;
     const vsfCookieValue = context.$prestashop.config.app.$config.psCustomerCookieValue;
 
-    const psCookieKey = context.$prestashop.config.app.$cookies.get(vsfCookieKey);
-    const psCookieValue = context.$prestashop.config.app.$cookies.get(vsfCookieValue);
-    const moquiSessionToken = context.$prestashop.config.app.$cookies.get('moquiSessionToken');
+    const psCookieKey = await context.$prestashop.config.app.$cookies.get(vsfCookieKey);
+    const psCookieValue = await context.$prestashop.config.app.$cookies.get(vsfCookieValue);
+    const moquiSessionToken = await context.$prestashop.config.app.$cookies.get('moquiSessionToken');
 
     const { data, cookieObject } = await context.$prestashop.api.updateCustomer({ psCookieKey, psCookieValue, updatedUserData, moquiSessionToken });
     if (data.success) {
@@ -166,8 +166,8 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
       const cookieKey = context.$prestashop.config.app.$config.psCustomerCookieKey;
       const cookieValue = context.$prestashop.config.app.$config.psCustomerCookieValue;
 
-      const key = context.$prestashop.config.app.$cookies.get(cookieKey);
-      const value = context.$prestashop.config.app.$cookies.get(cookieValue);
+      const key = await context.$prestashop.config.app.$cookies.get(cookieKey);
+      const value = await context.$prestashop.config.app.$cookies.get(cookieValue);
       if (key && value) {
         const result: any = await context.$prestashop.api.loadCustomer({key, value});
         return result.psdata;

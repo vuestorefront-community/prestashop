@@ -11,7 +11,7 @@
       class="form__element"
     />
     <p style="margin-bottom:0px;">Comment</p>
-    <SfTextarea v-model="comment" name="Cooment" class="textare" :rows="6" />
+    <SfTextarea v-model="comment" name="Comment" class="textare" :rows="6" />
 
     <p style="margin-bottom:0px;">Rating</p>
 <!--    TODO: style-->

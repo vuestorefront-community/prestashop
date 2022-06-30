@@ -21,8 +21,8 @@ export const usePayment = () => {
       const vsfCookieKey = context.$prestashop.config.app.$config.psCustomerCookieKey;
       const vsfCookieValue = context.$prestashop.config.app.$config.psCustomerCookieValue;
 
-      const psCookieKey = context.$prestashop.config.app.$cookies.get(vsfCookieKey);
-      const psCookieValue = context.$prestashop.config.app.$cookies.get(vsfCookieValue);
+      const psCookieKey = await context.$prestashop.config.app.$cookies.get(vsfCookieKey);
+      const psCookieValue = await context.$prestashop.config.app.$cookies.get(vsfCookieValue);
       const { data, cookieObject } = await context.$prestashop.api.getPaymentMethods({ psCookieKey, psCookieValue });
 
       error.value.boot = null;

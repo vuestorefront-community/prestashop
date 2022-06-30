@@ -16,8 +16,7 @@ const cookieParser = (headers) => {
   // to get the latest Auth cookie - normally there are two PrestaShop cookies
   const cookieArray = headers['set-cookie'] ? headers['set-cookie'] : [];
 
-  logger.info('cookieArray');
-  logger.info(cookieArray);
+  // logger.info('cookieArray' + JSON.stringify(cookieArray));
 
   // TODO: Allow for multiple cookies rather than just the last
   return parsePsCookie(cookieArray?.at(cookieArray?.length - 1)) || '';

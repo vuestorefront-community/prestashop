@@ -3,7 +3,7 @@ export default async function addReview(context, params) {
   const url = new URL(context.config.api.url + context.config.api.restPath + '/postcomment');
 
   // eslint-disable-next-line camelcase
-  const { id_product, comment_title, comment_content, criterion, key, value } = params;
+  const { id_product, comment_title, comment_content, criterion, key, value, moquiSessionToken } = params;
   const { data } = await context.client.post(url.href, {
     // eslint-disable-next-line camelcase
     id_product: id_product,
@@ -16,7 +16,8 @@ export default async function addReview(context, params) {
     }
   }, {
     headers: {
-      Cookie: key + '=' + value + ';'
+      Cookie: key + '=' + value + ';',
+      moquiSessionToken: moquiSessionToken
     }
   });
 

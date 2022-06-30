@@ -23,11 +23,12 @@ const params: UseReviewFactoryParams<Review, SearchParams, AddParams> = {
 
     const cookieKey = context.$prestashop.config.app.$config.psCustomerCookieKey;
     const cookieValue = context.$prestashop.config.app.$config.psCustomerCookieValue;
+    const moquiSessionToken = await context.$prestashop.config.app.$cookies.get('moquiSessionToken');
 
-    const key = context.$prestashop.config.app.$cookies.get(cookieKey);
-    const value = context.$prestashop.config.app.$cookies.get(cookieValue);
+    const key = await context.$prestashop.config.app.$cookies.get(cookieKey);
+    const value = await context.$prestashop.config.app.$cookies.get(cookieValue);
 
-    const item = await context.$prestashop.api.addReview({ ...AddParams, customQuery, key, value });
+    const item = await context.$prestashop.api.addReview({ ...AddParams, customQuery, key, value, moquiSessionToken });
     return item;
   }
 };

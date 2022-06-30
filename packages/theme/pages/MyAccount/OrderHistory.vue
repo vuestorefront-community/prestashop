@@ -89,7 +89,7 @@ import { AgnosticOrderStatus } from '@vue-storefront/core';
 import { onSSR } from '@vue-storefront/core';
 
 export default {
-  name: 'OrederHistory',
+  name: 'OrderHistory',
   components: {
     SfTabs,
     SfTable,

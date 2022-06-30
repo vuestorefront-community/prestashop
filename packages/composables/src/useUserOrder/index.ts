@@ -16,9 +16,10 @@ const params: UseUserOrderFactoryParams<Order, SearchParams> = {
     const vsfCookieKey = context.$prestashop.config.app.$config.psCustomerCookieKey;
     const vsfCookieValue = context.$prestashop.config.app.$config.psCustomerCookieValue;
 
-    const psCookieKey = context.$prestashop.config.app.$cookies.get(vsfCookieKey);
-    const psCookieValue = context.$prestashop.config.app.$cookies.get(vsfCookieValue);
-    const { data, cookieObject } = await context.$prestashop.api.fetchOrders({ psCookieKey, psCookieValue, orderId });
+    const psCookieKey = await context.$prestashop.config.app.$cookies.get(vsfCookieKey);
+    const psCookieValue = await context.$prestashop.config.app.$cookies.get(vsfCookieValue);
+    const moquiSessionToken = await context.$prestashop.config.app.$cookies.get('moquiSessionToken');
+    const { data, cookieObject } = await context.$prestashop.api.fetchOrders({ psCookieKey, psCookieValue, orderId, moquiSessionToken });
     if (data.code === 200) {
       if (cookieObject) {
         await context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
