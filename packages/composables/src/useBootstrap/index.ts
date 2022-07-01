@@ -18,7 +18,7 @@ export const useBootstrap = () => {
 
     try {
       loading.value = true;
-      const { data, cookieObject } = await context.$prestashop.api.bootstrap();
+      const { data, headers, cookieObject } = await context.$prestashop.api.bootstrap();
       error.value.boot = null;
 
       // Logger.error("boot headers['moquisessiontoken']: "+JSON.stringify(headers['moquisessiontoken']));

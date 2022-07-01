@@ -6,8 +6,7 @@ export default async function register(context, params) {
   const url = new URL(context.config.api.url + context.config.api.restPath + '/register');
   const { email, password, firstName, lastName, psCookieKey, psCookieValue, moquiSessionToken } = params;
 
-  logger.warn('register moquiSessionToken');
-  logger.warn(moquiSessionToken);
+  logger.warn('register moquiSessionToken ' + moquiSessionToken);
 
   logger.warn('register psCookieKey ' + psCookieKey);
   logger.warn('register psCookieValue ' + psCookieValue);
