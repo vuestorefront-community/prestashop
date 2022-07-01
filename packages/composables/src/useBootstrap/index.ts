@@ -29,8 +29,8 @@ export const useBootstrap = () => {
       //
       // }
 
-      // await context.$prestashop.config.app.$cookies.set('moquiSessionToken', headers['moquisessiontoken'] ? headers['moquisessiontoken'] : headers['x-csrf-token']);
-      //
+      await context.$prestashop.config.app.$cookies.set('moquiSessionToken', headers['moquisessiontoken'] ? headers['moquisessiontoken'] : headers['x-csrf-token']);
+
       // Logger.error("boot context.$prestashop.config.app.$cookies.get('moquiSessionToken'): "+JSON.stringify(context.$prestashop.config.app.$cookies.get('moquiSessionToken')));
 
       if (data?.code === 200) {
