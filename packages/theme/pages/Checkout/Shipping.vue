@@ -6,61 +6,61 @@
       :title="$t('Shipping')"
       class="sf-heading--left sf-heading--no-underline title"
     />
-    <form v-if='addressesList.length >= 1 && !addressFormVisibility' @submit.prevent="handleSelectedAddressSubmit">
+    <form v-if='addressesList && addressesList.length >= 1 && !addressFormVisibility' @submit.prevent="handleSelectedAddressSubmit">
       <SfLoader :class="{ loading }" :loading="loading">
         <div>
-      <sf-address-picker v-model='selectedAddress' class='address-picker'>
-        <div  v-for="address in addressesList" :key="address.id">
-        <sf-address :name="address.id" v-if='!isFormSubmitted || isSelectedAddress(address.id)'>
-          <div>
-          <span>{{address.alias}}</span>
-          <span>{{address.address1}}</span>
-          <span>{{address.address2}}</span>
-          <span>{{address.postcode}}</span>
-          <span>{{address.city}}</span>
-          <span>{{address.country}}</span>
-          <span>{{address.phone}}</span>
-          </div>
-          <div class='flex-row' v-if='!isFormSubmitted'>
-            <div>
-              <SfLink
-                @click.prevent='editAddress(address)'
-              >
-                {{ $t('Edit') }}
-              </SfLink>
-            </div>
-            <div>
-              <SfLink
-                @click.prevent='removeAddress(address.id)'
-              >
-                {{ $t('Remove') }}
-              </SfLink>
-            </div>
-          </div>
-        </sf-address>
+          <sf-address-picker v-model='selectedAddress' class='address-picker'>
+            <div  v-for="address in addressesList" :key="address.id">
+            <sf-address :name="address.id" v-if='!isFormSubmitted || isSelectedAddress(address.id)'>
+              <div>
+              <span>{{address.alias}}</span>
+              <span>{{address.address1}}</span>
+              <span>{{address.address2}}</span>
+              <span>{{address.postcode}}</span>
+              <span>{{address.city}}</span>
+              <span>{{address.country}}</span>
+              <span>{{address.phone}}</span>
+              </div>
+              <div class='flex-row' v-if='!isFormSubmitted'>
+                <div>
+                  <SfLink
+                    @click.prevent='editAddress(address)'
+                  >
+                    {{ $t('Edit') }}
+                  </SfLink>
+                </div>
+                <div>
+                  <SfLink
+                    @click.prevent='removeAddress(address.id)'
+                  >
+                    {{ $t('Remove') }}
+                  </SfLink>
+                </div>
+              </div>
+            </sf-address>
 
-        </div>
-      </sf-address-picker>
-      <div class="form" v-if="!isFormSubmitted">
-        <div class='form__action'>
-          <SfButton
-            v-e2e="'add-new-address'"
-            :disabled="loading"
-            class="form__action-button"
-            @click='addNewAddress'
-          >
-            {{ $t('Add new address') }}
-          </SfButton>
-          <SfButton
-            v-e2e="'select-shipping'"
-            :disabled="loading || !selectedAddress"
-            class="form__action-button"
-            type="submit"
-          >
-            {{ $t('Select shipping method') }}
-          </SfButton>
-        </div>
-      </div>
+            </div>
+          </sf-address-picker>
+          <div class="form" v-if="!isFormSubmitted">
+            <div class='form__action'>
+              <SfButton
+                v-e2e="'add-new-address'"
+                :disabled="loading"
+                class="form__action-button"
+                @click='addNewAddress'
+              >
+                {{ $t('Add new address') }}
+              </SfButton>
+              <SfButton
+                v-e2e="'select-shipping'"
+                :disabled="loading || !selectedAddress"
+                class="form__action-button"
+                type="submit"
+              >
+                {{ $t('Select shipping method') }}
+              </SfButton>
+            </div>
+          </div>
         </div>
       </SfLoader>
     </form>

@@ -18,7 +18,14 @@ export const useBootstrap = () => {
 
     try {
       loading.value = true;
-      const { data, headers, cookieObject } = await context.$prestashop.api.bootstrap();
+      const vsfCookieKey = context.$prestashop.config.app.$config.psCustomerCookieKey;
+      const vsfCookieValue = context.$prestashop.config.app.$config.psCustomerCookieValue;
+
+      const psCookieKey = await context.$prestashop.config.app.$cookies.get(vsfCookieKey);
+      const psCookieValue = await context.$prestashop.config.app.$cookies.get(vsfCookieValue);
+      let moquiSessionToken = await context.$prestashop.config.app.$cookies.get('moquiSessionToken');
+
+      const { data, headers, cookieObject } = await context.$prestashop.api.bootstrap({psCookieKey, psCookieValue, moquiSessionToken});
       error.value.boot = null;
 
       // Logger.error("boot headers['moquisessiontoken']: "+JSON.stringify(headers['moquisessiontoken']));
@@ -44,6 +51,8 @@ export const useBootstrap = () => {
         if (cookieObject && !psCookieKey && !psCookieValue) {
           await context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
           await context.$prestashop.config.app.$cookies.set(vsfCookieValue, cookieObject.vsfPsValCookie);
+          moquiSessionToken = headers['moquisessiontoken'] ? headers['moquisessiontoken'] : headers['x-csrf-token'];
+          await context.$prestashop.config.app.$cookies.set('moquiSessionToken', moquiSessionToken);
         }
         return data;
       }

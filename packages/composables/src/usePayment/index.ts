@@ -23,7 +23,9 @@ export const usePayment = () => {
 
       const psCookieKey = await context.$prestashop.config.app.$cookies.get(vsfCookieKey);
       const psCookieValue = await context.$prestashop.config.app.$cookies.get(vsfCookieValue);
-      const { data, cookieObject } = await context.$prestashop.api.getPaymentMethods({ psCookieKey, psCookieValue });
+      const moquiSessionToken = await context.$prestashop.config.app.$cookies.get('moquiSessionToken');
+
+      const { data, cookieObject } = await context.$prestashop.api.getPaymentMethods({ psCookieKey, psCookieValue, moquiSessionToken });
 
       error.value.boot = null;
 

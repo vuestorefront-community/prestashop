@@ -81,7 +81,7 @@ const params: UseUserShippingFactoryParams<Address, AddressItem> = {
     }
   },
 
-  load: async (context: Context) => {
+  load: async (context: Context, params) => {
     const vsfCookieKey = context.$prestashop.config.app.$config.psCustomerCookieKey;
     const vsfCookieValue = context.$prestashop.config.app.$config.psCustomerCookieValue;
 

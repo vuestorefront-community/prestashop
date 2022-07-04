@@ -7,15 +7,16 @@ export default async ({ app, $vsf }) => {
 
   const psCookieKey = $vsf.$prestashop.config.app.$cookies.get(vsfCookieKey);
   const psCookieValue = $vsf.$prestashop.config.app.$cookies.get(vsfCookieValue);
+  const moquiSessionToken = $vsf.$prestashop.config.app.$cookies.get('moquiSessionToken');
 
   switch (currentPath) {
     case 'payment':
-      const customer = await $vsf.$prestashop.api.loadCustomer({key: psCookieKey, value: psCookieValue});
+      const customer = await $vsf.$prestashop.api.loadCustomer({key: psCookieKey, value: psCookieValue, moquiSessionToken});
       if (customer.code === 410) {
         app.context.redirect('/checkout/user-account');
       }
 
-      const { data } = await $vsf.$prestashop.api.getPaymentMethods({ psCookieKey, psCookieValue });
+      const { data } = await $vsf.$prestashop.api.getPaymentMethods({ psCookieKey, psCookieValue, moquiSessionToken });
 
       if (data.code === 200) {
         if (Object.keys(data.psdata).length === 0) {
@@ -26,7 +27,7 @@ export default async ({ app, $vsf }) => {
       }
       break;
     case 'shipping':
-      const result = await $vsf.$prestashop.api.loadCustomer({key: psCookieKey, value: psCookieValue});
+      const result = await $vsf.$prestashop.api.loadCustomer({key: psCookieKey, value: psCookieValue, moquiSessionToken});
       if (result.code === 410) {
         app.context.redirect('/checkout/user-account');
       }

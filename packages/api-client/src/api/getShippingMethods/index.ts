@@ -6,7 +6,8 @@ export default async function getShippingMethods(context, params) {
 
   const { data, headers } = await context.client.get(url.href, {
     headers: {
-      Cookie: params.psCookieKey + '=' + params.psCookieValue + ';'
+      Cookie: params.psCookieKey + '=' + params.psCookieValue + ';',
+      moquiSessionToken: params.moquiSessionToken
     }
   });
   const cookieObject = cookieParser(headers);

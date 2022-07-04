@@ -2,14 +2,15 @@ import { cookieParser } from '../../helpers/cookieParser';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export default async function setShippingMethod(context, params) {
-  const { shippingMethodId, addressId } = params;
+  const { shippingMethodId, addressId, moquiSessionToken } = params;
   // eslint-disable-next-line camelcase
   const body = { id_address: addressId, id_carrier: shippingMethodId };
   const url = new URL(context.config.api.url + context.config.api.restPath + '/setcarriercheckout');
 
   const { data, headers } = await context.client.post(url.href, body, {
     headers: {
-      Cookie: params.psCookieKey + '=' + params.psCookieValue + ';'
+      Cookie: params.psCookieKey + '=' + params.psCookieValue + ';',
+      moquiSessionToken: moquiSessionToken
     }
   }
   );

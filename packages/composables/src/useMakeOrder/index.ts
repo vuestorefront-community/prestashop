@@ -16,8 +16,9 @@ const factoryParams: UseMakeOrderFactoryParams<Order> = {
 
     const psCookieKey = await context.$prestashop.config.app.$cookies.get(vsfCookieKey);
     const psCookieValue = await context.$prestashop.config.app.$cookies.get(vsfCookieValue);
+    const moquiSessionToken = await context.$prestashop.config.app.$cookies.get('moquiSessionToken');
 
-    const { data, cookieObject } = await context.$prestashop.api.makeOrder({ methodName: methodName, psCookieKey, psCookieValue });
+    const { data, cookieObject } = await context.$prestashop.api.makeOrder({ methodName: methodName, psCookieKey, psCookieValue, moquiSessionToken });
     if (data.code === 200) {
       if (cookieObject) {
         await context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);

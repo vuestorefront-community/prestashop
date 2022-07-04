@@ -52,6 +52,8 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
     const psCookieValue = await context.$prestashop.config.app.$cookies.get(vsfCookieValue);
     const moquiSessionToken = await context.$prestashop.config.app.$cookies.get('moquiSessionToken');
 
+    console.log("updateUser moquiSessionToken " + JSON.stringify(moquiSessionToken));
+
     const { data, cookieObject } = await context.$prestashop.api.updateCustomer({ psCookieKey, psCookieValue, updatedUserData, moquiSessionToken });
 
     if (data.success) {
@@ -88,17 +90,14 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
 
     Logger.error("user headers['moquisessiontoken']: "+JSON.stringify(headers['moquisessiontoken']));
 
-    moquiSessionToken = headers['moquisessiontoken'] ? headers['moquisessiontoken'] : headers['x-csrf-token'];
-    await context.$prestashop.config.app.$cookies.set('moquiSessionToken', moquiSessionToken);
 
     Logger.error("user 2 context.$prestashop.config.app.$cookies.get('moquiSessionToken'): "+JSON.stringify(await context.$prestashop.config.app.$cookies.get('moquiSessionToken')));
 
     if (code === 200) {
-      console.log("this "+JSON.stringify(this));
-      console.log(context);
-
       await context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
       await context.$prestashop.config.app.$cookies.set(vsfCookieValue, cookieObject.vsfPsValCookie);
+      moquiSessionToken = headers['moquisessiontoken'] ? headers['moquisessiontoken'] : headers['x-csrf-token'];
+      await context.$prestashop.config.app.$cookies.set('moquiSessionToken', moquiSessionToken);
 
       const result: any = await context.$prestashop.api.loadCustomer({key: cookieObject.vsfPsKeyCookie, value: cookieObject.vsfPsValCookie, moquiSessionToken});
 
