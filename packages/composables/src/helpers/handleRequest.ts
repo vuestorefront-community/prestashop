@@ -1,6 +1,4 @@
-import { computed } from '@nuxtjs/composition-api';
-import { sharedRef, useVSFContext, Logger } from '@vue-storefront/core';
-import populateAddressesList from './populateAddressesList';
+import { useVSFContext, Logger } from '@vue-storefront/core';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const handleRequest = async (params) => {
@@ -32,26 +30,26 @@ const handleRequest = async (params) => {
 
     // Logger.error('handleRequest data: ' + JSON.stringify(data));
 
-    // if (cookieObject) {
-    //   const psCookieKeyNew = cookieObject?.vsfPsKeyCookie;
-    //   if (psCookieKeyNew && psCookieKeyNew !== psCookieKey) {
-    //     await context.$prestashop.config.app.$cookies.set(await context.$prestashop.config.app.$config.psCustomerCookieKey, psCookieKeyNew);
-    //     // Logger.error(JSON.stringify(params.url) + ' psCookieKeyNew: ' + JSON.stringify(psCookieKeyNew));
-    //     // Logger.error(JSON.stringify(params.url) + ' await context.$prestashop.config.app.$cookies.get(await context.$prestashop.config.app.$config.psCustomerCookieKey)'
-    //     //   + JSON.stringify(await context.$prestashop.config.app.$cookies.get(await context.$prestashop.config.app.$config.psCustomerCookieKey)));
-    //
-    //     // console.assert(psCookieKeyNew === context.$prestashop.config.app.$cookies.get(context.$prestashop.config.app.$config.psCustomerCookieKey));
-    //   }
-    //   const psCookieValueNew = cookieObject?.vsfPsValCookie;
-    //   if (psCookieValueNew && psCookieValueNew !== psCookieValue) {
-    //     await context.$prestashop.config.app.$cookies.set(await context.$prestashop.config.app.$config.psCustomerCookieValue, psCookieValueNew);
-    //     // Logger.error(JSON.stringify(params.url) + ' psCookieValueNew: ' + JSON.stringify(psCookieValueNew));
-    //     // Logger.error(JSON.stringify(params.url) + ' await context.$prestashop.config.app.$cookies.get(await context.$prestashop.config.app.$config.psCustomerCookieValue); '
-    //     //   + JSON.stringify(await context.$prestashop.config.app.$cookies.get(await context.$prestashop.config.app.$config.psCustomerCookieValue)));
-    //
-    //     // console.assert(psCookieValueNew === context.$prestashop.config.app.$cookies.get(context.$prestashop.config.app.$config.psCustomerCookieValue));
-    //   }
-    // }
+    if (cookieObject) {
+      const psCookieKeyNew = cookieObject?.vsfPsKeyCookie;
+      if (psCookieKeyNew && psCookieKeyNew !== psCookieKey) {
+        await context.$prestashop.config.app.$cookies.set(await context.$prestashop.config.app.$config.psCustomerCookieKey, psCookieKeyNew);
+        // Logger.error(JSON.stringify(params.url) + ' psCookieKeyNew: ' + JSON.stringify(psCookieKeyNew));
+        // Logger.error(JSON.stringify(params.url) + ' await context.$prestashop.config.app.$cookies.get(await context.$prestashop.config.app.$config.psCustomerCookieKey)'
+        //   + JSON.stringify(await context.$prestashop.config.app.$cookies.get(await context.$prestashop.config.app.$config.psCustomerCookieKey)));
+
+        // console.assert(psCookieKeyNew === context.$prestashop.config.app.$cookies.get(context.$prestashop.config.app.$config.psCustomerCookieKey));
+      }
+      const psCookieValueNew = cookieObject?.vsfPsValCookie;
+      if (psCookieValueNew && psCookieValueNew !== psCookieValue) {
+        await context.$prestashop.config.app.$cookies.set(await context.$prestashop.config.app.$config.psCustomerCookieValue, psCookieValueNew);
+        // Logger.error(JSON.stringify(params.url) + ' psCookieValueNew: ' + JSON.stringify(psCookieValueNew));
+        // Logger.error(JSON.stringify(params.url) + ' await context.$prestashop.config.app.$cookies.get(await context.$prestashop.config.app.$config.psCustomerCookieValue); '
+        //   + JSON.stringify(await context.$prestashop.config.app.$cookies.get(await context.$prestashop.config.app.$config.psCustomerCookieValue)));
+
+        // console.assert(psCookieValueNew === context.$prestashop.config.app.$cookies.get(context.$prestashop.config.app.$config.psCustomerCookieValue));
+      }
+    }
     if (headers) {
       const moquiSessionTokenNew = headers['moquisessiontoken'] ? headers['moquisessiontoken'] : headers['x-csrf-token'];
       if (moquiSessionTokenNew && moquiSessionTokenNew !== moquiSessionToken) {
