@@ -1,5 +1,6 @@
 import { computed } from '@nuxtjs/composition-api';
 import { sharedRef, useVSFContext, Logger } from '@vue-storefront/core';
+import { handleRequest } from '../helpers';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const useBootstrap = () => {
@@ -18,44 +19,21 @@ export const useBootstrap = () => {
 
     try {
       loading.value = true;
-      const vsfCookieKey = context.$prestashop.config.app.$config.psCustomerCookieKey;
-      const vsfCookieValue = context.$prestashop.config.app.$config.psCustomerCookieValue;
 
-      const psCookieKey = await context.$prestashop.config.app.$cookies.get(vsfCookieKey);
-      const psCookieValue = await context.$prestashop.config.app.$cookies.get(vsfCookieValue);
-      let moquiSessionToken = await context.$prestashop.config.app.$cookies.get('moquiSessionToken');
+      const data = await handleRequest({method: 'get',
+        url: '/lightbootstrap',
+        params: {
+          // eslint-disable-next-line camelcase
+          menu_with_images: 'single',
+          requestHostName: context.req?.headers?.host
+        },
+        useCredentials: true
+      });
 
-      const { data, headers, cookieObject } = await context.$prestashop.api.bootstrap({psCookieKey, psCookieValue, moquiSessionToken});
+      if (data?.psdata?.menuItems && menuItems.value !== data?.psdata?.menuItems) menuItems.value = data?.psdata?.menuItems;
+      return data;
+
       error.value.boot = null;
-
-      // Logger.error("boot headers['moquisessiontoken']: "+JSON.stringify(headers['moquisessiontoken']));
-
-      // if (headers['moquisessiontoken'] || headers['x-csrf-token']) {
-      //   Logger.error("headers['moquisessiontoken']");
-      //   Logger.error(headers['moquisessiontoken']);
-      //
-      // }
-
-      await context.$prestashop.config.app.$cookies.set('moquiSessionToken', headers['moquisessiontoken'] ? headers['moquisessiontoken'] : headers['x-csrf-token']);
-
-      // Logger.error("boot context.$prestashop.config.app.$cookies.get('moquiSessionToken'): "+JSON.stringify(context.$prestashop.config.app.$cookies.get('moquiSessionToken')));
-
-      if (data?.code === 200) {
-        menuItems.value = data.psdata.menuItems;
-        const vsfCookieKey = context.$prestashop.config.app.$config.psCustomerCookieKey;
-        const vsfCookieValue = context.$prestashop.config.app.$config.psCustomerCookieValue;
-
-        const psCookieKey = await context.$prestashop.config.app.$cookies.get(vsfCookieKey);
-        const psCookieValue = await context.$prestashop.config.app.$cookies.get(vsfCookieValue);
-
-        if (cookieObject && !psCookieKey && !psCookieValue) {
-          await context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
-          await context.$prestashop.config.app.$cookies.set(vsfCookieValue, cookieObject.vsfPsValCookie);
-          moquiSessionToken = headers['moquisessiontoken'] ? headers['moquisessiontoken'] : headers['x-csrf-token'];
-          await context.$prestashop.config.app.$cookies.set('moquiSessionToken', moquiSessionToken);
-        }
-        return data;
-      }
     } catch (err) {
       error.value.boot = err;
       Logger.error('bootstrap/boot', err);

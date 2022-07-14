@@ -34,7 +34,5 @@ export default async function register(context, params) {
 
   const cookieObject = cookieParser(headers);
 
-
-
   return {data, headers, cookieObject};
 }

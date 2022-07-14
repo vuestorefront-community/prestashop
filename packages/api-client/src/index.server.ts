@@ -5,9 +5,12 @@ import axios from 'axios';
 
 const onCreate = (settings) => {
   const client = axios.create({
-    baseURL: settings.api.url,
-    // xsrfHeaderName: 'x-csrf-token'
-    xsrfHeaderName: 'X-CSRF-Token'
+    baseURL: settings.api.url + settings.api.restPath,
+    xsrfHeaderName: 'x-csrf-token',
+    // xsrfHeaderName: 'X-CSRF-Token',
+    withCredentials: true,
+
+
   });
 
   return {
@@ -15,7 +18,9 @@ const onCreate = (settings) => {
       ...settings
     },
     client,
-    cookies: (settings.api).cookies
+    cookies: (settings.api).cookies,
+    settings: settings,
+    api: settings.api
   };
 };
 

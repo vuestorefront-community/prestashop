@@ -8,25 +8,17 @@ import type {
   UseUserUpdateParams as UpdateParams,
   UseUserRegisterParams as RegisterParams
 } from '../types';
+import {handleRequest} from '../helpers';
 
 const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   load: async (context: Context) => {
-    const cookieKey = context.$prestashop.config.app.$config.psCustomerCookieKey;
-    const cookieValue = context.$prestashop.config.app.$config.psCustomerCookieValue;
+    const result: any = await handleRequest({method: 'get', url: '/accountInfo'});
 
-    const key = await context.$prestashop.config.app.$cookies.get(cookieKey);
-    const value = await context.$prestashop.config.app.$cookies.get(cookieValue);
-    const moquiSessionToken = await context.$prestashop.config.app.$cookies.get('moquiSessionToken');
-    if (key && value) {
-      const result: any = await context.$prestashop.api.loadCustomer({key, value, moquiSessionToken});
-      if (result.code === 410) {
-        return null;
-      }
-      return result.psdata;
-    } else {
+    if (result?.code === 410) {
       return null;
     }
+    return result?.psdata;
 
     // todo: setup User type
     return {};
@@ -89,7 +81,6 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
     const code = data?.code;
 
     Logger.error("user headers['moquisessiontoken']: "+JSON.stringify(headers['moquisessiontoken']));
-
 
     Logger.error("user 2 context.$prestashop.config.app.$cookies.get('moquiSessionToken'): "+JSON.stringify(await context.$prestashop.config.app.$cookies.get('moquiSessionToken')));
 
