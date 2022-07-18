@@ -7,26 +7,21 @@ import type {
   UserShippingAddress as Address,
   UserShippingAddressItem as AddressItem
 } from '@vue-storefront/prestashop-api';
+import {handleRequest} from '../helpers';
 
 const params: UseUserShippingFactoryParams<Address, AddressItem> = {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   addAddress: async (context: Context, params) => {
-    const { address } = params;
-    const vsfCookieKey = context.$prestashop.config.app.$config.psCustomerCookieKey;
-    const vsfCookieValue = context.$prestashop.config.app.$config.psCustomerCookieValue;
 
-    const psCookieKey = await context.$prestashop.config.app.$cookies.get(vsfCookieKey);
-    const psCookieValue = await context.$prestashop.config.app.$cookies.get(vsfCookieValue);
-    const moquiSessionToken = await context.$prestashop.config.app.$cookies.get('moquiSessionToken');
+    await handleRequest(context, {method: 'post',
+      url: '/address',
+      data: params.address
+    });
 
-    await context.$prestashop.api.addNewAddress({address, psCookieKey, psCookieValue, moquiSessionToken });
-    const { data, cookieObject } = await context.$prestashop.api.loadAddresses({ psCookieKey, psCookieValue, moquiSessionToken });
+    const data = await handleRequest(context, {method: 'get', url: '/alladdresses'});
+
     if (data.code === 200) {
-      if (cookieObject) {
-        await context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
-        await context.$prestashop.config.app.$cookies.set(vsfCookieValue, cookieObject.vsfPsValCookie);
-      }
       return data.psdata;
     } else {
       return {};
@@ -35,23 +30,17 @@ const params: UseUserShippingFactoryParams<Address, AddressItem> = {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   deleteAddress: async (context: Context, params) => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    const { id } = params.address;
-    const vsfCookieKey = context.$prestashop.config.app.$config.psCustomerCookieKey;
-    const vsfCookieValue = context.$prestashop.config.app.$config.psCustomerCookieValue;
+    await handleRequest(context, {method: 'delete',
+      url: '/address',
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      // eslint-disable-next-line camelcase
+      data: { id_address: params.address.id }
+    });
 
-    const psCookieKey = await context.$prestashop.config.app.$cookies.get(vsfCookieKey);
-    const psCookieValue = await context.$prestashop.config.app.$cookies.get(vsfCookieValue);
-    const moquiSessionToken = await context.$prestashop.config.app.$cookies.get('moquiSessionToken');
+    const data = await handleRequest(context, {method: 'get', url: '/alladdresses'});
 
-    await context.$prestashop.api.removeAddress({id, psCookieKey, psCookieValue, moquiSessionToken });
-    const { data, cookieObject } = await context.$prestashop.api.loadAddresses({ psCookieKey, psCookieValue });
     if (data.code === 200) {
-      if (cookieObject) {
-        await context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
-        await context.$prestashop.config.app.$cookies.set(vsfCookieValue, cookieObject.vsfPsValCookie);
-      }
       return data.psdata;
     } else {
       return {};
@@ -60,41 +49,25 @@ const params: UseUserShippingFactoryParams<Address, AddressItem> = {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   updateAddress: async (context: Context, params) => {
-    const { address } = params;
-    const vsfCookieKey = context.$prestashop.config.app.$config.psCustomerCookieKey;
-    const vsfCookieValue = context.$prestashop.config.app.$config.psCustomerCookieValue;
+    await handleRequest(context, {method: 'post',
+      url: '/address',
+      data: params.address
+    });
 
-    const psCookieKey = await context.$prestashop.config.app.$cookies.get(vsfCookieKey);
-    const psCookieValue = await context.$prestashop.config.app.$cookies.get(vsfCookieValue);
-    const moquiSessionToken = await context.$prestashop.config.app.$cookies.get('moquiSessionToken');
+    const data = await handleRequest(context, {method: 'get', url: '/alladdresses'});
 
-    await context.$prestashop.api.updateOneAddress({address, psCookieKey, psCookieValue, moquiSessionToken });
-    const { data, cookieObject } = await context.$prestashop.api.loadAddresses({ psCookieKey, psCookieValue });
     if (data.code === 200) {
-      if (cookieObject) {
-        await context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
-        await context.$prestashop.config.app.$cookies.set(vsfCookieValue, cookieObject.vsfPsValCookie);
-      }
       return data.psdata;
     } else {
       return {};
     }
   },
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   load: async (context: Context, params) => {
-    const vsfCookieKey = context.$prestashop.config.app.$config.psCustomerCookieKey;
-    const vsfCookieValue = context.$prestashop.config.app.$config.psCustomerCookieValue;
+    const data = await handleRequest(context, {method: 'get', url: '/alladdresses'});
 
-    const psCookieKey = await context.$prestashop.config.app.$cookies.get(vsfCookieKey);
-    const psCookieValue = await context.$prestashop.config.app.$cookies.get(vsfCookieValue);
-    const moquiSessionToken = await context.$prestashop.config.app.$cookies.get('moquiSessionToken');
-
-    const { data, cookieObject } = await context.$prestashop.api.loadAddresses({ psCookieKey, psCookieValue, moquiSessionToken });
     if (data.code === 200) {
-      if (cookieObject) {
-        await context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
-        await context.$prestashop.config.app.$cookies.set(vsfCookieValue, cookieObject.vsfPsValCookie);
-      }
       return data.psdata;
     } else {
       return {};
@@ -103,25 +76,16 @@ const params: UseUserShippingFactoryParams<Address, AddressItem> = {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   setDefaultAddress: async (context: Context, params) => {
+    await handleRequest(context, {method: 'post',
+      url: '/setaddresscheckout',
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      // eslint-disable-next-line camelcase
+      data: { id_address: params.address.id }
+    });
 
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    const { id } = params.address;
-    const vsfCookieKey = context.$prestashop.config.app.$config.psCustomerCookieKey;
-    const vsfCookieValue = context.$prestashop.config.app.$config.psCustomerCookieValue;
-
-    const psCookieKey = await context.$prestashop.config.app.$cookies.get(vsfCookieKey);
-    const psCookieValue = await context.$prestashop.config.app.$cookies.get(vsfCookieValue);
-    const moquiSessionToken = await context.$prestashop.config.app.$cookies.get('moquiSessionToken');
-
-    await context.$prestashop.api.setAddress({ id, psCookieKey, psCookieValue, moquiSessionToken });
-
-    const { data, cookieObject } = await context.$prestashop.api.loadAddresses({ psCookieKey, psCookieValue, moquiSessionToken });
+    const data = await handleRequest(context, {method: 'get', url: '/alladdresses'});
     if (data.code === 200) {
-      if (cookieObject) {
-        await context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
-        await context.$prestashop.config.app.$cookies.set(vsfCookieValue, cookieObject.vsfPsValCookie);
-      }
       return data.psdata;
     } else {
       return {};

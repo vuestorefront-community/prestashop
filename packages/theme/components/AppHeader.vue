@@ -29,16 +29,16 @@
               size="1.25rem"
             />
           </SfButton>
-          <SfButton
-            class="sf-button--pure sf-header__action"
-            @click="toggleWishlistSidebar"
-          >
-            <SfIcon
-              class="sf-header__icon"
-              icon="heart"
-              size="1.25rem"
-            />
-          </SfButton>
+<!--          <SfButton-->
+<!--            class="sf-button&#45;&#45;pure sf-header__action"-->
+<!--            @click="toggleWishlistSidebar"-->
+<!--          >-->
+<!--            <SfIcon-->
+<!--              class="sf-header__icon"-->
+<!--              icon="heart"-->
+<!--              size="1.25rem"-->
+<!--            />-->
+<!--          </SfButton>-->
           <SfButton
             class="sf-button--pure sf-header__action"
             aria-label="Toggle cart sidebar"
@@ -112,10 +112,7 @@ import LocaleSelector from './LocaleSelector';
 import SearchResults from '~/components/SearchResults';
 import HeaderNavigation from './HeaderNavigation';
 import { clickOutside } from '@storefront-ui/vue/src/utilities/directives/click-outside/click-outside-directive.js';
-import {
-  mapMobileObserver,
-  unMapMobileObserver
-} from '@storefront-ui/vue/src/utilities/mobile-observer.js';
+import { mapMobileObserver, unMapMobileObserver } from '@storefront-ui/vue/src/utilities/mobile-observer.js';
 import debounce from 'lodash.debounce';
 import { addBasePath } from '@vue-storefront/core';
 
@@ -148,7 +145,7 @@ export default {
     const result = ref(null);
 
     const cartTotalItems = computed(() => {
-      const count = cartGetters.getTotalItems(cart.value);
+      const count = cartGetters.getTotalItems(cart?.value);
       return count ? count.toString() : null;
     });
 

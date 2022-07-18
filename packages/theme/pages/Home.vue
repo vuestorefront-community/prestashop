@@ -269,18 +269,16 @@ export default {
       products.value[index].isInWishlist = !products.value[index].isInWishlist;
     };
 
-    const {
-      products: featureProducts,
-      search: productsSearch,
-      loading: productsLoading
-    } = useProduct('relatedProducts');
+    const { products: featureProducts, search: productsSearch, loading: productsLoading } = useProduct('relatedProducts');
 
     const { send: sendNotification } = useUiNotification();
     const { addItem: addItemToCart, isInCart } = useCart();
 
-    onSSR(async () => {
-      await productsSearch({ featured: true });
-    });
+    // if (process.client) productsSearch({ featured: true });
+
+    // onSSR(async () => {
+    //
+    // });
 
     return {
       sendNotification,

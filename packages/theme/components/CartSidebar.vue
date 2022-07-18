@@ -148,9 +148,11 @@ export default {
     const totals = computed(() => cartGetters.getTotals(cart.value));
     const totalItems = computed(() => cartGetters.getTotalItems(cart.value));
 
-    onSSR(async () => {
-      await loadCart();
-    });
+    // if (process.client) loadCart();
+
+    // onSSR(async () => {
+    //   await loadCart();
+    // });
 
     return {
       addBasePath,

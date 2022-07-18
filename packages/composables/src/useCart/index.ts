@@ -1,29 +1,31 @@
 import {
   Context,
   useCartFactory,
-  UseCartFactoryParams
+  UseCartFactoryParams, useVSFContext
 } from '@vue-storefront/core';
+import { useContext } from '@nuxtjs/composition-api';
 import type {
   Cart,
   CartItem,
   PsProduct
 } from '@vue-storefront/prestashop-api';
+import {handleRequest} from '../helpers';
 
 const params: UseCartFactoryParams<Cart, CartItem, PsProduct> = {
+  provide() {
+    const context = useContext();
+    return { context };
+  },
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   load: async (context: Context, { customQuery }) => {
-    const vsfCookieKey = context.$prestashop.config.app.$config.psCustomerCookieKey;
-    const vsfCookieValue = context.$prestashop.config.app.$config.psCustomerCookieValue;
-
-    const psCookieKey = await context.$prestashop.config.app.$cookies.get(vsfCookieKey);
-    const psCookieValue = await context.$prestashop.config.app.$cookies.get(vsfCookieValue);
-
-    const { data, cookieObject } = await context.$prestashop.api.getCartItems({ psCookieKey, psCookieValue });
-
-    if (cookieObject) {
-      await context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
-      await context.$prestashop.config.app.$cookies.set(vsfCookieValue, cookieObject.vsfPsValCookie);
-    }
+    const data = await handleRequest(context, {method: 'get',
+      url: '/cart',
+      params: {
+        // eslint-disable-next-line camelcase
+        image_size: 'medium_default'
+      }
+    });
 
     if (data && data.code === 200) {
       return data;
@@ -35,18 +37,26 @@ const params: UseCartFactoryParams<Cart, CartItem, PsProduct> = {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   addItem: async (context: Context, { currentCart, product, quantity, customQuery }) => {
-    const vsfCookieKey = context.$prestashop.config.app.$config.psCustomerCookieKey;
-    const vsfCookieValue = context.$prestashop.config.app.$config.psCustomerCookieValue;
 
-    const psCookieKey = await context.$prestashop.config.app.$cookies.get(vsfCookieKey);
-    const psCookieValue = await context.$prestashop.config.app.$cookies.get(vsfCookieValue);
-    const { data, cookieObject } = await context.$prestashop.api.addToCart({ psCookieKey, psCookieValue, product, quantity });
+    const data = await handleRequest(context, {method: 'get',
+      url: '/cart',
+      params: {
+        // eslint-disable-next-line camelcase
+        id_product: product.id,
+        qty: quantity,
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        // eslint-disable-next-line camelcase
+        id_product_attribute: product.attributeId,
+        op: 'up',
+        update: '1',
+        action: 'update',
+        // eslint-disable-next-line camelcase
+        image_size: 'medium_default'
+      }
+    });
 
     if (data.code === 200) {
-      if (cookieObject) {
-        await context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
-        await context.$prestashop.config.app.$cookies.set(vsfCookieValue, cookieObject.vsfPsValCookie);
-      }
       return data;
     } else {
       // add to cart failed
@@ -56,19 +66,21 @@ const params: UseCartFactoryParams<Cart, CartItem, PsProduct> = {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   removeItem: async (context: Context, { currentCart, product, customQuery }) => {
-    const vsfCookieKey = context.$prestashop.config.app.$config.psCustomerCookieKey;
-    const vsfCookieValue = context.$prestashop.config.app.$config.psCustomerCookieValue;
-
-    const psCookieKey = await context.$prestashop.config.app.$cookies.get(vsfCookieKey);
-    const psCookieValue = await context.$prestashop.config.app.$cookies.get(vsfCookieValue);
-
-    const { data, cookieObject } = await context.$prestashop.api.removeFromCart({ psCookieKey, psCookieValue, product });
+    const data = await handleRequest(context, {method: 'get',
+      url: '/cart',
+      params: {
+        // eslint-disable-next-line camelcase
+        id_product: product.id,
+        // eslint-disable-next-line camelcase
+        id_product_attribute: product.productAttributeId,
+        // eslint-disable-next-line camelcase
+        image_size: 'medium_default',
+        delete: '1',
+        action: 'update'
+      }
+    });
 
     if (data.code === 200) {
-      if (cookieObject) {
-        await context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
-        await context.$prestashop.config.app.$cookies.set(vsfCookieValue, cookieObject.vsfPsValCookie);
-      }
       return data;
     } else {
       // remove from cart failed
@@ -79,25 +91,26 @@ const params: UseCartFactoryParams<Cart, CartItem, PsProduct> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   updateItemQty: async (context: Context, { currentCart, product, quantity, customQuery }) => {
     let op;
-    if (product.quantity < quantity) {
-      op = 'up';
-    } else {
-      op = 'down';
-    }
+    if (product.quantity < quantity) op = 'up';
+    else op = 'down';
 
-    const vsfCookieKey = context.$prestashop.config.app.$config.psCustomerCookieKey;
-    const vsfCookieValue = context.$prestashop.config.app.$config.psCustomerCookieValue;
-
-    const psCookieKey = await context.$prestashop.config.app.$cookies.get(vsfCookieKey);
-    const psCookieValue = await context.$prestashop.config.app.$cookies.get(vsfCookieValue);
-
-    const { data, cookieObject } = await context.$prestashop.api.updateCart({ psCookieKey, psCookieValue, product, op });
+    const data = await handleRequest(context, {method: 'get',
+      url: '/cart',
+      params: {
+        // eslint-disable-next-line camelcase
+        id_product: product.id,
+        // eslint-disable-next-line camelcase
+        id_product_attribute: product.productAttributeId,
+        qty: '1',
+        op: op,
+        update: '1',
+        action: 'update',
+        // eslint-disable-next-line camelcase
+        image_size: 'medium_default'
+      }
+    });
 
     if (data.code === 200) {
-      if (cookieObject) {
-        await context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
-        await context.$prestashop.config.app.$cookies.set(vsfCookieValue, cookieObject.vsfPsValCookie);
-      }
       return data;
     } else {
       // add to cart failed

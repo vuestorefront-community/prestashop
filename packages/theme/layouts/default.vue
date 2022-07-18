@@ -31,9 +31,11 @@ import WishlistSidebar from '~/components/WishlistSidebar.vue';
 import LoginModal from '~/components/LoginModal.vue';
 import LazyHydrate from 'vue-lazy-hydration';
 import Notification from '~/components/Notification';
-import { onSSR } from '@vue-storefront/core';
+// import { onSSR } from '@vue-storefront/core';
 import { useRoute } from '@nuxtjs/composition-api';
 import { useCart, useStore, useUser, useWishlist, useBootstrap } from '@vue-storefront/prestashop';
+import { useVSFContext, Context, Logger} from '@vue-storefront/core';
+import {handleRequest} from '@vue-storefront/prestashop/src/helpers';
 
 export default {
   name: 'DefaultLayout',
@@ -50,24 +52,17 @@ export default {
     Notification
   },
 
-  setup() {
+  setup: function () {
     const route = useRoute();
-    const { load: loadStores } = useStore();
-    const { load: loadUser } = useUser();
-    const { load: loadCart } = useCart();
-    const { load: loadWishlist } = useWishlist();
+    const {boot: boot} = useBootstrap();
+    const {load: loadCart} = useCart();
 
-    const {
-      boot: boot
-    } = useBootstrap();
-
-    onSSR(async () => {
-      await Promise.allSettled([
-        boot()
-      ]);
-    });
+    if (process.client) {
+      boot().then(() => loadCart());
+    }
 
     return {
+      // eslint-disable-next-line line-comment-position
       route
     };
   }

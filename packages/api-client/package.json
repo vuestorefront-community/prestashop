@@ -19,6 +19,7 @@
   "dependencies": {
     "@vue-storefront/core": "~2.5.4",
     "axios": "^0.23.0",
+    "cookie": "^0.5.0",
     "log4js": "^6.5.2"
   },
   "devDependencies": {

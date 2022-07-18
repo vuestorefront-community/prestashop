@@ -12,14 +12,14 @@ export default async function bootstrap(context, params) {
   let response;
   let cookieObject;
   try {
-    // logger.warn(JSON.stringify(params.url) + ' context.client.defaults.headers ' + JSON.stringify(context.client.defaults.headers));
+    logger.warn(JSON.stringify(params.url) + ' context.client.defaults.headers ' + JSON.stringify(context.client.defaults.headers.common));
     response = await context.client(params);
     // logger.warn(JSON.stringify(params.url) + ' response.headers ' + JSON.stringify(response.headers));
     cookieObject = cookieParser(response?.headers);
 
     return { data: response?.data, headers: response?.headers, cookieObject };
   } catch (error) {
-    // TODO: Only log this in not production
+    // TODO: Only log this in dev
     logger.error(error);
     if (response) {
       cookieObject = cookieParser(response?.headers);

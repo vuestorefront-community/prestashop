@@ -48,11 +48,11 @@ export default {
     }
   },
   setup() {
-    const {
-      menuItems: categories
-    } = useBootstrap();
+    const { boot: boot, menuItems: categories } = useBootstrap();
 
     const { isMobileMenuOpen, toggleMobileMenu } = useUiState();
+
+    // if (process.client) boot();
 
     return {
       categories,

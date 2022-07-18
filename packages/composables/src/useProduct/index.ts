@@ -26,7 +26,7 @@ const params: UseProductFactoryParams<Product, SearchParams> = {
 
     let data;
     if (params.id) {
-      data = await handleRequest({method: 'get',
+      data = await handleRequest(context, {method: 'get',
         url: '/productdetail',
         params: {
           // eslint-disable-next-line camelcase
@@ -39,7 +39,7 @@ const params: UseProductFactoryParams<Product, SearchParams> = {
       });
 
     } else if (params.featured) {
-      data = await handleRequest({method: 'get', url: '/featuredproducts'});
+      data = await handleRequest(context, {method: 'get', url: '/featuredproducts'});
     }
     return data.psdata;
   }

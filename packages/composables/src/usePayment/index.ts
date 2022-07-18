@@ -1,5 +1,6 @@
 import { computed } from '@nuxtjs/composition-api';
 import { sharedRef, useVSFContext, Logger } from '@vue-storefront/core';
+import {handleRequest} from '../helpers';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const usePayment = () => {
@@ -18,24 +19,14 @@ export const usePayment = () => {
 
     try {
       loading.value = true;
-      const vsfCookieKey = context.$prestashop.config.app.$config.psCustomerCookieKey;
-      const vsfCookieValue = context.$prestashop.config.app.$config.psCustomerCookieValue;
 
-      const psCookieKey = await context.$prestashop.config.app.$cookies.get(vsfCookieKey);
-      const psCookieValue = await context.$prestashop.config.app.$cookies.get(vsfCookieValue);
-      const moquiSessionToken = await context.$prestashop.config.app.$cookies.get('moquiSessionToken');
-
-      const { data, cookieObject } = await context.$prestashop.api.getPaymentMethods({ psCookieKey, psCookieValue, moquiSessionToken });
+      const data = await handleRequest(context, {method: 'get', url: '/paymentoptions'});
 
       error.value.boot = null;
 
       if (data.code === 200) {
         payment.value = data.psdata;
 
-        if (cookieObject) {
-          await context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
-          await context.$prestashop.config.app.$cookies.set(vsfCookieValue, cookieObject.vsfPsValCookie);
-        }
         return data.psdata;
       } else {
         return {};

@@ -20,14 +20,13 @@ export const useBootstrap = () => {
     try {
       loading.value = true;
 
-      const data = await handleRequest({method: 'get',
+      const data = await handleRequest(context, {method: 'get',
         url: '/lightbootstrap',
         params: {
           // eslint-disable-next-line camelcase
           menu_with_images: 'single',
           requestHostName: context.req?.headers?.host
-        },
-        useCredentials: true
+        }
       });
 
       if (data?.psdata?.menuItems && menuItems.value !== data?.psdata?.menuItems) menuItems.value = data?.psdata?.menuItems;

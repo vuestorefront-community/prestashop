@@ -1,22 +1,13 @@
 import {useShippingProviderFactory, UseShippingProviderParams, Context, Logger} from '@vue-storefront/core';
 import type { ShippingProvider, ShippingMethod } from '@vue-storefront/prestashop-api';
+import {handleRequest} from '../helpers';
 
 const params: UseShippingProviderParams<ShippingProvider, ShippingMethod> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   load: async (context: Context, { customQuery }) => {
-    const vsfCookieKey = context.$prestashop.config.app.$config.psCustomerCookieKey;
-    const vsfCookieValue = context.$prestashop.config.app.$config.psCustomerCookieValue;
+    const data = await handleRequest(context, {method: 'get', url: '/carriers'});
 
-    const psCookieKey = await context.$prestashop.config.app.$cookies.get(vsfCookieKey);
-    const psCookieValue = await context.$prestashop.config.app.$cookies.get(vsfCookieValue);
-    const moquiSessionToken = await context.$prestashop.config.app.$cookies.get('moquiSessionToken');
-
-    const { data, cookieObject } = await context.$prestashop.api.getShippingMethods({ psCookieKey, psCookieValue, moquiSessionToken });
     if (data.code === 200) {
-      if (cookieObject) {
-        await context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
-        await context.$prestashop.config.app.$cookies.set(vsfCookieValue, cookieObject.vsfPsValCookie);
-      }
       return data.psdata;
     } else {
       // add to cart failed
@@ -30,21 +21,20 @@ const params: UseShippingProviderParams<ShippingProvider, ShippingMethod> = {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const { shippingMethodId, addressId } = params;
-    const vsfCookieKey = context.$prestashop.config.app.$config.psCustomerCookieKey;
-    const vsfCookieValue = context.$prestashop.config.app.$config.psCustomerCookieValue;
 
-    const psCookieKey = await context.$prestashop.config.app.$cookies.get(vsfCookieKey);
-    const psCookieValue = await context.$prestashop.config.app.$cookies.get(vsfCookieValue);
-    const moquiSessionToken = await context.$prestashop.config.app.$cookies.get('moquiSessionToken');
-
-    await context.$prestashop.api.setShippingMethod({ shippingMethodId, addressId, psCookieKey, psCookieValue, moquiSessionToken });
-
-    const { data, cookieObject } = await context.$prestashop.api.getShippingMethods({ psCookieKey, psCookieValue, moquiSessionToken });
-    if (data.code === 200) {
-      if (cookieObject) {
-        await context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
-        await context.$prestashop.config.app.$cookies.set(vsfCookieValue, cookieObject.vsfPsValCookie);
+    await handleRequest(context, {method: 'post',
+      url: '/setcarriercheckout',
+      data: {
+        // eslint-disable-next-line camelcase
+        id_address: addressId,
+        // eslint-disable-next-line camelcase
+        id_carrier: shippingMethodId
       }
+    });
+
+    const data = await handleRequest(context, {method: 'get', url: '/carriers'});
+
+    if (data.code === 200) {
       return data.psdata;
     } else {
       // add to cart failed

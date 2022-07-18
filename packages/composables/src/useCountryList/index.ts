@@ -1,5 +1,6 @@
 import { computed } from '@nuxtjs/composition-api';
 import { sharedRef, useVSFContext, Logger } from '@vue-storefront/core';
+import {handleRequest} from '../helpers';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const useCountryList = () => {
@@ -18,21 +19,13 @@ export const useCountryList = () => {
 
     try {
       loading.value = true;
-      const { data, cookieObject } = await context.$prestashop.api.getAvailableCountries();
+
+      const data = await handleRequest(context, {method: 'get', url: '/addressform'});
+
       result.value = data;
       error.value.boot = null;
 
       if (data.code === 200) {
-        const vsfCookieKey = context.$prestashop.config.app.$config.psCustomerCookieKey;
-        const vsfCookieValue = context.$prestashop.config.app.$config.psCustomerCookieValue;
-
-        const psCookieKey = await context.$prestashop.config.app.$cookies.get(vsfCookieKey);
-        const psCookieValue = await context.$prestashop.config.app.$cookies.get(vsfCookieValue);
-
-        if (cookieObject && !psCookieKey && !psCookieValue) {
-          await context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
-          await context.$prestashop.config.app.$cookies.set(vsfCookieValue, cookieObject.vsfPsValCookie);
-        }
         return data;
       }
     } catch (err) {
