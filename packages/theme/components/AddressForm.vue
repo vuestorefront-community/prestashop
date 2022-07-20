@@ -3,40 +3,40 @@
     <SfLoader :class="{ loading }" :loading="loading||loadingCountries">
   <form @submit.prevent="handleSubmit(handleFormSubmit)">
     <div class="form">
-      <ValidationProvider
-        name="alias"
-        rules="required"
-        v-slot="{ errors }"
-        slim
-      >
-        <SfInput
-          v-e2e="'shipping-alias'"
-          v-model="form.alias"
-          label="alias"
-          name="alias"
-          class="form__element form__element--half"
-          required
-          :valid="!errors[0]"
-          :errorMessage="errors[0]"
-        />
-      </ValidationProvider>
+<!--      <ValidationProvider-->
+<!--        name="alias"-->
+<!--        rules="required"-->
+<!--        v-slot="{ errors }"-->
+<!--        slim-->
+<!--      >-->
+<!--        <SfInput-->
+<!--          v-e2e="'shipping-alias'"-->
+<!--          v-model="form.alias"-->
+<!--          label="alias"-->
+<!--          name="alias"-->
+<!--          class="form__element form__element&#45;&#45;half"-->
+<!--          required-->
+<!--          :valid="!errors[0]"-->
+<!--          :errorMessage="errors[0]"-->
+<!--        />-->
+<!--      </ValidationProvider>-->
 
-      <ValidationProvider
-        name="phone"
-        rules=""
-        v-slot="{ errors }"
-        slim
-      >
-        <SfInput
-          v-e2e="'shipping-phone'"
-          v-model.trim="form.phone"
-          label="Phone number"
-          name="phone"
-          class="form__element form__element--half form__element--half-even"
-          :valid="!errors[0]"
-          :errorMessage="errors[0]"
-        />
-      </ValidationProvider>
+<!--      <ValidationProvider-->
+<!--        name="phone"-->
+<!--        rules=""-->
+<!--        v-slot="{ errors }"-->
+<!--        slim-->
+<!--      >-->
+<!--        <SfInput-->
+<!--          v-e2e="'shipping-phone'"-->
+<!--          v-model.trim="form.phone"-->
+<!--          label="Phone number"-->
+<!--          name="phone"-->
+<!--          class="form__element form__element&#45;&#45;half form__element&#45;&#45;half-even"-->
+<!--          :valid="!errors[0]"-->
+<!--          :errorMessage="errors[0]"-->
+<!--        />-->
+<!--      </ValidationProvider>-->
       <ValidationProvider
         name="country"
         rules="required"

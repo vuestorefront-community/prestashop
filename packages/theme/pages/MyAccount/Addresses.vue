@@ -110,9 +110,12 @@ export default {
       isFormSubmitted.value = false;
     };
 
-    onSSR(async () => {
-      await load();
-    });
+    // only run client side
+    if (process.client) load();
+
+    // onSSR(async () => {
+    //   await load();
+    // });
 
     return {
       addressesList,

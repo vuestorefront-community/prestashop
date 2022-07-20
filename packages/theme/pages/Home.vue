@@ -63,6 +63,7 @@
             :regular-price="$n(productGetters.getPrice(product).regular, 'currency')"
             :special-price="$n(productGetters.getPrice(product).regular, 'currency') === $n(productGetters.getPrice(product).special, 'currency')? '': $n(productGetters.getPrice(product).special, 'currency')"
             :show-add-to-cart-button="true"
+            :wishlistIcon=false
             :link="localePath(`/p/${productGetters.getId(product)}/${productGetters.getSlug(product)}`)"
             class="carousel__item__product"
             @click:add-to-cart="HandleAddToCart({ product, quantity:1 })"
@@ -91,13 +92,13 @@
       </SfCallToAction>
     </LazyHydrate>
 
-    <LazyHydrate when-visible>
-      <NewsletterModal @email-submitted="onSubscribe" />
-    </LazyHydrate>
+<!--    <LazyHydrate when-visible>-->
+<!--      <NewsletterModal @email-submitted="onSubscribe" />-->
+<!--    </LazyHydrate>-->
 
-    <LazyHydrate when-visible>
-      <InstagramFeed />
-    </LazyHydrate>
+<!--    <LazyHydrate when-visible>-->
+<!--      <InstagramFeed />-->
+<!--    </LazyHydrate>-->
 
   </div>
 </template>
@@ -274,10 +275,10 @@ export default {
     const { send: sendNotification } = useUiNotification();
     const { addItem: addItemToCart, isInCart } = useCart();
 
-    // if (process.client) productsSearch({ featured: true });
+    if (process.client) productsSearch({ featured: true });
 
     // onSSR(async () => {
-    //
+    //   productsSearch({ featured: true });
     // });
 
     return {

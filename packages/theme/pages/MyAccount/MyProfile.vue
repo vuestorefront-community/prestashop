@@ -6,23 +6,23 @@
         {{ $t('Feel free to edit') }}
       </p>
 
-      <ProfileUpdateForm @submit="updatePersonalData" />
+      <ProfileUpdateForm @submit="updatePersonalData"/>
 
-      <p class="notice">
-        {{ $t('Use your personal data') }}
-        <a href="">{{ $t('Privacy Policy') }}</a>
-      </p>
+<!--      <p class="notice">-->
+<!--        {{ $t('Use your personal data') }}-->
+<!--        <a href="">{{ $t('Privacy Policy') }}</a>-->
+<!--      </p>-->
     </SfTab>
 
     <!-- Password reset -->
     <SfTab title="Password change">
       <p class="message">
-        {{ $t('Change password your account') }}:<br />
+        {{ $t('Change password your account') }}:<br/>
         {{ $t('Your current email address is') }}
         <span class="message__label">{{ emailAddress }}</span>
       </p>
 
-      <PasswordResetForm @submit="updatePassword" />
+      <PasswordResetForm @submit="updatePassword"/>
     </SfTab>
   </SfTabs>
 </template>
@@ -77,20 +77,39 @@ export default {
   },
 
   setup() {
-    const { user, updateUser, changePassword } = useUser();
+    const { user, load, updateUser, changePassword } = useUser();
+
+    // only run client side
+    if (process.client) {
+      load();
+      console.log('myprofile setup user.value: ' + JSON.stringify(user.value));
+    }
 
     const emailAddress = userGetters.getEmailAddress(user.value);
-    const formHandler = async (fn, onComplete, onError) => {
+
+    //   const formHandler = async <T extends () => Promise<unknown>>(
+    //     onSubmit: T,
+    //     onComplete: OnFormComplete,
+    //     onError: OnFormError,
+    // )
+
+    const formHandler = async (onSubmit, onComplete, onError) => {
       try {
-        const data = await fn();
-        await onComplete(data);
+        console.log('formHandler start');
+        const data = await onSubmit();
+        console.log('formHandler data: ' + JSON.stringify(data));
+        onComplete(data);
+
       } catch (error) {
+        console.log(error);
         onError(error);
       }
     };
 
-    const updatePersonalData = ({ form, onComplete, onError }) => formHandler(() => updateUser({ user: form.value }), onComplete, onError);
-    const updatePassword = ({ form, onComplete, onError }) => formHandler(() => changePassword({ current: form.value.currentPassword, new: form.value.newPassword, customQuery: form.value.currentUser }), onComplete, onError);
+    const updatePersonalData = ({ form, onComplete, onError }) => formHandler(async () => await updateUser({ user: form.value }), onComplete, onError);
+    const updatePassword = ({ form, onComplete, onError }) => formHandler(async () => {
+      return await changePassword({current: form.value.currentPassword, new: form.value.newPassword, customQuery: form.value.currentUser});
+    }, onComplete, onError);
 
     return {
       updatePersonalData,

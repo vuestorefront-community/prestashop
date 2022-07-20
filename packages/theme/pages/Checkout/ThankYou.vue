@@ -39,9 +39,7 @@
             <p class="contact__email">{{ companyDetails.email }}</p>
           </div>
         </div>
-        <SfButton class="order__notifications-button button-size"
-        >{{ $t('Allow order notifications') }}</SfButton
-        >
+<!--        <SfButton class="order__notifications-button button-size">{{ $t('Allow order notifications') }}</SfButton>-->
       </div>
       <div class="additional-info">
         <div>
@@ -54,31 +52,25 @@
             {{ $t('Info after order') }}
           </p>
         </div>
-        <div>
-          <SfHeading
-            title="What can we improve"
-            class="heading sf-heading--left"
-            :level="3"
-          />
-          <p class="paragraph">
-            {{ $t('Feedback') }}
-          </p>
-          <SfButton
-            class="feedback-button color-secondary sf-button--full-width button-size"
-          >{{ $t('Send my feedback') }}</SfButton
-          >
-        </div>
+<!--        <div>-->
+<!--          <SfHeading-->
+<!--            title="What can we improve"-->
+<!--            class="heading sf-heading&#45;&#45;left"-->
+<!--            :level="3"-->
+<!--          />-->
+<!--          <p class="paragraph">{{ $t('Feedback') }}</p>-->
+<!--          <SfButton class="feedback-button color-secondary sf-button&#45;&#45;full-width button-size">{{ $t('Send my feedback') }}</SfButton>-->
+<!--        </div>-->
       </div>
     </section>
-    <SfButton class="back-button color-secondary button-size"
-    >{{ $t('Go back to shop') }}</SfButton
-    >
+<!--    <SfButton class="back-button color-secondary button-size"-->
+<!--              @click="handleHomeClick()">{{ $t('Go back to shop') }}</SfButton>-->
   </div>
 </template>
 
 <script>
 import { SfHeading, SfButton, SfCallToAction } from '@storefront-ui/vue';
-import { ref } from '@nuxtjs/composition-api';
+import {ref, useRoute} from '@nuxtjs/composition-api';
 import { addBasePath } from '@vue-storefront/core';
 
 export default {
@@ -88,6 +80,8 @@ export default {
     SfCallToAction
   },
   setup(props, context) {
+    const router = useRoute();
+
     context.emit('changeStep', 4);
 
     const companyDetails = ref({

@@ -116,9 +116,12 @@ export default {
       }
     };
 
-    onSSR(async () => {
-      await loadUserBilling();
-    });
+    // only run client side
+    if (process.client) loadUserBilling();
+
+    // onSSR(async () => {
+    //   await loadUserBilling();
+    // });
 
     return {
       changeAddress,

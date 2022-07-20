@@ -112,9 +112,12 @@ export default {
       isFormSubmitted.value = true;
     };
 
-    onSSR(async () => {
-      await load();
-    });
+    // only run client side
+    if (process.client) load();
+
+    // onSSR(async () => {
+    //   await load();
+    // });
 
     const handleAccountClick = async () => {
       toggleLoginModal();

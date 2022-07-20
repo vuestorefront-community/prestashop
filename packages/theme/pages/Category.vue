@@ -95,13 +95,14 @@
               :max-rating="5"
               :score-rating="productGetters.getAverageRating(product)"
               :show-add-to-cart-button="true"
-              :is-in-wishlist="isInWishlist({ product })"
+              :wishlistIcon=false
               :is-added-to-cart="isInCart({ product })"
               :link="localePath(`/p/${productGetters.getId(product)}/${productGetters.getSlug(product)}`)"
               class="products__product-card"
-              @click:wishlist="!isInWishlist({ product }) ? addItemToWishlist({ product }) : removeProductFromWishlist(product)"
               @click:add-to-cart="HandleAddToCart({ product, quantity: 1 })"
             />
+            <!-- after line 97 with :show-add-to-cart-button="true"             :is-in-wishlist="isInWishlist({ product })"-->
+            <!-- after line 100 with class="products__product-card"              @click:wishlist="!isInWishlist({ product }) ? addItemToWishlist({ product }) : removeProductFromWishlist(product)"-->
           </transition-group>
           <transition-group
             v-else
@@ -124,30 +125,32 @@
               :max-rating="5"
               :score-rating="3"
               :qty="1"
-              :is-in-wishlist="isInWishlist({ product })"
+              :wishlistIcon=false
               :link="localePath(`/p/${productGetters.getId(product)}/${productGetters.getSlug(product)}`)"
               @input="productsQuantity[product._id] = $event"
-              @click:wishlist="!isInWishlist({ product }) ? addItemToWishlist({ product }) : removeProductFromWishlist(product)"
               @click:add-to-cart="HandleAddToCart({ product, quantity: 1})"
             >
-              <template #configuration>
-                <SfProperty
-                  class="desktop-only"
-                  name="Size"
-                  value="XS"
-                  style="margin: 0 0 1rem 0;"
-                />
-                <SfProperty class="desktop-only" name="Color" value="white" />
-              </template>
-              <template #actions>
-                <SfButton
-                  class="sf-button--text desktop-only"
-                  style="margin: 0 0 1rem auto; display: block;"
-                  @click="() => {}"
-                >
-                  {{ $t('Save for later') }}
-                </SfButton>
-              </template>
+              <!-- after line 126 with :qty="1"             :is-in-wishlist="isInWishlist({ product })"-->
+              <!-- after line 128 with @input="productsQuantity:              @click:wishlist="!isInWishlist({ product }) ? addItemToWishlist({ product }) : removeProductFromWishlist(product)"-->
+              <!-- TODO: Perhaps do something with this. It looks a little empty at the moment. -->
+<!--              <template #configuration>-->
+<!--                <SfProperty-->
+<!--                  class="desktop-only"-->
+<!--                  name="Size"-->
+<!--                  value="XS"-->
+<!--                  style="margin: 0 0 1rem 0;"-->
+<!--                />-->
+<!--                <SfProperty class="desktop-only" name="Description" value="white"/>-->
+<!--              </template>-->
+<!--              <template #actions>-->
+<!--                <SfButton-->
+<!--                  class="sf-button&#45;&#45;text desktop-only"-->
+<!--                  style="margin: 0 0 1rem auto; display: block;"-->
+<!--                  @click="() => {}"-->
+<!--                >-->
+<!--                  {{ $t('Save for later') }}-->
+<!--                </SfButton>-->
+<!--              </template>-->
             </SfProductCardHorizontal>
           </transition-group>
 
@@ -169,6 +172,7 @@
             <span class="products__show-on-page__label">{{ $t('Show on page') }}</span>
             <LazyHydrate on-interaction>
               <SfSelect
+                v-if="pagination.itemsPerPage"
                 :value="pagination.itemsPerPage.toString()"
                 class="products__items-per-page"
                 @input="th.changeItemsPerPage"
@@ -210,9 +214,10 @@ import {
   SfProperty
 } from '@storefront-ui/vue';
 import { computed, ref, onMounted } from '@nuxtjs/composition-api';
-import { useCart, useWishlist, productGetters, useFacet, facetGetters, wishlistGetters } from '@vue-storefront/prestashop';
+// import { useCart, useWishlist, productGetters, useFacet, facetGetters, wishlistGetters } from '@vue-storefront/prestashop';
+import { useCart, productGetters, useFacet, facetGetters } from '@vue-storefront/prestashop';
 import { useUiHelpers, useUiState, useUiNotification } from '~/composables';
-import { onSSR } from '@vue-storefront/core';
+// import { onSSR } from '@vue-storefront/core';
 import LazyHydrate from 'vue-lazy-hydration';
 import Vue from 'vue';
 import cacheControl from './../helpers/cacheControl';
@@ -232,7 +237,7 @@ export default {
     const { addItem: addItemToCart, isInCart } = useCart();
     const { result, search, loading } = useFacet();
     const { send: sendNotification } = useUiNotification();
-    const { addItem: addItemToWishlist, isInWishlist, removeItem: removeItemFromWishlist, wishlist } = useWishlist();
+    // const { addItem: addItemToWishlist, isInWishlist, removeItem: removeItemFromWishlist, wishlist } = useWishlist();
 
     const productsQuantity = ref({});
     const products = computed(() => facetGetters.getProducts(result.value));
@@ -255,10 +260,13 @@ export default {
       }), {});
     };
 
-    onSSR(async () => {
-      await search(th.getFacetsFromURL());
-      setSelectedFilters();
-    });
+    // only run client side
+    if (process.client) search(th.getFacetsFromURL()).then(() => setSelectedFilters());
+
+    // onSSR(async () => {
+    //   await search(th.getFacetsFromURL());
+    //   setSelectedFilters();
+    // });
 
     const { changeFilters, isFacetColor } = useUiHelpers();
     const { toggleFilterSidebar } = useUiState();
@@ -295,11 +303,11 @@ export default {
       toggleFilterSidebar();
     };
 
-    const removeProductFromWishlist = (productItem) => {
-      const productsInWhishlist = computed(() => wishlistGetters.getItems(wishlist.value));
-      const product = productsInWhishlist.value.find(wishlistProduct => wishlistProduct.variant.sku === productItem.sku);
-      removeItemFromWishlist({ product });
-    };
+    // const removeProductFromWishlist = (productItem) => {
+    //   const productsInWhishlist = computed(() => wishlistGetters.getItems(wishlist.value));
+    //   const product = productsInWhishlist.value.find(wishlistProduct => wishlistProduct.variant.sku === productItem.sku);
+    //   removeItemFromWishlist({ product });
+    // };
 
     return {
       ...uiState,
@@ -313,9 +321,9 @@ export default {
       sortBy,
       facets,
       breadcrumbs,
-      addItemToWishlist,
-      removeProductFromWishlist,
-      isInWishlist,
+      // addItemToWishlist,
+      // removeProductFromWishlist,
+      // isInWishlist,
       addItemToCart,
       isInCart,
       productsQuantity,

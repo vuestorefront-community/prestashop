@@ -104,9 +104,13 @@ export default {
     const currentOrder = ref(null);
     const ordersList = computed(()=> orders.value ? orderGetters.getOrdersListFiltered(orders.value) : []);
     const totalOrders = computed(() => orders.value ? orderGetters.getOrdersTotal(orders.value) : 0);
-    onSSR(async () => {
-      await search({orderId: null});
-    });
+
+    // only run client side
+    if (process.client) search({orderId: null});
+
+    // onSSR(async () => {
+    //   await search({orderId: null});
+    // });
 
     const tableHeaders = [
       'Order ID',

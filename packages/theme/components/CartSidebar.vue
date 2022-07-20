@@ -148,7 +148,7 @@ export default {
     const totals = computed(() => cartGetters.getTotals(cart.value));
     const totalItems = computed(() => cartGetters.getTotalItems(cart.value));
 
-    // if (process.client) loadCart();
+    if (process.client) loadCart();
 
     // onSSR(async () => {
     //   await loadCart();

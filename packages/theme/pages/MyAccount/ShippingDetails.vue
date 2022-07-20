@@ -116,9 +116,12 @@ export default {
       }
     };
 
-    onSSR(async () => {
-      await loadUserShipping();
-    });
+    // only run client side
+    if (process.client) loadUserShipping();
+
+    // onSSR(async () => {
+    //   await loadUserShipping();
+    // });
 
     return {
       changeAddress,

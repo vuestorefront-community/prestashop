@@ -13,13 +13,13 @@
             <div  v-for="address in addressesList" :key="address.id">
             <sf-address :name="address.id" v-if='!isFormSubmitted || isSelectedAddress(address.id)'>
               <div>
-              <span>{{address.alias}}</span>
-              <span>{{address.address1}}</span>
-              <span>{{address.address2}}</span>
-              <span>{{address.postcode}}</span>
-              <span>{{address.city}}</span>
-              <span>{{address.country}}</span>
-              <span>{{address.phone}}</span>
+                <span>{{address.alias}}</span>
+                <span>{{address.address1}}</span>
+                <span>{{address.address2}}</span>
+                <span>{{address.postcode}}</span>
+                <span>{{address.city}}</span>
+                <span>{{address.country}}</span>
+                <span>{{address.phone}}</span>
               </div>
               <div class='flex-row' v-if='!isFormSubmitted'>
                 <div>
@@ -149,9 +149,12 @@ export default {
       isFormSubmitted.value = false;
     };
 
-    onSSR(async () => {
-      await load();
-    });
+    // only run client side
+    if (process.client) load();
+
+    // onSSR(async () => {
+    //   await load();
+    // });
 
     return {
       addressesList,

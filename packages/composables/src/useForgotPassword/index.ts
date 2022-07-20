@@ -3,11 +3,21 @@ import {
   useForgotPasswordFactory,
   UseForgotPasswordFactoryParams
 } from '@vue-storefront/core';
+import {handleRequest} from '../helpers';
 
 const factoryParams: UseForgotPasswordFactoryParams<any> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   resetPassword: async (context: Context, { email, customQuery }) => {
-    console.log('Mocked: resetPassword');
+    const data = await handleRequest(context, {method: 'post',
+      url: '/resetPassword',
+      params: {
+        email: email
+      }
+    });
+
+    if (data?.errors) {
+      throw { message: data?.errors ? data?.errors : 'Password Reset failed' };
+    }
     return {};
   },
 

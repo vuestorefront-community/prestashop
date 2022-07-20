@@ -13,12 +13,14 @@ import {handleRequest} from '../helpers';
 const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   load: async (context: Context) => {
-    const result: any = await handleRequest(context, {method: 'get', url: '/accountInfo'});
+    const data: any = await handleRequest(context, {method: 'get', url: '/accountInfo'});
 
-    if (result?.code === 410) {
+    if (data?.errorCode) {
+      throw { message: data?.errors ? data?.errors : 'User load failed' };
       return null;
     }
-    return result?.psdata;
+
+    return data?.psdata;
 
     // todo: setup User type
     return {};
@@ -35,16 +37,38 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   updateUser: async (context: Context, { currentUser, updatedUserData }) => {
-    const data = await handleRequest(context, {method: 'post',
+    console.log('updateUser updatedUserData ' + JSON.stringify(updatedUserData));
+    // let data;
+    // let data2;
+    await handleRequest(context, {method: 'post',
       url: '/accountedit',
       data: updatedUserData
-    });
+    })
+      // .then((_data) => {
+      //   data = _data;
+      //   if (data?.errorCode) {
+      //     console.log('updateUser data?.errors ' + JSON.stringify(data?.errors));
+      //     throw { message: data?.errors ? data?.errors : 'User update failed' };
+      //   }
+      //   return data;
+      //
+      //   // handleRequest(context, {method: 'get', url: '/accountInfo'})
+      //   //   .then((_data2) => {
+      //   //     data2 = _data;
+      //   //     console.log('updateUser nested 2 data2 ' + JSON.stringify(data2));
+      //   //     return data2.psdata;
+      //   //   });
+      // })
+      ;
+    return await handleRequest(context, {method: 'get', url: '/accountInfo'});
 
-    if (data.success) {
-      const result: any = await handleRequest(context, {method: 'get', url: '/accountInfo'});
+    // console.log('updateUser data ' + JSON.stringify(data));
+    // return data;
+    // console.log('updateUser data2 ' + JSON.stringify(data2));
 
-      return result.psdata;
-    }
+
+
+    // const data2: any = await ;
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -59,14 +83,19 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
       }
     });
 
+    // Logger.error('data: ' + JSON.stringify(data));
+
+    if (data?.errors) {
+      throw { message: data?.errors ? data?.errors : 'Registration failed' };
+    }
+
     const code = data?.code;
     if (code === 200) {
-      const result: any = await handleRequest(context, {method: 'get', url: '/accountInfo'});
+      const data: any = await handleRequest(context, {method: 'get', url: '/accountInfo'});
 
-      if (result.code === 410) return {};
-      return result.psdata;
+      if (data.code === 410) return {};
+      return data.psdata;
     } else if (code === 306) {
-      throw { message: 'Registration failed' };
     }
 
     return {};
@@ -81,10 +110,9 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
         password: password
       }
     });
-    const code = data.code;
 
-    if (code === 306) {
-      throw { message: 'The provided credentials are invalid' };
+    if (data?.errorCode) {
+      throw { message: data?.errors ? data?.errors : 'The provided credentials are invalid' };
     }
 
     return data.psdata.user;
@@ -104,9 +132,9 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
     });
 
     if (data.success) {
-      const result: any = await handleRequest(context, {method: 'get', url: '/accountInfo'});
+      const data: any = await handleRequest(context, {method: 'get', url: '/accountInfo'});
 
-      return result.psdata;
+      return data.psdata;
     }
   }
 };

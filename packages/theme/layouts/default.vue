@@ -34,8 +34,6 @@ import Notification from '~/components/Notification';
 // import { onSSR } from '@vue-storefront/core';
 import { useRoute } from '@nuxtjs/composition-api';
 import { useCart, useStore, useUser, useWishlist, useBootstrap } from '@vue-storefront/prestashop';
-import { useVSFContext, Context, Logger} from '@vue-storefront/core';
-import {handleRequest} from '@vue-storefront/prestashop/src/helpers';
 
 export default {
   name: 'DefaultLayout',
@@ -52,13 +50,25 @@ export default {
     Notification
   },
 
+  // eslint-disable-next-line func-names
   setup: function () {
     const route = useRoute();
     const {boot: boot} = useBootstrap();
-    const {load: loadCart} = useCart();
+    const { load: loadStores } = useStore();
+    const { load: loadUser } = useUser();
+    const { load: loadCart } = useCart();
+    // const { load: loadWishlist } = useWishlist();
 
+    // only run client side
     if (process.client) {
-      boot().then(() => loadCart());
+      // make sure to get a cookie and csrf token before doing the rest of the calls
+      boot()
+        .then(() => Promise.all([
+          loadStores(),
+          loadUser(),
+          loadCart() // ,
+          // loadWishlist()
+        ]));
     }
 
     return {

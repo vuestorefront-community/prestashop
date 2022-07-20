@@ -36,7 +36,7 @@ const handleRequest = async (context, params) => {
     const {data, headers, cookieObject} = await _context.$prestashop.api.bootstrap(params);
     Logger.error(JSON.stringify(params.url) + ' headers: ' + JSON.stringify(headers));
 
-    // Logger.error('handleRequest data: ' + JSON.stringify(data));
+    Logger.error(JSON.stringify(params.url) + ' handleRequest data: ' + JSON.stringify(data));
 
     if (cookieObject) {
       const psCookieKeyNew = cookieObject?.vsfPsKeyCookie;
@@ -71,7 +71,7 @@ const handleRequest = async (context, params) => {
     return data;
 
   } catch (err) {
-    Logger.error('handleRequest', err);
+    Logger.error('isSSR: ' + JSON.stringify(process.server) + ' at ' + JSON.stringify(params.url) + ' handleRequest: ', err);
   }
 
 };

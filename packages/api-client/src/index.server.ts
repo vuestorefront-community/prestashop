@@ -25,6 +25,7 @@ const { createApiClient } = apiClientFactory<Setttings, Endpoints>({
   onCreate,
   // eslint-disable-next-line line-comment-position
   api // ,
+  // TODO: Not sure if this should be used, but might be necessary for cookies on SSR
   // extensions: [
   //   cookieExtension
   //   // tokenExtension

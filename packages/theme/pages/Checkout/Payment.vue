@@ -137,9 +137,13 @@ export default {
     const changeSelectedMethod = (selectedOption) => {
       selectedPaymentOption.value = selectedOption;
     };
-    onSSR(async () => {
-      await load();
-    });
+
+    // only run client side
+    if (process.client) load();
+
+    // onSSR(async () => {
+    //   await load();
+    // });
 
     const processOrder = async () => {
       await make({methodName: selectedPaymentOption.value});
