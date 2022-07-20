@@ -106,7 +106,9 @@ export default {
       }
     };
 
-    const updatePersonalData = ({ form, onComplete, onError }) => formHandler(async () => await updateUser({ user: form.value }), onComplete, onError);
+    const updatePersonalData = ({ form, onComplete, onError }) => formHandler(async () => {
+      return await updateUser({ user: form.value });
+    }, onComplete, onError);
     const updatePassword = ({ form, onComplete, onError }) => formHandler(async () => {
       return await changePassword({current: form.value.currentPassword, new: form.value.newPassword, customQuery: form.value.currentUser});
     }, onComplete, onError);

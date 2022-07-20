@@ -13,7 +13,7 @@ const handleRequest = async (context, params) => {
 
   const psCookieKey = _context.$prestashop.config.app.$cookies.get(await _context.$prestashop.config.app.$config.psCustomerCookieKey);
   const psCookieValue = _context.$prestashop.config.app.$cookies.get(await _context.$prestashop.config.app.$config.psCustomerCookieValue);
-  let moquiSessionToken = _context.$prestashop.config.app.$cookies.get('moquiSessionToken');
+  const moquiSessionToken = _context.$prestashop.config.app.$cookies.get('moquiSessionToken');
 
   // console.log('typeof _context.$prestashop.client.defaults.headers: ' + JSON.stringify(_context.$prestashop.client.defaults.headers));
 
@@ -59,7 +59,7 @@ const handleRequest = async (context, params) => {
       }
     }
     if (headers) {
-      const moquiSessionTokenNew = headers['moquisessiontoken'] ? headers['moquisessiontoken'] : headers['x-csrf-token'];
+      const moquiSessionTokenNew = headers.moquisessiontoken ? headers.moquisessiontoken : headers['x-csrf-token'];
       if (moquiSessionTokenNew && moquiSessionTokenNew !== moquiSessionToken) {
         await _context.$prestashop.config.app.$cookies.set('moquiSessionToken', moquiSessionTokenNew);
         Logger.error('isSSR: ' + JSON.stringify(process.server) + ' at ' + JSON.stringify(params.url) + ' moquiSessionTokenNew: ' + JSON.stringify(moquiSessionTokenNew));

@@ -37,36 +37,38 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   updateUser: async (context: Context, { currentUser, updatedUserData }) => {
-    console.log('updateUser updatedUserData ' + JSON.stringify(updatedUserData));
+    // console.log('updateUser updatedUserData ' + JSON.stringify(updatedUserData));
     // let data;
     // let data2;
     await handleRequest(context, {method: 'post',
       url: '/accountedit',
       data: updatedUserData
     })
-      // .then((_data) => {
-      //   data = _data;
-      //   if (data?.errorCode) {
-      //     console.log('updateUser data?.errors ' + JSON.stringify(data?.errors));
-      //     throw { message: data?.errors ? data?.errors : 'User update failed' };
-      //   }
-      //   return data;
-      //
-      //   // handleRequest(context, {method: 'get', url: '/accountInfo'})
-      //   //   .then((_data2) => {
-      //   //     data2 = _data;
-      //   //     console.log('updateUser nested 2 data2 ' + JSON.stringify(data2));
-      //   //     return data2.psdata;
-      //   //   });
-      // })
-      ;
-    return await handleRequest(context, {method: 'get', url: '/accountInfo'});
+    // .then((_data) => {
+    //   data = _data;
+    //   if (data?.errorCode) {
+    //     console.log('updateUser data?.errors ' + JSON.stringify(data?.errors));
+    //     throw { message: data?.errors ? data?.errors : 'User update failed' };
+    //   }
+    //   return data;
+    //
+    //   // handleRequest(context, {method: 'get', url: '/accountInfo'})
+    //   //   .then((_data2) => {
+    //   //     data2 = _data;
+    //   //     console.log('updateUser nested 2 data2 ' + JSON.stringify(data2));
+    //   //     return data2.psdata;
+    //   //   });
+    // })
+    ;
+    const data = await handleRequest(context, {method: 'get', url: '/accountInfo'});
+
+    console.log('updateUser data: ' + JSON.stringify(data));
+
+    return data;
 
     // console.log('updateUser data ' + JSON.stringify(data));
     // return data;
     // console.log('updateUser data2 ' + JSON.stringify(data2));
-
-
 
     // const data2: any = await ;
   },
