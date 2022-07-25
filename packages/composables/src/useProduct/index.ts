@@ -31,9 +31,7 @@ const params: UseProductFactoryParams<Product, SearchParams> = {
         params: {
           // eslint-disable-next-line camelcase
           product_id: params.id,
-          refresh: params.refresh
-        },
-        data: {
+          refresh: params.refresh,
           group: params.variantObj
         }
       });

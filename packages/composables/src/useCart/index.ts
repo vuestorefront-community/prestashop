@@ -37,30 +37,51 @@ const params: UseCartFactoryParams<Cart, CartItem, PsProduct> = {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   addItem: async (context: Context, { currentCart, product, quantity, customQuery }) => {
+    let data;
+    try {
 
-    const data = await handleRequest(context, {method: 'get',
-      url: '/cart',
-      params: {
-        // eslint-disable-next-line camelcase
-        id_product: product.id,
-        qty: quantity,
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        // eslint-disable-next-line camelcase
-        id_product_attribute: product.attributeId,
-        op: 'up',
-        update: '1',
-        action: 'update',
-        // eslint-disable-next-line camelcase
-        image_size: 'medium_default'
+      console.log('addItem test');
+
+      let variantObj;
+      if (product.variant) {
+        const _variantObj = { };
+        for (const i in product.variant) {
+          const splitted = product.variant[i].split('-');
+          console.log('splitted: ' + JSON.stringify(splitted));
+          _variantObj[splitted[0]] = splitted[1];
+          console.log('_variantObj: ' + JSON.stringify(_variantObj));
+        }
+        variantObj = _variantObj;
       }
-    });
+      console.log('product.variant: ' + JSON.stringify(product.variant));
+      console.log('variantObj: ' + JSON.stringify(variantObj));
 
-    if (data.code === 200) {
+      data = await handleRequest(context, {method: 'get',
+        url: '/cart',
+        params: {
+          // eslint-disable-next-line camelcase
+          id_product: product.id,
+          qty: quantity,
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          // eslint-disable-next-line camelcase
+          id_product_attribute: product.attributeId,
+          attributes: variantObj,
+          op: 'up',
+          update: '1',
+          action: 'update',
+          // eslint-disable-next-line camelcase
+          image_size: 'medium_default'
+        }
+      });
+
+      if (data?.errors) throw { message: data?.errors ? data?.errors : 'Unable to add to cart.' };
+
+      console.log('addItem data: ' + JSON.stringify(data));
+
       return data;
-    } else {
-      // add to cart failed
-      return {};
+    } catch (error) {
+      if (error.message) throw error;
     }
   },
 

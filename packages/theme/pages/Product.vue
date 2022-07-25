@@ -25,8 +25,9 @@
           </div>
           <div class="product__price-and-rating">
             <SfPrice
+              :class="{ 'display-none': !productGetters.getPrice(product).regular }"
               :regular="$n(productGetters.getPrice(product).regular, 'currency')"
-              :special="$n(productGetters.getPrice(product).regular, 'currency') === $n(productGetters.getPrice(product).special, 'currency')? '': $n(productGetters.getPrice(product).special, 'currency')"
+              :special="$n(productGetters.getPrice(product).regular, 'currency') === $n(productGetters.getPrice(product).special, 'currency') ? '' : $n(productGetters.getPrice(product).special, 'currency')"
             />
             <div>
               <div class="product__rating">
@@ -82,7 +83,7 @@
               :disabled="loading"
               :canAddToCart="stock > 0"
               class="product__add-to-cart"
-              @click="addingToCart({ product, quantity: parseInt(qty) } )"
+              @click="addItemToCart({ product, variant: route.query, quantity: parseInt(qty) } )"
             />
           </div>
 
@@ -218,6 +219,7 @@ import { onSSR } from '@vue-storefront/core';
 import LazyHydrate from 'vue-lazy-hydration';
 import cacheControl from './../helpers/cacheControl';
 import useUiNotification from '~/composables/useUiNotification';
+import {useAddToCart} from '~/composables';
 
 export default {
   name: 'Product',
@@ -230,18 +232,13 @@ export default {
     const qty = ref(1);
     const { id } = context.root.$route.params;
     const { products, search, loading: productLoading } = useProduct('products');
-    const {
-      products: featureProducts,
-      search: searchRelatedProducts,
-      loading: relatedLoading
-    } = useProduct('relatedProducts');
+    const {products: featureProducts, search: searchRelatedProducts, loading: relatedLoading} = useProduct('relatedProducts');
     const { addItem, loading } = useCart();
-    const { reviews: productReviews, search: searchReviews } = useReview(
-      'productReviews'
-    );
+    const { reviews: productReviews, search: searchReviews } = useReview('productReviews');
     const { send: sendNotification } = useUiNotification();
     // const pagination = computed(() => facetGetters.getPagination(result.value));
     const { isAuthenticated } = useUser();
+    const { addItemToCart } = useAddToCart();
 
     const product = computed(
       () =>
@@ -288,11 +285,11 @@ export default {
       if (variant && Object.keys(variant).length === 0) {
         variant = null;
       }
-      search({ id, variant: variant })
+      Promise.resolve(search({ id, variant: variant })
         .then(() => Promise.all([
           searchRelatedProducts({ featured: true }),
           searchReviews({ productId: id, page: '1' })
-        ]));
+        ])));
     }
 
     // onSSR(async () => {
@@ -344,6 +341,7 @@ export default {
       updateFilter,
       searchReviews,
       sendNotification,
+      route: context.root.$route,
       product,
       reviews,
       productReviews,
@@ -366,22 +364,9 @@ export default {
       productGetters,
       productGallery,
       isAuthenticated,
-      goNext
+      goNext,
+      addItemToCart
     };
-  },
-  methods: {
-    async addingToCart(Productdata) {
-      await this.addItem(Productdata).then(() => {
-        this.sendNotification({
-          key: 'product_added',
-          message: `${Productdata.product.name} has been successfully added to your cart.`,
-          type: 'success',
-          title: 'Product added!',
-          icon: 'check'
-        });
-        this.qty = 1;
-      });
-    }
   },
   components: {
     SfAlert,

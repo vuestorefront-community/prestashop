@@ -34,6 +34,8 @@ import ProfileUpdateForm from '~/components/MyAccount/ProfileUpdateForm';
 import PasswordResetForm from '~/components/MyAccount/PasswordResetForm';
 import { SfTabs, SfInput, SfButton } from '@storefront-ui/vue';
 import { useUser, userGetters } from '@vue-storefront/prestashop';
+import {useRouter} from '@nuxtjs/composition-api';
+import {useUiNotification, useUiState} from '~/composables';
 
 extend('email', {
   ...email,
@@ -76,16 +78,31 @@ export default {
     PasswordResetForm
   },
 
-  setup() {
-    const { user, load, updateUser, changePassword } = useUser();
+  setup(props, context) {
+    // const uiState = useUiState();
+    const router = useRouter();
+    const { send: sendNotification } = useUiNotification();
+    const { user, load, updateUser, changePassword, error: userError } = useUser();
 
+    let emailAddress;
     // only run client side
     if (process.client) {
-      load();
+      Promise.resolve(load());
       console.log('myprofile setup user.value: ' + JSON.stringify(user.value));
+      if (user.value) emailAddress = userGetters.getEmailAddress(user.value);
+      else {
+        // TODO: handle the scenario when reloading
+        // router.push(context.root.localePath('/'));
+        // sendNotification({
+        //   key: 'user_load_error',
+        //   message: 'User load has failed!',
+        //   type: 'danger',
+        //   title: 'Error',
+        //   icon: 'danger'
+        // });
+        // return;
+      }
     }
-
-    const emailAddress = userGetters.getEmailAddress(user.value);
 
     //   const formHandler = async <T extends () => Promise<unknown>>(
     //     onSubmit: T,
@@ -96,9 +113,11 @@ export default {
     const formHandler = async (onSubmit, onComplete, onError) => {
       try {
         console.log('formHandler start');
-        const data = await onSubmit();
-        console.log('formHandler data: ' + JSON.stringify(data));
-        onComplete(data);
+        await onSubmit();
+        console.log('formHandler user: ' + JSON.stringify(user.value));
+        if (userError.value.updateUser) throw { message: userError.value.updateUser?.message };
+        if (userError.value.changePassword) throw { message: userError.value.changePassword?.message };
+        onComplete(user.value);
 
       } catch (error) {
         console.log(error);
@@ -106,12 +125,17 @@ export default {
       }
     };
 
-    const updatePersonalData = ({ form, onComplete, onError }) => formHandler(async () => {
-      return await updateUser({ user: form.value });
-    }, onComplete, onError);
-    const updatePassword = ({ form, onComplete, onError }) => formHandler(async () => {
-      return await changePassword({current: form.value.currentPassword, new: form.value.newPassword, customQuery: form.value.currentUser});
-    }, onComplete, onError);
+    // const updatePersonalData = ({ form, onComplete, onError }) => formHandler(async () => {
+    //   // const data = await updateUser({ user: form.value });
+    //   // console.log('updatePersonalData data: ' + JSON.stringify(data));
+    //   // return data;
+    //   const data = await updateUser({ user: form.value });
+    //   console.log('updatePersonalData data: ' + JSON.stringify(data));
+    //   console.log('updatePersonalData user: ' + JSON.stringify(user));
+    //   return user;
+    // }, onComplete, onError);
+    const updatePersonalData = ({ form, onComplete, onError }) => formHandler(() => updateUser({ user: form.value }), onComplete, onError);
+    const updatePassword = ({ form, onComplete, onError }) => formHandler(() => changePassword({current: form.value.currentPassword, new: form.value.newPassword, customQuery: form.value.currentUser}), onComplete, onError);
 
     return {
       updatePersonalData,

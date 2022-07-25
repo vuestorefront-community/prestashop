@@ -24,13 +24,11 @@
             :loading="loading">
             <SfAccordion
               v-e2e="'categories-accordion'"
-              :show-chevron="true"
-            >
+              :show-chevron="true">
               <SfAccordionItem
                 v-for="(cat, i) in categoryTree && categoryTree.items"
                 :key="i"
-                :header="cat.label"
-              >
+                :header="cat.label">
                 <template>
                   <SfList class="list">
                     <SfListItem class="list__item">
@@ -83,6 +81,7 @@
             tag="div"
             class="products__grid"
           >
+            <!-- TODO: Setting addToCartDisabled to true will still show a white button area. It should be transparent or completely hidden.-->
             <SfProductCard
               v-e2e="'category-product-card'"
               v-for="(product, i) in products"
@@ -94,13 +93,21 @@
               :special-price="$n(productGetters.getPrice(product).regular, 'currency') === $n(productGetters.getPrice(product).special, 'currency')? '': $n(productGetters.getPrice(product).special, 'currency')"
               :max-rating="5"
               :score-rating="productGetters.getAverageRating(product)"
-              :show-add-to-cart-button="true"
-              :wishlistIcon=false
-              :is-added-to-cart="isInCart({ product })"
+              :wishlistIcon="false"
+              :isAddedToCart="isInCart({ product })"
               :link="localePath(`/p/${productGetters.getId(product)}/${productGetters.getSlug(product)}`)"
               class="products__product-card"
-              @click:add-to-cart="HandleAddToCart({ product, quantity: 1 })"
-            />
+              @click:add-to-cart="addItemToCart({ product, quantity: 1 })"
+            >
+              <template #add-to-cart-icon v-if="productGetters.getIsVirtual(product)">
+                <SfIcon
+                  key="more"
+                  icon="more"
+                  size="20px"
+                  color="white"
+                />
+              </template>
+            </SfProductCard>
             <!-- after line 97 with :show-add-to-cart-button="true"             :is-in-wishlist="isInWishlist({ product })"-->
             <!-- after line 100 with class="products__product-card"              @click:wishlist="!isInWishlist({ product }) ? addItemToWishlist({ product }) : removeProductFromWishlist(product)"-->
           </transition-group>
@@ -126,12 +133,19 @@
               :score-rating="3"
               :qty="1"
               :wishlistIcon=false
-              :link="localePath(`/p/${productGetters.getId(product)}/${productGetters.getSlug(product)}`)"
+              :link="localePath(`/p/${productGetters.getId(product)}/${productGetters.getSlug(product)}`)")
               @input="productsQuantity[product._id] = $event"
-              @click:add-to-cart="HandleAddToCart({ product, quantity: 1})"
+              @click:add-to-cart="addItemToCart({ product, quantity: 1})"
             >
               <!-- after line 126 with :qty="1"             :is-in-wishlist="isInWishlist({ product })"-->
               <!-- after line 128 with @input="productsQuantity:              @click:wishlist="!isInWishlist({ product }) ? addItemToWishlist({ product }) : removeProductFromWishlist(product)"-->
+              <template #add-to-cart v-if="productGetters.getIsVirtual(product)">
+                <SfButton
+                  class="sf-call-to-action__button"
+                  :link="localePath(`/p/${productGetters.getId(product)}/${productGetters.getSlug(product)}`)">
+                  View Details
+                </SfButton>
+              </template>
               <!-- TODO: Perhaps do something with this. It looks a little empty at the moment. -->
 <!--              <template #configuration>-->
 <!--                <SfProperty-->
@@ -213,10 +227,10 @@ import {
   SfColor,
   SfProperty
 } from '@storefront-ui/vue';
-import { computed, ref, onMounted } from '@nuxtjs/composition-api';
+import {computed, ref, onMounted, useRouter} from '@nuxtjs/composition-api';
 // import { useCart, useWishlist, productGetters, useFacet, facetGetters, wishlistGetters } from '@vue-storefront/prestashop';
 import { useCart, productGetters, useFacet, facetGetters } from '@vue-storefront/prestashop';
-import { useUiHelpers, useUiState, useUiNotification } from '~/composables';
+import { useUiHelpers, useUiState, useUiNotification, useAddToCart } from '~/composables';
 // import { onSSR } from '@vue-storefront/core';
 import LazyHydrate from 'vue-lazy-hydration';
 import Vue from 'vue';
@@ -232,11 +246,13 @@ export default {
     'stale-when-revalidate': 5
   }),
   setup(props, context) {
+    const router = useRouter();
     const th = useUiHelpers();
     const uiState = useUiState();
-    const { addItem: addItemToCart, isInCart } = useCart();
+    const { isInCart } = useCart();
     const { result, search, loading } = useFacet();
     const { send: sendNotification } = useUiNotification();
+    const { addItemToCart } = useAddToCart();
     // const { addItem: addItemToWishlist, isInWishlist, removeItem: removeItemFromWishlist, wishlist } = useWishlist();
 
     const productsQuantity = ref({});
@@ -261,7 +277,8 @@ export default {
     };
 
     // only run client side
-    if (process.client) search(th.getFacetsFromURL()).then(() => setSelectedFilters());
+    if (process.client) Promise.resolve(search(th.getFacetsFromURL()).then(() => setSelectedFilters()));
+    console.log('category result: ' + JSON.stringify(result.value));
 
     // onSSR(async () => {
     //   await search(th.getFacetsFromURL());
@@ -311,6 +328,7 @@ export default {
 
     return {
       ...uiState,
+      router,
       sendNotification,
       th,
       products,
@@ -333,21 +351,10 @@ export default {
       selectedFilters,
       clearFilters,
       applyFilters,
-      addBasePath
+      addBasePath//,
+      // useAddToCart,
+      // handleAddToCart: computed(({product, quantity}) => useAddToCart({ product, quantity }))
     };
-  },
-  methods: {
-    HandleAddToCart(productObj) {
-      this.addItemToCart(productObj).then(() => {
-        this.sendNotification({
-          key: 'added_to_cart',
-          message: 'Product has been successfully added to cart !',
-          type: 'success',
-          title: 'Product added!',
-          icon: 'check'
-        });
-      });
-    }
   },
   components: {
     CategoryPageHeader,

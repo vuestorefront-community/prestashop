@@ -11,9 +11,22 @@
             :image="productGetters.getCoverImage(product)"
             :regular-price="$n(productGetters.getPrice(product).regular, 'currency')"
             :special-price="productGetters.getPrice(product).special && $n(productGetters.getPrice(product).special, 'currency')"
+            :max-rating="5"
+            :score-rating="productGetters.getAverageRating(product)"
+            :wishlistIcon="false"
+            :isAddedToCart="isInCart({ product })"
             :link="localePath(`/p/${productGetters.getId(product)}/${productGetters.getSlug(product)}`)"
-            :wishlistIcon=false
-          />
+            @click:add-to-cart="addItemToCart({ product, quantity: 1})"
+          >
+            <template #add-to-cart-icon v-if="productGetters.getIsVirtual(product)">
+              <SfIcon
+                key="more"
+                icon="more"
+                size="20px"
+                color="white"
+              />
+            </template>
+          </SfProductCard>
         </SfCarouselItem>
       </SfCarousel>
     </SfLoader>
@@ -26,21 +39,33 @@ import {
   SfCarousel,
   SfProductCard,
   SfSection,
-  SfLoader
+  SfLoader,
+  SfIcon
 } from '@storefront-ui/vue';
 
-import { productGetters } from '@vue-storefront/prestashop';
+import {productGetters, useCart} from '@vue-storefront/prestashop';
+import {useRouter} from '@nuxtjs/composition-api';
+import { useUiNotification} from '~/composables';
+import {useAddToCart} from '~/composables';
 
 export default {
   name: 'RelatedProducts',
-  setup() {
-    return { productGetters };
+  setup(props, context) {
+    const { isInCart } = useCart();
+    const { addItemToCart } = useAddToCart();
+
+    return {
+      productGetters,
+      addItemToCart,
+      isInCart
+    };
   },
   components: {
     SfCarousel,
     SfProductCard,
     SfSection,
-    SfLoader
+    SfLoader,
+    SfIcon
   },
   props: {
     title: String,

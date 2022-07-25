@@ -24,6 +24,7 @@ const handleRequest = async (context, params) => {
       moquiSessionToken: moquiSessionToken
     };
   }
+  let data, headers, cookieObject;
   try {
     // Logger.error(JSON.stringify(params.url) + ' _context.$prestashop.settings ' + JSON.stringify(_context.$prestashop.settings));
     // Logger.error(JSON.stringify(params.url) + ' _context.$prestashop.cookies ' + JSON.stringify(_context.$prestashop.cookies));
@@ -33,7 +34,11 @@ const handleRequest = async (context, params) => {
     // Logger.error(JSON.stringify(params.url) + ' _context.$prestashop.api ' + JSON.stringify(_context.$prestashop.api));
 
     Logger.error(JSON.stringify(params.url) + ' params.headers: ' + JSON.stringify(params.headers));
-    const {data, headers, cookieObject} = await _context.$prestashop.api.bootstrap(params);
+    const response = await _context.$prestashop.api.bootstrap(params);
+    data = response.data;
+    headers = response.headers;
+    cookieObject = response.cookieObject;
+
     Logger.error(JSON.stringify(params.url) + ' headers: ' + JSON.stringify(headers));
 
     Logger.error(JSON.stringify(params.url) + ' handleRequest data: ' + JSON.stringify(data));
@@ -68,10 +73,14 @@ const handleRequest = async (context, params) => {
       }
     }
 
+    if (data?.errors) throw { message: data?.errors };
+
     return data;
 
   } catch (err) {
     Logger.error('isSSR: ' + JSON.stringify(process.server) + ' at ' + JSON.stringify(params.url) + ' handleRequest: ', err);
+
+    return data;
   }
 
 };

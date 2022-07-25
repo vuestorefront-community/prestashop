@@ -10,7 +10,7 @@ const populateProducts = (psProducts: Array<any>) => {
     attributeId: product.id_product_attribute,
     regularPrice: product.float_price,
     // eslint-disable-next-line line-comment-position
-    discountPrice: product.float_price, // todo
+    discountPrice: product.discount_price ? product.discount_price : product.float_price, // todo
     coverImageSmall: product.cover_image,
     coverImageMedium: product.cover_image,
     coverImageLarge: product.cover_image,
@@ -27,6 +27,7 @@ const populateProducts = (psProducts: Array<any>) => {
         big: product.default_image.url
       }]
       ),
+    isVirtual: product.is_virtual,
     attributes: product.attributes,
     groups: product.groups,
     description: product.description,

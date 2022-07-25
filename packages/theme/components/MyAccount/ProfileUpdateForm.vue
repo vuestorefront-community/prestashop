@@ -58,6 +58,7 @@
             required
             :valid="!errors[0]"
             :error-message="errors[0]"
+            :disabled="true"
           />
         </ValidationProvider>
       </div>
@@ -136,7 +137,10 @@ export default defineComponent({
       gender: userGetters.getGender(user.value)
     });
     const { send: sendNotification } = useUiNotification();
-    const form = ref(getInitialForm());
+    let form;
+    if (process.client) {
+      form = ref(getInitialForm());
+    }
 
     // const handleForm = (fn) => async () => {
     //   await fn({ user: form.value });
@@ -149,7 +153,7 @@ export default defineComponent({
         currentPassword.value = '';
         sendNotification({
           id: Symbol('user_updated'),
-          message: 'The user account data was successfully updated!',
+          message: data.message ? data.message : 'The user account data was successfully updated!',
           type: 'success',
           icon: 'check',
           persist: false,
@@ -157,10 +161,10 @@ export default defineComponent({
         });
         resetValidationFn();
       };
-      const onError = (message) => {
+      const onError = (error) => {
         sendNotification({
           id: Symbol('user_updated'),
-          message: message,
+          message: error.message,
           type: 'danger',
           icon: 'cross',
           persist: false,
@@ -179,132 +183,6 @@ export default defineComponent({
       // }
     };
 
-    // const submitForm = (resetValidationFn) => {
-    //   // try {
-    //   //   console.log('submitForm form.value ' + JSON.stringify(form.value));
-    //   //   const data = await updateUser({user: form.value});
-    //   //   console.log('submitForm data ' + JSON.stringify(data));
-    //   //
-    //   // } catch (error) {
-    //   //   console.log(error);
-    //   // }
-    //
-    //   // const onComplete = (data) => {
-    //   //   // form.value = getInitialForm();
-    //   //   currentPassword.value = '';
-    //   //   console.log('onComplete submitForm: data ' + JSON.stringify(data));
-    //   //   sendNotification({
-    //   //     id: Symbol('user_updated'),
-    //   //     message: 'The user account data was successfully updated!',
-    //   //     type: 'success',
-    //   //     icon: 'check',
-    //   //     persist: false,
-    //   //     title: 'User Account Update'
-    //   //   });
-    //   //   resetValidationFn();
-    //   // };
-    //   // const onError = (error) => {
-    //   //   console.log('onError submitForm: error ' + JSON.stringify(error));
-    //   //   sendNotification({
-    //   //     id: Symbol('user_update_failed'),
-    //   //     message: 'Could not update user! Check password or lastname, firstname format.',
-    //   //     type: 'danger',
-    //   //     icon: 'error',
-    //   //     persist: false,
-    //   //     title: 'User Account Update'
-    //   //   });
-    //   // };
-    //   if (currentPassword.value) {
-    //     form.value.password = currentPassword.value;
-    //   }
-    //   // emit('submit', { form, onComplete, onError });
-    //
-    //
-    //   try {
-    //
-    //
-    //     // const data = Promise.resolve(() => {
-    //     //   return new Promise((resolve, reject) => {
-    //     //     console.log('formHandler form.value ' + JSON.stringify(form.value));
-    //     //     let updatedUser;
-    //     //
-    //     //     updateUser({user: form.value})
-    //     //       .then((_updatedUser) => console.log('formHandler await updateUser({user: form.value}) ' + JSON.stringify(_updatedUser)));
-    //     //
-    //     //     resolve(updatedUser);
-    //     //   });
-    //     // }).then((_data) => console.log('formHandler data ' + JSON.stringify(_data)));
-    //
-    //     const tick = Date.now();
-    //     const log = (v) => console.log(`${v} \n Elapsed ${Date.now() - tick}`);
-    //
-    //     const codeBlocker = () => {
-    //       // let i = 0;
-    //       // while (i < 1000000000) i++;
-    //       // return ('Billion loops done');
-    //
-    //       return new Promise((resolve, reject) => {
-    //         let i = 0;
-    //         while (i < 1000000000) i++;
-    //         resolve(i);
-    //       });
-    //
-    //       // return Promise.resolve().then(() => {
-    //       //   let i = 0;
-    //       //   while (i < 1000000000) i++;
-    //       //   return ('Billion loops done');
-    //       // });
-    //     };
-    //
-    //     log(' ');
-    //     log(' ');
-    //     log(' ');
-    //     log(' ');
-    //     log(' ');
-    //     log(' ');
-    //     log(' ');
-    //     log(' ');
-    //     log(' ');
-    //     log(' ');
-    //     log(' ');
-    //     log(' ');
-    //     log(' ');
-    //     log(' ');
-    //     log('Sync 1');
-    //
-    //     // log(codeBlocker());
-    //     let a;
-    //     updateUser({user: form.value})
-    //       .then(data => {
-    //         // a = v;
-    //         console.log('data: ' + JSON.stringify(data));
-    //         // log(a);
-    //         log('Sync 2');
-    //       })
-    //     ;
-    //     // let a;
-    //     // codeBlocker()
-    //     //   .then(v => {
-    //     //     // a = v;
-    //     //     log(v);
-    //     //     // log(a);
-    //     //     return new Promise((resolve, reject) => {
-    //     //       let i = 0;
-    //     //       while (i < 1000000000) i++;
-    //     //       resolve('Billion loops done 2');
-    //     //     });
-    //     //   })
-    //     //   .then(log('Sync 2'));
-    //     // codeBlocker().then((v) => log(v));
-    //
-    //     // log('Sync 2');
-    //
-    //     // Promise.resolve(onComplete(data));
-    //   } catch (error) {
-    //     console.log(error);
-    //     // onError(error);
-    //   }
-    // };
     return {
       currentPassword,
       form,

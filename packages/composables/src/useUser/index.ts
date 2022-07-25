@@ -28,11 +28,11 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   logOut: async (context: Context) => {
+    const data = await handleRequest(context, {method: 'get', url: '/logout'});
+
     context.$prestashop.config.app.$cookies.remove(context.$prestashop.config.app.$config.psCustomerCookieKey);
     context.$prestashop.config.app.$cookies.remove(context.$prestashop.config.app.$config.psCustomerCookieValue);
     context.$prestashop.config.app.$cookies.remove('moquiSessionToken');
-
-    // todo: call logout api
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -40,31 +40,20 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
     // console.log('updateUser updatedUserData ' + JSON.stringify(updatedUserData));
     // let data;
     // let data2;
-    await handleRequest(context, {method: 'post',
+    const data = await handleRequest(context, {method: 'post',
       url: '/accountedit',
       data: updatedUserData
-    })
-    // .then((_data) => {
-    //   data = _data;
-    //   if (data?.errorCode) {
-    //     console.log('updateUser data?.errors ' + JSON.stringify(data?.errors));
-    //     throw { message: data?.errors ? data?.errors : 'User update failed' };
-    //   }
-    //   return data;
-    //
-    //   // handleRequest(context, {method: 'get', url: '/accountInfo'})
-    //   //   .then((_data2) => {
-    //   //     data2 = _data;
-    //   //     console.log('updateUser nested 2 data2 ' + JSON.stringify(data2));
-    //   //     return data2.psdata;
-    //   //   });
-    // })
-    ;
-    const data = await handleRequest(context, {method: 'get', url: '/accountInfo'});
+    });
 
     console.log('updateUser data: ' + JSON.stringify(data));
+    const data2 = await handleRequest(context, {method: 'get', url: '/accountInfo'});
 
-    return data;
+    if (data?.errors) throw { message: data?.errors ? data?.errors : 'Update User failed' };
+    if (data?.psdata?.message && !data2?.psdata?.message) data2.psdata.message = data?.psdata?.message;
+
+    console.log('updateUser data2: ' + JSON.stringify(data2));
+
+    return data2.psdata;
 
     // console.log('updateUser data ' + JSON.stringify(data));
     // return data;
@@ -133,11 +122,14 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
       data: updatedUserData
     });
 
-    if (data.success) {
-      const data: any = await handleRequest(context, {method: 'get', url: '/accountInfo'});
+    const data2: any = await handleRequest(context, {method: 'get', url: '/accountInfo'});
 
-      return data.psdata;
-    }
+    if (data?.errors) throw { message: data?.errors ? data?.errors : 'It was not possible to update your password.' };
+    if (data?.psdata?.message && !data2?.psdata?.message) data2.psdata.message = data?.psdata?.message;
+
+    console.log('changePassword data2: ' + JSON.stringify(data2));
+
+    return data2.psdata;
   }
 };
 

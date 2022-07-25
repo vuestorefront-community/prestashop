@@ -10,6 +10,7 @@ const populateCategoryProducts = (psProducts: Array<any>) => {
     coverImageMedium: product.cover?.url,
     coverImageLarge: product.cover?.url,
     images: [],
+    isVirtual: product.is_virtual,
     description: null,
     shortDescription: null,
     brand: null,

@@ -110,6 +110,13 @@ function getAverageRating(product: PsProduct): number {
   return 0;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function getIsVirtual(product: PsProduct): boolean {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  return product.isVirtual ? product.isVirtual : false;
+}
+
 export const productGetters: ProductGetters<PsProduct, ProductFilter> = {
   getName,
   getSlug,
@@ -128,5 +135,6 @@ export const productGetters: ProductGetters<PsProduct, ProductFilter> = {
   getShortDescription,
   getBrand,
   getCategory,
-  getProductInfo
+  getProductInfo,
+  getIsVirtual
 };

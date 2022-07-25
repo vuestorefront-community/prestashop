@@ -89,13 +89,19 @@ export default defineComponent({
     const {
       send: sendNotification
     } = useUiNotification();
-    const form = ref(resetForm());
+    // const form = ref(resetForm());
+    let form;
+    if (process.client) {
+      form = ref(resetForm());
+    }
+
+
     const submitForm = (resetValidationFn) => () => {
-      const onComplete = () => {
+      const onComplete = (data) => {
         form.value = resetForm();
         sendNotification({
           id: Symbol('password_updated'),
-          message: 'The user password was changed successfully updated!',
+          message: data.message ? data.message : 'The user password was changed successfully updated!',
           type: 'success',
           icon: 'check',
           persist: false,
@@ -103,10 +109,10 @@ export default defineComponent({
         });
         resetValidationFn();
       };
-      const onError = () => {
+      const onError = (error) => {
         sendNotification({
           id: Symbol('password_not_updated'),
-          message: 'It was not possible to update your password.',
+          message: error.message ? error.message : 'It was not possible to update your password.',
           type: 'danger',
           icon: 'cross',
           persist: false,
