@@ -132,10 +132,10 @@ export default defineComponent({
         $router.push(context.root.localePath({ name: 'shipping' }));
         resetValidationFn();
       };
-      const onError = () => {
+      const onError = (error) => {
         sendNotification({
           id: Symbol('user_update_failed'),
-          message: 'Could not update user! Check password or lastname, firstname format.',
+          message: error?.message ? error?.message : 'Could not update user! Check password or lastname, firstname format.',
           type: 'danger',
           icon: 'error',
           persist: false,

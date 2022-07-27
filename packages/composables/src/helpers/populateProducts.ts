@@ -6,7 +6,7 @@ const populateProducts = (psProducts: Array<any>) => {
   const populateProducts = psProducts.map((product) => ({
     id: product.id_product,
     name: product.name,
-    slug: 'todo-back',
+    slug: product.id_product ? product.id_product : product.slug,
     attributeId: product.id_product_attribute,
     regularPrice: product.float_price,
     // eslint-disable-next-line line-comment-position

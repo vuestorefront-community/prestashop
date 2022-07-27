@@ -3,7 +3,7 @@
     :class="{ 'loading--categories': productLoading }"
     :loading="productLoading">
     <div id="product" >
-      <SfBreadcrumbs class="breadcrumbs desktop-only" :breadcrumbs="breadcrumbs" />
+      <SfBreadcrumbs class="breadcrumbs desktop-only" :breadcrumbs="breadcrumbs"/>
       <div class="product">
         <LazyHydrate when-idle>
           <SfGallery :images="productGallery" class="product__gallery" />
@@ -91,69 +91,70 @@
             <SfTabs :open-tab="1" class="product__tabs">
               <SfTab title="Description">
                 <div class="product__description" v-html="productGetters.getDescription(product)"></div>
-                <SfProperty
-                  class="product__property"
-                  name="Category"
-                  :value="productGetters.getCategory(product)"
-                ></SfProperty>
+<!--                <SfProperty-->
+<!--                  class="product__property"-->
+<!--                  name="Category"-->
+<!--                  :value="productGetters.getCategory(product)"-->
+<!--                ></SfProperty>-->
 
-                <SfProperty
-                  v-for="(property, i) in productGetters.getProductInfo(product)"
-                  :key="i"
-                  :name="property.name"
-                  :value="property.value"
-                  class="product__property"
-                >
-                  <template v-if="property.name === 'Category'" #value>
-                    <SfButton class="product__property__button sf-button--text">{{ property.value }}</SfButton>
-                  </template>
-                </SfProperty>
+<!--                <SfProperty-->
+<!--                  v-for="(property, i) in productGetters.getProductInfo(product)"-->
+<!--                  :key="i"-->
+<!--                  :name="property.name"-->
+<!--                  :value="property.value"-->
+<!--                  class="product__property"-->
+<!--                >-->
+<!--                  <template v-if="property.name === 'Category'" #value>-->
+<!--                    <SfButton class="product__property__button sf-button&#45;&#45;text">{{ property.value }}</SfButton>-->
+<!--                  </template>-->
+<!--                </SfProperty>-->
               </SfTab>
               <SfTab title="Read reviews">
                 <SfButton
                   v-if="isAuthenticated"
                   class="before-results__button"
                   style="margin-bottom:60px"
-                  @click="addReviewModal=true"
+                  @click="toggleAddReviewModalOpen"
                 >ADD REVIEW</SfButton>
                 <p  v-else>You must be logged in to write comment</p>
                 <!-- TODO: loop over review type instead of API structure -->
+                <!-- TODO: Handle when message has no content better -->
                 <SfReview
                   v-for="review in reviews"
                   :key="reviewGetters.getReviewId(review)"
                   :author="reviewGetters.getReviewAuthor(review)"
                   :date="reviewGetters.getReviewDate(review)"
-                  :message="reviewGetters.getReviewMessage(review)"
+                  :message="reviewGetters.getReviewMessage(review) ? reviewGetters.getReviewMessage(review) : ' '"
                   :rating="reviewGetters.getReviewRating(review)"
                   read-more-text="Read more"
                   hide-full-text="Read less"
                   class="product__review"
                 />
-                <LazyHydrate>
-                  <SfPagination
-                    v-if="Math.ceil(totalReviews/totalReviewPerPage) > 1"
-                    class="products__pagination desktop-only"
-                    :current="currentPage"
-                    :total="Math.ceil(totalReviews/totalReviewPerPage)"
-                    :visible="5"
-                  >
-                    <template #number="{page}">
-                    <span
-                      class="sf-pagination__item arrow"
-                      :class="{'current': currentPage === page}"
-                      @click="goNext(page)"
-                    >{{page}}</span>
-                    </template>
+<!--                <LazyHydrate>-->
+<!--                  <SfPagination-->
+<!--                    v-if="Math.ceil(totalReviews/totalReviewPerPage) > 1"-->
+<!--                    class="products__pagination desktop-only"-->
+<!--                    :current="currentPage"-->
+<!--                    :total="Math.ceil(totalReviews/totalReviewPerPage)"-->
+<!--                    :visible="5"-->
+<!--                  >-->
+<!--                    <template #number="{page}">-->
+<!--                    <span-->
+<!--                      class="sf-pagination__item arrow"-->
+<!--                      :class="{'current': currentPage === page}"-->
+<!--                      @click="goNext(page)"-->
+<!--                    >{{page}}</span>-->
+<!--                    </template>-->
 
-                    <template #next="{isDisabled, go, next}">
-                      <span @click="goNext(currentPage + 1)" class="arrow">&#8594</span>
-                    </template>
+<!--                    <template #next="{isDisabled, go, next}">-->
+<!--                      <span @click="goNext(currentPage + 1)" class="arrow">&#8594</span>-->
+<!--                    </template>-->
 
-                    <template #prev="{isDisabled, go, prev}">
-                      <span @click="goNext(currentPage - 1)" class="arrow">&#8592</span>
-                    </template>
-                  </SfPagination>
-                </LazyHydrate>
+<!--                    <template #prev="{isDisabled, go, prev}">-->
+<!--                      <span @click="goNext(currentPage - 1)" class="arrow">&#8592</span>-->
+<!--                    </template>-->
+<!--                  </SfPagination>-->
+<!--                </LazyHydrate>-->
               </SfTab>
 <!--              <SfTab title="Additional Information" class="product__additional-info">-->
 <!--                <div class="product__additional-info">-->
@@ -170,8 +171,8 @@
         <RelatedProducts :products="relatedProducts" :loading="relatedLoading" title="Match it with" />
       </LazyHydrate>
 
-      <LazyHydrate v-if="addReviewModal" >
-        <AddReview :productId="productGetters.getId(product)" @close="addReviewModal = false" />
+      <LazyHydrate v-if="isAddReviewModalOpen">
+        <AddReview :productId="productGetters.getId(product)" @close="onAddReviewClose"/>
       </LazyHydrate>
 
 <!--      <LazyHydrate when-visible>-->
@@ -219,7 +220,7 @@ import { onSSR } from '@vue-storefront/core';
 import LazyHydrate from 'vue-lazy-hydration';
 import cacheControl from './../helpers/cacheControl';
 import useUiNotification from '~/composables/useUiNotification';
-import {useAddToCart} from '~/composables';
+import {useAddToCart, useUiState} from '~/composables';
 
 export default {
   name: 'Product',
@@ -239,6 +240,21 @@ export default {
     // const pagination = computed(() => facetGetters.getPagination(result.value));
     const { isAuthenticated } = useUser();
     const { addItemToCart } = useAddToCart();
+    const { isAddReviewModalOpen, toggleAddReviewModalOpen } = useUiState();
+
+    // only run client side
+    if (process.client) {
+      // make sure to get a cookie and csrf token before doing the rest of the calls
+      let variant = context.root.$route.query;
+      if (variant && Object.keys(variant).length === 0) {
+        variant = null;
+      }
+      Promise.resolve(search({ id, variant: variant })
+        .then(() => Promise.all([
+          searchRelatedProducts({ featured: true }),
+          searchReviews({ productId: id, page: '1' })
+        ])));
+    }
 
     const product = computed(
       () =>
@@ -268,7 +284,7 @@ export default {
     };
 
     // TODO: Breadcrumbs are temporary disabled because productGetters return undefined. We have a mocks in data
-    // const breadcrumbs = computed(() => productGetters.getBreadcrumbs ? productGetters.getBreadcrumbs(product.value) : props.fallbackBreadcrumbs);
+    const breadcrumbs = computed(() => productGetters.getBreadcrumbs(product.value));
     const productGallery = computed(() =>
       productGetters.getGallery(product.value).map((img) => ({
         mobile: { url: img.small },
@@ -278,19 +294,15 @@ export default {
       }))
     );
 
-    // only run client side
-    if (process.client) {
-      // make sure to get a cookie and csrf token before doing the rest of the calls
-      let variant = context.root.$route.query;
-      if (variant && Object.keys(variant).length === 0) {
-        variant = null;
-      }
-      Promise.resolve(search({ id, variant: variant })
-        .then(() => Promise.all([
-          searchRelatedProducts({ featured: true }),
-          searchReviews({ productId: id, page: '1' })
-        ])));
-    }
+    const onAddReviewClose = () => {
+      // console.log('onAddReviewClose');
+      console.log('onAddReviewClose before productReviews: ' + JSON.stringify(productReviews));
+      console.log('onAddReviewClose before reviews: ' + JSON.stringify(reviews));
+      Promise.resolve(searchReviews({ productId: id, page: '1' }));
+      console.log('onAddReviewClose after productReviews: ' + JSON.stringify(productReviews));
+      console.log('onAddReviewClose after reviews: ' + JSON.stringify(reviews));
+    };
+
 
     // onSSR(async () => {
     //   let variant = context.root.$route.query;
@@ -365,7 +377,11 @@ export default {
       productGallery,
       isAuthenticated,
       goNext,
-      addItemToCart
+      addItemToCart,
+      breadcrumbs,
+      onAddReviewClose,
+      isAddReviewModalOpen,
+      toggleAddReviewModalOpen
     };
   },
   components: {
@@ -396,21 +412,7 @@ export default {
   data() {
     return {
       currentPage: 1,
-      addReviewModal: false,
-      breadcrumbs: [
-        {
-          text: 'Home',
-          route: {
-            link: '#'
-          }
-        },
-        {
-          text: 'Category',
-          route: {
-            link: '#'
-          }
-        }
-      ],
+      // addReviewModal: false,
       stock: 1
     };
   }

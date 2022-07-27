@@ -109,6 +109,7 @@ export default {
   'Price': 'Preis',
   'Back to homepage': 'Zurück zur Homepage',
   'Select shipping method': 'Versandart auswählen',
+  'Select billing method': 'Abrechnungsmethode auswählen',
   'Review my order': 'Meine Bestellung überprüfen',
   'Select payment method': 'Zahlungsmethode auswählen',
   'Make an order': 'Bestellung aufgeben',

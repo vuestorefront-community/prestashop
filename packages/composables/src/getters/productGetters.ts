@@ -2,10 +2,11 @@ import {
   AgnosticMediaGalleryItem,
   AgnosticAttribute,
   AgnosticPrice,
-  ProductGetters
+  ProductGetters, FacetSearchResult, AgnosticBreadcrumb
 } from '@vue-storefront/core';
 import type { PsProduct, ProductFilter } from '@vue-storefront/prestashop-api';
 import { populateFeaturedProducts, populateProducts } from '../helpers';
+import {Facet} from '@vue-storefront/prestashop-api';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getName(product: PsProduct): string {
@@ -117,6 +118,23 @@ function getIsVirtual(product: PsProduct): boolean {
   return product.isVirtual ? product.isVirtual : false;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function getBreadcrumbs(product: PsProduct): AgnosticBreadcrumb[] {
+  const breadcrumbs = [
+    {
+      text: 'Home',
+      link: '/'
+    }
+  ];
+  if (!product) return breadcrumbs;
+
+  breadcrumbs.push({
+    text: getName(product),
+    link: `/p/${getId(product)}/${getSlug(product)}`
+  });
+  return breadcrumbs;
+}
+
 export const productGetters: ProductGetters<PsProduct, ProductFilter> = {
   getName,
   getSlug,
@@ -136,5 +154,6 @@ export const productGetters: ProductGetters<PsProduct, ProductFilter> = {
   getBrand,
   getCategory,
   getProductInfo,
-  getIsVirtual
+  getIsVirtual,
+  getBreadcrumbs
 };

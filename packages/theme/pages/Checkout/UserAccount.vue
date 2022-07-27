@@ -93,7 +93,7 @@ export default {
     const isFormSubmitted = ref(false);
     const { load, save, loading } = useShipping();
     const { toggleLoginModal } = useUiState();
-    const { isAuthenticated, logout, register } = useUser();
+    const { isAuthenticated, logout, register, error: userError } = useUser();
 
     const form = ref({
       firstName: '',
@@ -131,6 +131,9 @@ export default {
     const formHandler = async (fn, onComplete, onError) => {
       try {
         const data = await fn();
+
+        if (userError.value.register) throw { message: userError.value.register?.message };
+
         await onComplete(data);
       } catch (error) {
         onError(error);

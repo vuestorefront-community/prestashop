@@ -35,7 +35,6 @@ const params: UseProductFactoryParams<Product, SearchParams> = {
           group: params.variantObj
         }
       });
-
     } else if (params.featured) {
       data = await handleRequest(context, {method: 'get', url: '/featuredproducts'});
     }

@@ -20,15 +20,22 @@ const params: UseShippingProviderParams<ShippingProvider, ShippingMethod> = {
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    const { shippingMethodId, addressId } = params;
+    const { shippingMethod } = params;
+
+    console.log('useShippingProvider save params: ' + JSON.stringify(params));
+
 
     await handleRequest(context, {method: 'post',
       url: '/setcarriercheckout',
       data: {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         // eslint-disable-next-line camelcase
-        id_address: addressId,
+        id_address: shippingMethod.addressId,
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         // eslint-disable-next-line camelcase
-        id_carrier: shippingMethodId
+        id_carrier: shippingMethod.carrierId
       }
     });
 

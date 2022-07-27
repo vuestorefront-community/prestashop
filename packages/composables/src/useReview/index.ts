@@ -40,6 +40,8 @@ const params: UseReviewFactoryParams<Review, SearchParams, AddParams> = {
       }
     });
 
+    if (data?.errors) throw { message: data?.errors ? data?.errors : 'Unable to add a review.' };
+
     return data;
   }
 };

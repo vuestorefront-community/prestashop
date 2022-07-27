@@ -109,6 +109,7 @@ export default {
   'Price': 'Price',
   'Back to homepage': 'Back to homepage',
   'Select shipping method': 'Select shipping method',
+  'Select billing method': 'Select billing method',
   'Review my order': 'Review my order',
   'Select payment method': 'Select payment method',
   'Make an order': 'Make an order',

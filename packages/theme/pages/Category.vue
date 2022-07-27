@@ -133,7 +133,7 @@
               :score-rating="3"
               :qty="1"
               :wishlistIcon=false
-              :link="localePath(`/p/${productGetters.getId(product)}/${productGetters.getSlug(product)}`)")
+              :link="localePath(`/p/${productGetters.getId(product)}/${productGetters.getSlug(product)}`)"
               @input="productsQuantity[product._id] = $event"
               @click:add-to-cart="addItemToCart({ product, quantity: 1})"
             >

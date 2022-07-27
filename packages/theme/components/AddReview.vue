@@ -1,32 +1,36 @@
 <template>
 
-  <SfModal v-e2e="'add-review-modal'" visible class="modal" :cross="false">
+  <SfModal v-e2e="'add-review-modal'"
+    :visible="isAddReviewModalOpen"
+    class="modal"
+    :cross="false">
 
-    <SfInput
-      v-e2e="'add-review-modal'"
-      :label="$t('Title')"
-      v-model="title"
-      name="comment"
-      type="text"
-      class="form__element"
-    />
+    <!-- TODO: This should be a form with error handling -->
+<!--    <SfInput-->
+<!--      v-e2e="'add-review-modal'"-->
+<!--      :label="$t('Title')"-->
+<!--      v-model="title"-->
+<!--      name="comment"-->
+<!--      type="text"-->
+<!--      class="form__element"-->
+<!--    />-->
     <p style="margin-bottom:0px;">Comment</p>
-    <SfTextarea v-model="comment" name="Comment" class="textare" :rows="6" />
+    <SfTextarea v-model="comment" name="Comment" class="textarea" :rows="6" />
 
     <p style="margin-bottom:0px;">Rating</p>
 <!--    TODO: style-->
     <SfSelect
       style="padding-top:0px;padding-bottom:0px"
-      v-e2e="'Rsting'"
+      v-e2e="'Rating'"
       v-model="rate"
       name="Rate"
       class="sf-select--underlined product__select-size"
     >
       <SfSelectOption v-for="i in 5" :key="i" :value="i">{{ i }}</SfSelectOption>
     </SfSelect>
-    <SfRating :max="5" :score="rate" />
+    <SfRating :max="5" :score="rate"/>
     <div class="btns">
-      <SfButton class="sf-button--text" @click="closeModal">{{ $t('Back ') }}</SfButton>
+      <SfButton class="sf-button--text" @click="closeModal">{{ $t('Back') }}</SfButton>
       <SfButton class="before-results__button" @click="addingReviewFunc">ADD REVIEW</SfButton>
     </div>
   </SfModal>
@@ -47,7 +51,7 @@ import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
 import { required } from 'vee-validate/dist/rules';
 import { useReview } from '@vue-storefront/prestashop';
 import useUiNotification from '~/composables/useUiNotification';
-const { send: sendNotification } = useUiNotification();
+import {useUiState} from '~/composables';
 
 extend('required', {
   ...required,
@@ -74,16 +78,58 @@ export default {
       required: true
     }
   },
-  setup() {
+  setup(props, context) {
     const form = ref({});
+    const { send: sendNotification } = useUiNotification();
+    const { isAddReviewModalOpen, toggleAddReviewModalOpen } = useUiState();
 
-    const { reviews: productReviews, addReview } = useReview();
+    const { reviews: productReviews, addReview, error: reviewError } = useReview();
+
+    const closeModal = () => {
+      toggleAddReviewModalOpen();
+      // TODO: See what happens when removing the next line
+      document.body.removeAttribute('style');
+      context.emit('close');
+    };
+
+    // TODO: This should be refactored to be implementation independent and not require useReview
+    const addingToReview = (comment) => {
+      addReview(comment)
+        .then(() => {
+          // const response = productReviews;
+          console.log('AddReview productReviews: ' + JSON.stringify(productReviews));
+
+          if (reviewError.value.addReview) throw {message: reviewError.value.addReview?.message};
+
+          sendNotification({
+            key: 'review_added',
+            message: 'Review has been successfully added!',
+            type: 'success',
+            title: 'Comment added!',
+            icon: 'check'
+          });
+          closeModal();
+        })
+        .catch((error) => {
+          sendNotification({
+            key: 'review_added_error',
+            message: error.message ? error.message : 'Unable to add a review.',
+            type: 'danger',
+            title: 'add review error',
+            icon: 'error'
+          });
+        });
+    };
 
     return {
       form,
       addReview,
       productReviews,
-      sendNotification
+      sendNotification,
+      addingToReview,
+      isAddReviewModalOpen,
+      toggleAddReviewModalOpen,
+      closeModal
     };
   },
   data() {
@@ -91,7 +137,7 @@ export default {
       close: true,
       comment: '',
       title: '',
-      rate: 1
+      rate: '1'
     };
   },
   methods: {
@@ -106,33 +152,6 @@ export default {
         criterion: this.rate.toString()
       };
       this.addingToReview(comment);
-    },
-    async addingToReview(comment) {
-      await this.addReview(comment);
-      const responce = this.productReviews;
-      if (!responce.data.success) {
-        this.sendNotification({
-          key: 'review_added_error',
-          message: responce.data.psdata,
-          type: 'danger',
-          title: 'add review error',
-          icon: 'error'
-        });
-      } else {
-        this.sendNotification({
-          key: 'review_added',
-          message: 'comment has been successfully added .',
-          type: 'success',
-          title: 'Comment added!',
-          icon: 'check'
-        });
-        document.body.removeAttribute('style');
-        this.$emit('close');
-      }
-    },
-    closeModal() {
-      document.body.removeAttribute('style');
-      this.$emit('close');
     }
   }
 };
