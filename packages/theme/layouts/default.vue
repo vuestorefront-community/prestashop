@@ -32,8 +32,10 @@ import LoginModal from '~/components/LoginModal.vue';
 import LazyHydrate from 'vue-lazy-hydration';
 import Notification from '~/components/Notification';
 // import { onSSR } from '@vue-storefront/core';
-import { useRoute } from '@nuxtjs/composition-api';
-import { useCart, useStore, useUser, useWishlist, useBootstrap } from '@vue-storefront/prestashop';
+import {useContext, useRoute} from '@nuxtjs/composition-api';
+// import { useCart, useStore, useUser, useWishlist, useBootstrap } from '@vue-storefront/prestashop';
+import { useCart, useStore, useUser, useBootstrap } from '@vue-storefront/prestashop';
+import {Logger, useVSFContext} from '@vue-storefront/core';
 
 export default {
   name: 'DefaultLayout',
@@ -51,11 +53,12 @@ export default {
   },
 
   // eslint-disable-next-line func-names
-  setup: function () {
+  setup() {
     const route = useRoute();
+    const { $cookies } = useContext();
     const {boot: boot} = useBootstrap();
     const { load: loadStores } = useStore();
-    const { load: loadUser } = useUser();
+    const { isAuthenticated, load: loadUser } = useUser();
     const { load: loadCart } = useCart();
     // const { load: loadWishlist } = useWishlist();
 
@@ -63,12 +66,16 @@ export default {
     if (process.client) {
       // make sure to get a cookie and csrf token before doing the rest of the calls
       boot()
-        .then(() => Promise.all([
-          loadStores(),
-          loadUser(),
-          loadCart() // ,
-          // loadWishlist()
-        ]));
+        .then(() => {
+          let promiseList = [
+            loadStores(),
+            loadCart()
+            // loadWishlist()
+          ];
+          // Logger.error('default setup isAuthenticated.value: ' + JSON.stringify(isAuthenticated.value) + ' $cookies.get(\'moquiSessionToken\'): ' + JSON.stringify($cookies.get('moquiSessionToken')));
+          if (isAuthenticated.value || $cookies.get('moquiSessionToken')) promiseList.push(loadUser());
+          Promise.all(promiseList);
+        });
     }
 
     return {

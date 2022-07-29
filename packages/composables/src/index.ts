@@ -37,5 +37,8 @@ export { countryGetters } from './getters/countryGetters';
 export { shippingProviderGetters } from './getters/shippingProviderGetters';
 export { paymentProviderGetters } from './getters/paymentProviderGetters';
 
+// Helpers
+export { handleRequest } from './helpers';
+
 // Types
 export * from './types';

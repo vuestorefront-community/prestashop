@@ -31,19 +31,13 @@ const useUiNotification = () => {
       if (index !== -1) state.notifications.splice(index, 1);
     };
 
-
     const newNotification = {
       ...notification,
       id,
       dismiss
     };
-    // TODO: Figure out why the notifications are one message behind except the first one
-    console.log('useUiNotification notification: ' + JSON.stringify(notification));
-    console.log('useUiNotification newNotification: ' + JSON.stringify(newNotification));
 
-    console.log('useUiNotification before state.notifications: ' + JSON.stringify(state.notifications));
     state.notifications.push(newNotification);
-    console.log('useUiNotification after state.notifications: ' + JSON.stringify(state.notifications));
     if (state.notifications.length > maxVisibleNotifications) state.notifications.shift();
 
     if (!notification.persist) {

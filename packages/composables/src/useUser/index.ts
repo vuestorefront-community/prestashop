@@ -1,16 +1,10 @@
-import {
-  Context, Logger,
-  useUserFactory,
-  UseUserFactoryParams
-} from '@vue-storefront/core';
+import {Context, Logger, useUserFactory, UseUserFactoryParams} from '@vue-storefront/core';
 import type { User } from '@vue-storefront/prestashop-api';
-import type {
-  UseUserUpdateParams as UpdateParams,
-  UseUserRegisterParams as RegisterParams
-} from '../types';
+import type {UseUserUpdateParams as UpdateParams, UseUserRegisterParams as RegisterParams} from '../types';
 import {handleRequest} from '../helpers';
 
 const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   load: async (context: Context) => {
     const data: any = await handleRequest(context, {method: 'get', url: '/accountInfo'});
@@ -37,29 +31,17 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   updateUser: async (context: Context, { currentUser, updatedUserData }) => {
-    // console.log('updateUser updatedUserData ' + JSON.stringify(updatedUserData));
-    // let data;
-    // let data2;
     const data = await handleRequest(context, {method: 'post',
       url: '/accountedit',
       data: updatedUserData
     });
 
-    console.log('updateUser data: ' + JSON.stringify(data));
     const data2 = await handleRequest(context, {method: 'get', url: '/accountInfo'});
 
     if (data?.errors) throw { message: data?.errors ? data?.errors : 'Update User failed' };
     if (data?.psdata?.message && !data2?.psdata?.message) data2.psdata.message = data?.psdata?.message;
 
-    console.log('updateUser data2: ' + JSON.stringify(data2));
-
     return data2.psdata;
-
-    // console.log('updateUser data ' + JSON.stringify(data));
-    // return data;
-    // console.log('updateUser data2 ' + JSON.stringify(data2));
-
-    // const data2: any = await ;
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -73,8 +55,6 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
         lastName: lastName
       }
     });
-
-    // Logger.error('data: ' + JSON.stringify(data));
 
     if (data?.errors) {
       throw { message: data?.errors ? data?.errors : 'Registration failed' };
@@ -102,9 +82,7 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
       }
     });
 
-    if (data?.errorCode) {
-      throw { message: data?.errors ? data?.errors : 'The provided credentials are invalid' };
-    }
+    if (data?.errorCode) throw { message: data?.errors ? data?.errors : 'The provided credentials are invalid' };
 
     return data.psdata.user;
   },
@@ -126,8 +104,6 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
 
     if (data?.errors) throw { message: data?.errors ? data?.errors : 'It was not possible to update your password.' };
     if (data?.psdata?.message && !data2?.psdata?.message) data2.psdata.message = data?.psdata?.message;
-
-    console.log('changePassword data2: ' + JSON.stringify(data2));
 
     return data2.psdata;
   }

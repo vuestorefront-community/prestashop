@@ -1,4 +1,5 @@
 import { getCurrentInstance } from '@vue/composition-api';
+import {Logger} from '@vue-storefront/core';
 
 const getContext = () => {
   const vm = getCurrentInstance();
@@ -66,30 +67,30 @@ const useUiHelpers = () => {
 
   // eslint-disable-next-line
   const changeItemsPerPage = (itemsPerPage) => {
-    console.warn('[VSF] please implement useUiHelpers.changeItemsPerPage.');
+    Logger.debug('[VSF] please implement useUiHelpers.changeItemsPerPage.');
   };
 
   // eslint-disable-next-line
   const setTermForUrl = (term: string) => {
-    console.warn('[VSF] please implement useUiHelpers.changeSearchTerm.');
+    Logger.debug('[VSF] please implement useUiHelpers.changeSearchTerm.');
   };
 
   // eslint-disable-next-line
   const isFacetColor = (facet): boolean => {
-    console.warn('[VSF] please implement useUiHelpers.isFacetColor.');
+    Logger.debug('[VSF] please implement useUiHelpers.isFacetColor.');
 
     return false;
   };
 
   // eslint-disable-next-line
   const isFacetCheckbox = (facet): boolean => {
-    console.warn('[VSF] please implement useUiHelpers.isFacetCheckbox.');
+    Logger.debug('[VSF] please implement useUiHelpers.isFacetCheckbox.');
 
     return false;
   };
 
   const getSearchTermFromUrl = () => {
-    console.warn('[VSF] please implement useUiHelpers.getSearchTermFromUrl.');
+    Logger.debug('[VSF] please implement useUiHelpers.getSearchTermFromUrl.');
   };
 
   return {

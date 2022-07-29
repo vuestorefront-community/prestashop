@@ -13,17 +13,17 @@
     >
       <SfContentCategory title="Personal Details">
         <SfContentPage title="My profile">
-          <MyProfile />
+          <MyProfile/>
         </SfContentPage>
 
         <SfContentPage title="Addresses">
-          <Addresses />
+          <Addresses/>
         </SfContentPage>
       </SfContentCategory>
 
       <SfContentCategory title="Order details">
         <SfContentPage title="Order history">
-          <OrderHistory />
+          <OrderHistory/>
         </SfContentPage>
       </SfContentCategory>
 

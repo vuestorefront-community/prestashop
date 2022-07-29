@@ -1,194 +1,194 @@
 <template>
   <ValidationObserver v-slot="{ handleSubmit }">
     <SfLoader :class="{ loading }" :loading="loading||loadingCountries">
-  <form @submit.prevent="handleSubmit(handleFormSubmit)">
-    <div class="form">
-<!--      <ValidationProvider-->
-<!--        name="alias"-->
-<!--        rules="required"-->
-<!--        v-slot="{ errors }"-->
-<!--        slim-->
-<!--      >-->
-<!--        <SfInput-->
-<!--          v-e2e="'shipping-alias'"-->
-<!--          v-model="form.alias"-->
-<!--          label="alias"-->
-<!--          name="alias"-->
-<!--          class="form__element form__element&#45;&#45;half"-->
-<!--          required-->
-<!--          :valid="!errors[0]"-->
-<!--          :errorMessage="errors[0]"-->
-<!--        />-->
-<!--      </ValidationProvider>-->
+      <form @submit.prevent="handleSubmit(handleFormSubmit)">
+        <div class="form">
+    <!--      <ValidationProvider-->
+    <!--        name="alias"-->
+    <!--        rules="required"-->
+    <!--        v-slot="{ errors }"-->
+    <!--        slim-->
+    <!--      >-->
+    <!--        <SfInput-->
+    <!--          v-e2e="'shipping-alias'"-->
+    <!--          v-model="form.alias"-->
+    <!--          label="alias"-->
+    <!--          name="alias"-->
+    <!--          class="form__element form__element&#45;&#45;half"-->
+    <!--          required-->
+    <!--          :valid="!errors[0]"-->
+    <!--          :errorMessage="errors[0]"-->
+    <!--        />-->
+    <!--      </ValidationProvider>-->
 
-<!--      <ValidationProvider-->
-<!--        name="phone"-->
-<!--        rules=""-->
-<!--        v-slot="{ errors }"-->
-<!--        slim-->
-<!--      >-->
-<!--        <SfInput-->
-<!--          v-e2e="'shipping-phone'"-->
-<!--          v-model.trim="form.phone"-->
-<!--          label="Phone number"-->
-<!--          name="phone"-->
-<!--          class="form__element form__element&#45;&#45;half form__element&#45;&#45;half-even"-->
-<!--          :valid="!errors[0]"-->
-<!--          :errorMessage="errors[0]"-->
-<!--        />-->
-<!--      </ValidationProvider>-->
-      <ValidationProvider
-        name="country"
-        rules="required"
-        v-slot="{ errors }"
-        slim
-      >
-        <SfSelect
-          v-e2e="'shipping-country'"
-          v-model="selectedCountry"
-          label="Country"
-          name="country"
-          :disabled='loadingCountries'
-          class="form__element form__element--half form__select sf-select--underlined"
-          required
-          :valid="!errors[0]"
-          :errorMessage="errors[0]"
-        >
-          <SfSelectOption
-            v-for="countryOption in countriesList"
-            :key="countryOption.id"
-            :value="countryOption.id"
+    <!--      <ValidationProvider-->
+    <!--        name="phone"-->
+    <!--        rules=""-->
+    <!--        v-slot="{ errors }"-->
+    <!--        slim-->
+    <!--      >-->
+    <!--        <SfInput-->
+    <!--          v-e2e="'shipping-phone'"-->
+    <!--          v-model.trim="form.phone"-->
+    <!--          label="Phone number"-->
+    <!--          name="phone"-->
+    <!--          class="form__element form__element&#45;&#45;half form__element&#45;&#45;half-even"-->
+    <!--          :valid="!errors[0]"-->
+    <!--          :errorMessage="errors[0]"-->
+    <!--        />-->
+    <!--      </ValidationProvider>-->
+          <ValidationProvider
+            name="country"
+            rules="required"
+            v-slot="{ errors }"
+            slim
           >
-            {{ countryOption.name }}
-          </SfSelectOption>
-        </SfSelect>
-      </ValidationProvider>
-      <ValidationProvider
-        name="state"
-        :rules="isStatesRequired ? 'required':''"
-        v-slot="{ errors }"
-        slim
-      >
-        <SfSelect
-          v-e2e="'shipping-state'"
-          v-model="form.id_state"
-          label="State"
-          name="state"
-          :disabled='loadingCountries || !isStatesRequired '
-          class="form__element form__element--half form__element--half-even form__select sf-select--underlined"
-          required
-          :valid="!errors[0]"
-          :errorMessage="errors[0]"
-        >
-          <SfSelectOption
-            v-for="stateOption in statesList"
-            :key="stateOption.id_state"
-            :value="stateOption.id_state"
+            <SfSelect
+              v-e2e="'shipping-country'"
+              v-model="selectedCountry"
+              label="Country"
+              name="country"
+              :disabled='loadingCountries'
+              class="form__element form__element--half form__select sf-select--underlined"
+              required
+              :valid="!errors[0]"
+              :errorMessage="errors[0]"
+            >
+              <SfSelectOption
+                v-for="countryOption in countriesList"
+                :key="countryOption.id"
+                :value="countryOption.id"
+              >
+                {{ countryOption.name }}
+              </SfSelectOption>
+            </SfSelect>
+          </ValidationProvider>
+          <ValidationProvider
+            name="state"
+            :rules="isStatesRequired ? 'required':''"
+            v-slot="{ errors }"
+            slim
           >
-            {{ stateOption.name }}
-          </SfSelectOption>
-        </SfSelect>
-      </ValidationProvider>
-      <ValidationProvider
-        name="city"
-        rules="required"
-        v-slot="{ errors }"
-        slim
-      >
-        <SfInput
-          v-e2e="'shipping-city'"
-          v-model="form.city"
-          label="City"
-          name="city"
-          class="form__element form__element--half"
-          required
-          :valid="!errors[0]"
-          :errorMessage="errors[0]"
-        />
-      </ValidationProvider>
-      <ValidationProvider
-        name="zipCode"
-        :rules="`${needZipCode ? 'required|zipcode:' + zipCodeFormat : ''}`"
-        v-slot="{ errors }"
-        slim
-      >
-        <SfInput
-          v-e2e="'shipping-zipcode'"
-          v-model.trim="form.postcode"
-          label="Zip-code"
-          name="zipCode"
-          class="form__element form__element--half form__element--half-even"
-          required
-          :valid="!errors[0]"
-          :errorMessage="errors[0]"
-        />
-      </ValidationProvider>
-      <ValidationProvider
-        name="address"
-        rules="required"
-        v-slot="{ errors }"
-        slim
-      >
-        <SfInput
-          v-e2e="'shipping-address'"
-          v-model="form.address1"
-          label="Address"
-          name="address"
-          class="form__element form__element--half"
-          required
-          :valid="!errors[0]"
-          :errorMessage="errors[0]"
-        />
-      </ValidationProvider>
-      <ValidationProvider
-        name="address2"
-        v-slot="{ errors }"
-        slim
-      >
-        <SfInput
-          v-e2e="'shipping-address2'"
-          v-model="form.address2"
-          label="Address2"
-          name="address2"
-          class="form__element form__element--half form__element--half-even"
-          :valid="!errors[0]"
-          :errorMessage="errors[0]"
-        />
-      </ValidationProvider>
-    </div>
-    <div class="form">
-      <div class="form__action"
-           v-if="!isFormSubmitted"
-           :disabled="loading"
-      >
-        <div class="summary__action">
-          <SfButton
-            type="button"
-            class="sf-button color-secondary summary__back-button"
-            v-if='Boolean($props.addressesCount)'
-            @click='toggleAddNewAddress'
+            <SfSelect
+              v-e2e="'shipping-state'"
+              v-model="form.id_state"
+              label="State"
+              name="state"
+              :disabled='loadingCountries || !isStatesRequired '
+              class="form__element form__element--half form__element--half-even form__select sf-select--underlined"
+              required
+              :valid="!errors[0]"
+              :errorMessage="errors[0]"
+            >
+              <SfSelectOption
+                v-for="stateOption in statesList"
+                :key="stateOption.id_state"
+                :value="stateOption.id_state"
+              >
+                {{ stateOption.name }}
+              </SfSelectOption>
+            </SfSelect>
+          </ValidationProvider>
+          <ValidationProvider
+            name="city"
+            rules="required"
+            v-slot="{ errors }"
+            slim
           >
-            {{ $t('Go back') }}
-          </SfButton>
-        <SfButton
-          v-if='$props.edit'
-          v-e2e="'select-shipping'"
-          class="form__action-button"
-          type="submit"
-        >
-          {{ $t('Edit address') }}
-        </SfButton>
-        <SfButton
-          v-else
-          v-e2e="'select-shipping'"
-          class="form__action-button"
-          type="submit"
-        >
-          {{ $t('Add address') }}
-        </SfButton>
-        </div></div>
-    </div>
-  </form>
+            <SfInput
+              v-e2e="'shipping-city'"
+              v-model="form.city"
+              label="City"
+              name="city"
+              class="form__element form__element--half"
+              required
+              :valid="!errors[0]"
+              :errorMessage="errors[0]"
+            />
+          </ValidationProvider>
+          <ValidationProvider
+            name="zipCode"
+            :rules="`${needZipCode ? 'required|zipcode:' + zipCodeFormat : ''}`"
+            v-slot="{ errors }"
+            slim
+          >
+            <SfInput
+              v-e2e="'shipping-zipcode'"
+              v-model.trim="form.postcode"
+              label="Zip-code"
+              name="zipCode"
+              class="form__element form__element--half form__element--half-even"
+              required
+              :valid="!errors[0]"
+              :errorMessage="errors[0]"
+            />
+          </ValidationProvider>
+          <ValidationProvider
+            name="address"
+            rules="required"
+            v-slot="{ errors }"
+            slim
+          >
+            <SfInput
+              v-e2e="'shipping-address'"
+              v-model="form.address1"
+              label="Address"
+              name="address"
+              class="form__element form__element--half"
+              required
+              :valid="!errors[0]"
+              :errorMessage="errors[0]"
+            />
+          </ValidationProvider>
+          <ValidationProvider
+            name="address2"
+            v-slot="{ errors }"
+            slim
+          >
+            <SfInput
+              v-e2e="'shipping-address2'"
+              v-model="form.address2"
+              label="Address2"
+              name="address2"
+              class="form__element form__element--half form__element--half-even"
+              :valid="!errors[0]"
+              :errorMessage="errors[0]"
+            />
+          </ValidationProvider>
+        </div>
+        <div class="form">
+          <div class="form__action"
+               v-if="!isFormSubmitted"
+               :disabled="loading"
+          >
+            <div class="summary__action">
+              <SfButton
+                type="button"
+                class="sf-button color-secondary summary__back-button"
+                v-if='Boolean($props.addressesCount)'
+                @click='toggleAddNewAddress'
+              >
+                {{ $t('Go back') }}
+              </SfButton>
+            <SfButton
+              v-if='$props.edit'
+              v-e2e="'select-shipping'"
+              class="form__action-button"
+              type="submit"
+            >
+              {{ $t('Edit address') }}
+            </SfButton>
+            <SfButton
+              v-else
+              v-e2e="'select-shipping'"
+              class="form__action-button"
+              type="submit"
+            >
+              {{ $t('Add address') }}
+            </SfButton>
+            </div></div>
+        </div>
+      </form>
     </SfLoader>
   </ValidationObserver>
 </template>
@@ -283,10 +283,11 @@ export default {
     }
   },
   setup(props, context) {
-    const isFormSubmitted = ref(false);
-    const selectedCountry = ref(null);
     const { addAddress, loading, deleteAddress, updateAddress } = useUserShipping();
     const { countries, loading: loadingCountries, load: loadCountries } = useCountryList();
+
+    const isFormSubmitted = ref(false);
+    const selectedCountry = ref(null);
     const form = ref({
       // eslint-disable-next-line camelcase
       id_address: props.addressForEdit.id,
@@ -302,6 +303,7 @@ export default {
       postcode: props.addressForEdit.postcode,
       phone: props.addressForEdit.phone
     });
+
     const countriesList = computed(() => countries.value ? countryGetters.getCountriesList(countries.value.countries) : []);
     const statesList = computed(() => selectedCountry.value && countriesList.value.length >= 1 ? countriesList.value.find(el => el.id === selectedCountry.value).states : []);
 
@@ -313,11 +315,13 @@ export default {
     const removeAddress = async (id) => {
       await deleteAddress({ address: { id: id } });
     };
+
     watch(selectedCountry, () => {
       // eslint-disable-next-line camelcase
       form.value.id_country = selectedCountry.value;
     });
     watch(selectedCountry, (newVal) => form.value.country = countriesList.value.find(el => el.id === newVal).name);
+
     const toggleAddNewAddress = () => {
       context.emit('toggle');
     };
@@ -331,12 +335,14 @@ export default {
     };
     const countriesLoading = async () => {
       await loadCountries();
+
       // eslint-disable-next-line camelcase
       if (props.addressForEdit.id_country) {
         selectedCountry.value = props.addressForEdit.id_country;
       }
     };
     countriesLoading();
+
     return {
       loading,
       loadingCountries,

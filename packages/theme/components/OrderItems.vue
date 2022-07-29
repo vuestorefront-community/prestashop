@@ -7,7 +7,7 @@
     </SfTableHeading>
     <SfTableRow v-for="item in orderProducts" :key='item.id'>
       <SfTableData class="products__name">
-<!--        TODO:add slug to api  -->
+<!--        TODO: add slug to api  -->
 <!--        <nuxt-link :to="localePath(`/p/${orderGetters.getId(item)}/${orderGetters.getSlug(item)}`)">-->
 <!--          {{orderGetters.getItemName(item)}}-->
 <!--        </nuxt-link>-->

@@ -14,75 +14,27 @@
       </SfHero>
     </LazyHydrate>
 
-    <LazyHydrate when-visible>
-      <SfBannerGrid :banner-grid="1" class="banner-grid">
-        <template v-for="item in banners" v-slot:[item.slot]>
-          <SfBanner
-            :key="item.slot"
-            :title="item.title"
-            :subtitle="item.subtitle"
-            :description="item.description"
-            :button-text="item.buttonText"
-            :link="localePath(item.link)"
-            :image="item.image"
-            :class="item.class"
-          />
-        </template>
-      </SfBannerGrid>
-    </LazyHydrate>
+<!--    <LazyHydrate when-visible>-->
+<!--      <SfBannerGrid :banner-grid="1" class="banner-grid">-->
+<!--        <template v-for="item in banners" v-slot:[item.slot]>-->
+<!--          <SfBanner-->
+<!--            :key="item.slot"-->
+<!--            :title="item.title"-->
+<!--            :subtitle="item.subtitle"-->
+<!--            :description="item.description"-->
+<!--            :button-text="item.buttonText"-->
+<!--            :link="localePath(item.link)"-->
+<!--            :image="item.image"-->
+<!--            :class="item.class"-->
+<!--          />-->
+<!--        </template>-->
+<!--      </SfBannerGrid>-->
+<!--    </LazyHydrate>-->
 
     <LazyHydrate when-visible>
-      <div class="similar-products">
-        <SfHeading title="Featured Products" :level="2"/>
-        <nuxt-link :to="localePath('/c/women')" class="smartphone-only">
-          {{ $t('See all') }}
-        </nuxt-link>
-      </div>
+      <RelatedProducts :products="products" :loading="productsLoading" title="Featured Products"/>
     </LazyHydrate>
 
-    <LazyHydrate when-visible>
-      <SfCarousel class="carousel" :settings="{ peek: 16, breakpoints: { 1023: { peek: 0, perView: 2 } } }">
-        <template #prev="{go}">
-          <SfArrow
-            aria-label="prev"
-            class="sf-arrow--left sf-arrow--long"
-            @click="go('prev')"
-          />
-        </template>
-        <template #next="{go}">
-          <SfArrow
-            aria-label="next"
-            class="sf-arrow--right sf-arrow--long"
-            @click="go('next')"
-          />
-        </template>
-        <SfCarouselItem class="carousel__item" v-for="(product, i) in products" :key="i">
-          <SfProductCard
-            :title="productGetters.getName(product)"
-            :image="productGetters.getCoverImage(product)"
-            :regular-price="$n(productGetters.getPrice(product).regular, 'currency')"
-            :special-price="$n(productGetters.getPrice(product).regular, 'currency') === $n(productGetters.getPrice(product).special, 'currency')? '': $n(productGetters.getPrice(product).special, 'currency')"
-            :max-rating="5"
-            :score-rating="productGetters.getAverageRating(product)"
-            :wishlistIcon="false"
-            :isAddedToCart="isInCart({ product })"
-            :link="localePath(`/p/${productGetters.getId(product)}/${productGetters.getSlug(product)}`)"
-            class="carousel__item__product"
-            @click:add-to-cart="addItemToCart({ product, quantity: 1 })"
-            >
-            <template #add-to-cart-icon v-if="productGetters.getIsVirtual(product)">
-              <SfIcon
-                key="more"
-                icon="more"
-                size="20px"
-                color="white"
-              />
-            </template>
-          </SfProductCard>
-
-        </SfCarouselItem>
-      </SfCarousel>
-    </LazyHydrate>
 
 <!--    <LazyHydrate when-visible>-->
 <!--      <SfCallToAction-->
@@ -129,21 +81,18 @@ import {
   SfButton,
   SfIcon
 } from '@storefront-ui/vue';
+import RelatedProducts from '~/components/RelatedProducts.vue';
 import { ref, useContext, useRouter } from '@nuxtjs/composition-api';
 import InstagramFeed from '~/components/InstagramFeed.vue';
 import NewsletterModal from '~/components/NewsletterModal.vue';
 import LazyHydrate from 'vue-lazy-hydration';
 import {useAddToCart, useUiState} from '../composables';
 import cacheControl from './../helpers/cacheControl';
-import { onSSR, addBasePath } from '@vue-storefront/core';
+import {onSSR, addBasePath, Logger} from '@vue-storefront/core';
 import { computed } from '@nuxtjs/composition-api';
 import { useUiNotification } from '~/composables';
 
-import {
-  useProduct,
-  productGetters,
-  useCart
-} from '@vue-storefront/prestashop';
+import {useProduct, productGetters, useCart} from '@vue-storefront/prestashop';
 
 export default {
   name: 'Home',
@@ -153,64 +102,6 @@ export default {
     const { toggleNewsletterModal } = useUiState();
     const { isInCart } = useCart();
     const { addItemToCart } = useAddToCart();
-    const products = ref([
-      {
-        title: 'Cream Beach Bag',
-        image: addBasePath('/homepage/productA.webp'),
-        price: { regular: '50.00 $' },
-        rating: { max: 5, score: 4 },
-        isInWishlist: true
-      },
-      {
-        title: 'Cream Beach Bag 2',
-        image: addBasePath('/homepage/productB.webp'),
-        price: { regular: '50.00 $' },
-        rating: { max: 5, score: 4 },
-        isInWishlist: false
-      },
-      {
-        title: 'Cream Beach Bag 3',
-        image: addBasePath('/homepage/productC.webp'),
-        price: { regular: '50.00 $' },
-        rating: { max: 5, score: 4 },
-        isInWishlist: false
-      },
-      {
-        title: 'Cream Beach Bag RR',
-        image: addBasePath('/homepage/productA.webp'),
-        price: { regular: '50.00 $' },
-        rating: { max: 5, score: 4 },
-        isInWishlist: false
-      },
-      {
-        title: 'Cream Beach Bag',
-        image: addBasePath('/homepage/productB.webp'),
-        price: { regular: '50.00 $' },
-        rating: { max: 5, score: 4 },
-        isInWishlist: false
-      },
-      {
-        title: 'Cream Beach Bag',
-        image: addBasePath('/homepage/productC.webp'),
-        price: { regular: '50.00 $' },
-        rating: { max: 5, score: 4 },
-        isInWishlist: false
-      },
-      {
-        title: 'Cream Beach Bag',
-        image: addBasePath('/homepage/productA.webp'),
-        price: { regular: '50.00 $' },
-        rating: { max: 5, score: 4 },
-        isInWishlist: false
-      },
-      {
-        title: 'Cream Beach Bag',
-        image: addBasePath('/homepage/productB.webp'),
-        price: { regular: '50.00 $' },
-        rating: { max: 5, score: 4 },
-        isInWishlist: false
-      }
-    ]);
     const heroes = [
       {
         title: 'Colorful summer dresses are already in store',
@@ -278,19 +169,18 @@ export default {
     ];
 
     const onSubscribe = (emailAddress) => {
-      console.log(`Email ${emailAddress} was added to newsletter.`);
+      Logger.info(`Email ${emailAddress} was added to newsletter.`);
       toggleNewsletterModal();
     };
 
-    const toggleWishlist = (index) => {
-      products.value[index].isInWishlist = !products.value[index].isInWishlist;
-    };
+    // const toggleWishlist = (index) => {
+    //   products.value[index].isInWishlist = !products.value[index].isInWishlist;
+    // };
 
     const { products: featureProducts, search: productsSearch, loading: productsLoading } = useProduct('relatedProducts');
-
     const { send: sendNotification } = useUiNotification();
 
-    if (process.client) Promise.resolve(productsSearch({ featured: true }));
+    if (process.client) Promise.resolve().then(productsSearch({ featured: true }));
 
     // onSSR(async () => {
     //   productsSearch({ featured: true });
@@ -305,7 +195,7 @@ export default {
       products: computed(() =>
         productGetters.getFeaturedProductsFiltered(featureProducts.value)
       ),
-      toggleWishlist,
+      // toggleWishlist,
       toggleNewsletterModal,
       onSubscribe,
       addBasePath,
@@ -333,7 +223,8 @@ export default {
     SfButton,
     NewsletterModal,
     LazyHydrate,
-    SfIcon
+    SfIcon,
+    RelatedProducts
   }
 };
 </script>

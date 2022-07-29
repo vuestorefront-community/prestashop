@@ -60,7 +60,7 @@
 </template>
 
 <script>
-import { defineComponent, ref } from '@nuxtjs/composition-api';
+import {computed, defineComponent, ref} from '@nuxtjs/composition-api';
 import { ValidationProvider, ValidationObserver } from 'vee-validate';
 import { SfInput, SfButton } from '@storefront-ui/vue';
 import { useUser, userGetters } from '@vue-storefront/prestashop';
@@ -75,30 +75,23 @@ export default defineComponent({
   },
   setup(_, { emit }) {
     const { user } = useUser();
-    const resetForm = () => ({
+    const {send: sendNotification} = useUiNotification();
+
+    const form = computed(() => ({
       currentUser: {
-        firstName: userGetters.getFirstName(user.value),
-        lastName: userGetters.getLastName(user.value),
-        email: userGetters.getEmailAddress(user.value),
-        gender: userGetters.getGender(user.value)
+        firstName: user.value ? userGetters.getFirstName(user.value) : '',
+        lastName: user.value ? userGetters.getLastName(user.value) : '',
+        email: user.value ? userGetters.getEmailAddress(user.value) : '',
+        gender: user.value ? userGetters.getGender(user.value) : ''
       },
       currentPassword: '',
       newPassword: '',
       repeatPassword: ''
-    });
-    const {
-      send: sendNotification
-    } = useUiNotification();
-    // const form = ref(resetForm());
-    let form;
-    if (process.client) {
-      form = ref(resetForm());
-    }
-
+    }));
 
     const submitForm = (resetValidationFn) => () => {
       const onComplete = (data) => {
-        form.value = resetForm();
+        // form.value = resetForm();
         sendNotification({
           id: Symbol('password_updated'),
           message: data.message ? data.message : 'The user password was changed successfully updated!',

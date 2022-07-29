@@ -63,11 +63,16 @@ function getGrouped(searchResult, criteria?: FacetSearchCriteria): AgnosticGroup
   return [];
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+// eslint-disable-next-line @typescript-eslint/no-unused-vars,@typescript-eslint/explicit-module-boundary-types
 function getSortOptions(params: FacetSearchResult<Facet>): AgnosticSort {
+
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  const sortOptions = params?.data?.sortOptions;
+
   return {
-    options: [],
-    selected: ''
+    options: sortOptions?.options ? sortOptions.options : [],
+    selected: sortOptions?.selected ? sortOptions.selected : ''
   };
 }
 

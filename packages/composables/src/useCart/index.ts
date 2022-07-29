@@ -1,14 +1,6 @@
-import {
-  Context,
-  useCartFactory,
-  UseCartFactoryParams, useVSFContext
-} from '@vue-storefront/core';
+import {Context, Logger, useCartFactory, UseCartFactoryParams, useVSFContext} from '@vue-storefront/core';
 import { useContext } from '@nuxtjs/composition-api';
-import type {
-  Cart,
-  CartItem,
-  PsProduct
-} from '@vue-storefront/prestashop-api';
+import type {Cart, CartItem, PsProduct} from '@vue-storefront/prestashop-api';
 import {handleRequest} from '../helpers';
 
 const params: UseCartFactoryParams<Cart, CartItem, PsProduct> = {
@@ -40,21 +32,15 @@ const params: UseCartFactoryParams<Cart, CartItem, PsProduct> = {
     let data;
     try {
 
-      console.log('addItem test');
-
       let variantObj;
       if (product.variant) {
         const _variantObj = { };
         for (const i in product.variant) {
           const splitted = product.variant[i].split('-');
-          console.log('splitted: ' + JSON.stringify(splitted));
           _variantObj[splitted[0]] = splitted[1];
-          console.log('_variantObj: ' + JSON.stringify(_variantObj));
         }
         variantObj = _variantObj;
       }
-      console.log('product.variant: ' + JSON.stringify(product.variant));
-      console.log('variantObj: ' + JSON.stringify(variantObj));
 
       data = await handleRequest(context, {method: 'get',
         url: '/cart',
@@ -76,8 +62,6 @@ const params: UseCartFactoryParams<Cart, CartItem, PsProduct> = {
       });
 
       if (data?.errors) throw { message: data?.errors ? data?.errors : 'Unable to add to cart.' };
-
-      console.log('addItem data: ' + JSON.stringify(data));
 
       return data;
     } catch (error) {
@@ -141,13 +125,13 @@ const params: UseCartFactoryParams<Cart, CartItem, PsProduct> = {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   clear: async (context: Context, { currentCart }) => {
-    console.log('Mocked: useCart.clear');
+    Logger.debug('Mocked: useCart.clear');
     return {};
   },
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   applyCoupon: async (context: Context, { currentCart, couponCode, customQuery }) => {
-    console.log('Mocked: useCart.applyCoupon');
+    Logger.debug('Mocked: useCart.applyCoupon');
     return {
       updatedCart: {},
       updatedCoupon: {}
@@ -156,7 +140,7 @@ const params: UseCartFactoryParams<Cart, CartItem, PsProduct> = {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   removeCoupon: async (context: Context, { currentCart, couponCode, customQuery }) => {
-    console.log('Mocked: useCart.removeCoupon');
+    Logger.debug('Mocked: useCart.removeCoupon');
     return {
       updatedCart: {}
     };
@@ -164,7 +148,7 @@ const params: UseCartFactoryParams<Cart, CartItem, PsProduct> = {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   isInCart: (context: Context, { currentCart, product }) => {
-    console.log('Mocked: useCart.isInCart');
+    Logger.debug('Mocked: useCart.isInCart');
     return false;
   }
 };

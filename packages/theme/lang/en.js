@@ -159,5 +159,12 @@ export default {
   'show more': 'show more',
   'hide': 'hide',
   'Change to grid view': 'Change to grid view',
-  'Change to list view': 'Change to list view'
+  'Change to list view': 'Change to list view',
+  'See all': 'See all',
+  'Back':'Back',
+  'Address':'Address',
+  'Addresses':'Addresses',
+  'User Account':'User Account',
+  'Submit':'Submit',
+  'Select sorting':'Select sorting'
 };

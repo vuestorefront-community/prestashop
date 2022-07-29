@@ -51,6 +51,7 @@
                     />
                   </div>
                 </template>
+                <template #actions><div></div></template>
                 <!-- @TODO: remove if https://github.com/vuestorefront/storefront-ui/issues/2022 is done -->
                 <template #more-actions>{{  }}</template>
               </SfCollectedProduct>

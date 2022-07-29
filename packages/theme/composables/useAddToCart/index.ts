@@ -14,17 +14,15 @@ const useAddToCart = () => {
   const addItemToCart = (params: { product: any, variant: any, quantity: number }) => {
 
     params.product.variant = params.variant;
-    console.log('params.product.variant: ' + JSON.stringify(params.product.variant));
 
     if (productGetters.getIsVirtual(params.product) && !params.variant) {
-      console.log('addItemToCart redirecting to: ' + JSON.stringify(app.localePath(`/p/${productGetters.getId(params.product)}/${productGetters.getSlug(params.product)}`)));
+      // Logger.debug('addItemToCart redirecting to: ' + JSON.stringify(app.localePath(`/p/${productGetters.getId(params.product)}/${productGetters.getSlug(params.product)}`)));
       return router.push(app.localePath(`/p/${productGetters.getId(params.product)}/${productGetters.getSlug(params.product)}`));
     }
 
     // console.log('addItemToCart calling addItemToCart');
     addItemToCartBase(params)
       .then(() => {
-        console.log('addItemToCart cart.value: ' + JSON.stringify(cart.value));
         if (cartError.value.addItem) throw {message: cartError.value.addItem?.message};
         // console.log('addItemToCart cart: ' + JSON.stringify(cart));
         // console.log('addItemToCart cartError.value.addItem: ' + JSON.stringify(cartError.value.addItem));
@@ -38,7 +36,6 @@ const useAddToCart = () => {
         });
       })
       .catch((error) => {
-        console.log('addItemToCart error: ' + JSON.stringify(error));
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         sendNotification({

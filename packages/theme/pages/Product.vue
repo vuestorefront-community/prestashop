@@ -41,7 +41,7 @@
             <p
               class="product__description desktop-only"
               v-html="productGetters.getShortDescription(product)"
-            ></p>
+            />
             <template
               v-for="(option, optionKey) in options"
             >
@@ -119,13 +119,14 @@
                 <p  v-else>You must be logged in to write comment</p>
                 <!-- TODO: loop over review type instead of API structure -->
                 <!-- TODO: Handle when message has no content better -->
+                <!-- TODO: Figure out how to stop invalid prop score error -->
                 <SfReview
                   v-for="review in reviews"
                   :key="reviewGetters.getReviewId(review)"
                   :author="reviewGetters.getReviewAuthor(review)"
                   :date="reviewGetters.getReviewDate(review)"
                   :message="reviewGetters.getReviewMessage(review) ? reviewGetters.getReviewMessage(review) : ' '"
-                  :rating="reviewGetters.getReviewRating(review)"
+                  :rating="parseInt(reviewGetters.getReviewRating(review))"
                   read-more-text="Read more"
                   hide-full-text="Read less"
                   class="product__review"
@@ -168,7 +169,7 @@
       </div>
 
       <LazyHydrate when-visible>
-        <RelatedProducts :products="relatedProducts" :loading="relatedLoading" title="Match it with" />
+        <RelatedProducts :products="relatedProducts" :loading="relatedLoading" title="Match it with"/>
       </LazyHydrate>
 
       <LazyHydrate v-if="isAddReviewModalOpen">
@@ -283,7 +284,6 @@ export default {
       return null;
     };
 
-    // TODO: Breadcrumbs are temporary disabled because productGetters return undefined. We have a mocks in data
     const breadcrumbs = computed(() => productGetters.getBreadcrumbs(product.value));
     const productGallery = computed(() =>
       productGetters.getGallery(product.value).map((img) => ({
@@ -296,13 +296,12 @@ export default {
 
     const onAddReviewClose = () => {
       // console.log('onAddReviewClose');
-      console.log('onAddReviewClose before productReviews: ' + JSON.stringify(productReviews));
-      console.log('onAddReviewClose before reviews: ' + JSON.stringify(reviews));
+      // console.log('onAddReviewClose before productReviews: ' + JSON.stringify(productReviews));
+      // console.log('onAddReviewClose before reviews: ' + JSON.stringify(reviews));
       Promise.resolve(searchReviews({ productId: id, page: '1' }));
-      console.log('onAddReviewClose after productReviews: ' + JSON.stringify(productReviews));
-      console.log('onAddReviewClose after reviews: ' + JSON.stringify(reviews));
+      // console.log('onAddReviewClose after productReviews: ' + JSON.stringify(productReviews));
+      // console.log('onAddReviewClose after reviews: ' + JSON.stringify(reviews));
     };
-
 
     // onSSR(async () => {
     //   let variant = context.root.$route.query;

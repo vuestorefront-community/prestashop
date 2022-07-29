@@ -62,14 +62,14 @@
         </div>
       </SfLoader>
     </SfTab>
-    <SfTab title="Returns">
-      <p class="message">
-        This feature is not implemented yet! Please take a look at
-        <br />
-        <SfLink class="message__link" href="#">https://github.com/DivanteLtd/vue-storefront/issues</SfLink>
-        for our Roadmap!
-      </p>
-    </SfTab>
+<!--    <SfTab title="Returns">-->
+<!--      <p class="message">-->
+<!--        This feature is not implemented yet! Please take a look at-->
+<!--        <br />-->
+<!--        <SfLink class="message__link" href="#">https://github.com/DivanteLtd/vue-storefront/issues</SfLink>-->
+<!--        for our Roadmap!-->
+<!--      </p>-->
+<!--    </SfTab>-->
   </SfTabs>
 </template>
 

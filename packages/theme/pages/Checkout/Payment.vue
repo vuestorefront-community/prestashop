@@ -159,8 +159,8 @@ export default {
       changeSelectedMethod,
       terms,
       loading,
-      products: computed(() => cartGetters.getItems(cart.value)),
-      totals: computed(() => cartGetters.getTotals(cart.value)),
+      products: computed(() => cart.value ? cartGetters.getItems(cart.value) : []),
+      totals: computed(() => cart.value ? cartGetters.getTotals(cart.value) : []),
       tableHeaders: ['Description', 'Quantity', 'Amount'],
       cartGetters,
       processOrder

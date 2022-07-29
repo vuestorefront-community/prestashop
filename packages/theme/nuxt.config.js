@@ -78,7 +78,6 @@ export default {
     ['@vue-storefront/prestashop/nuxt', {}]
   ],
 
-
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     ['nuxt-i18n', {

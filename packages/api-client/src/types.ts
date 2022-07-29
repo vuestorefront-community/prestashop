@@ -11,6 +11,7 @@ export type BillingAddress = TODO;
 export type Cart = any;
 
 export type CartItem = {
+    variant: any;
     id: string;
     productAttributeId: string;
     name: string;
@@ -38,6 +39,7 @@ export type PasswordResetResult = TODO;
 export type Product = TODO;
 
 export type PsProduct = {
+    variant: any;
     id: string;
     name: string;
     slug: string;

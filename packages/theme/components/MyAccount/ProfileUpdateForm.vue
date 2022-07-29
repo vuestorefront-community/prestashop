@@ -1,4 +1,5 @@
 <template>
+<!--  <LazyHydrate when-visible>-->
   <ValidationObserver v-slot="{ handleSubmit, reset }" key="profile-update">
     <form
       class="form"
@@ -68,9 +69,9 @@
           rules="required|min:8"
           class="form__element">
         <SfInput
-          v-model="currentPassword"
+          v-model="password"
           type="password"
-          name="currentPassword"
+          name="password"
           label="Current Password"
           required
           class="form__element"
@@ -87,10 +88,11 @@
       </SfButton>
     </form>
   </ValidationObserver>
+<!--  </LazyHydrate>-->
 </template>
 
 <script>
-import { defineComponent, ref, useContext } from '@nuxtjs/composition-api';
+import {computed, defineComponent, ref, useContext} from '@nuxtjs/composition-api';
 import { ValidationProvider, ValidationObserver } from 'vee-validate';
 import { useUser, userGetters } from '@vue-storefront/prestashop';
 import {
@@ -102,6 +104,9 @@ import {
   SfLoader
 } from '@storefront-ui/vue';
 import { useUiNotification } from '~/composables';
+import {Logger, onSSR} from '@vue-storefront/core';
+import LazyHydrate from 'vue-lazy-hydration';
+
 export default defineComponent({
   name: 'ProfileUpdateForm',
   components: {
@@ -112,7 +117,8 @@ export default defineComponent({
     SfProductOption,
     SfLoader,
     ValidationProvider,
-    ValidationObserver
+    ValidationObserver,
+    LazyHydrate
   },
   props: {
     loading: {
@@ -124,33 +130,25 @@ export default defineComponent({
   emits: ['submit'],
   setup(props, { emit }) {
     // const { app: { i18n } } = useContext();
-    const { user, updateUser } = useUser();
-    const currentPassword = ref('');
+    const { user, load } = useUser();
+    const { send: sendNotification } = useUiNotification();
+
+    const password = ref('');
     const genderOptions = [
       { value: 1, label: 'male' },
       { value: 2, label: 'female' }
     ];
-    const getInitialForm = () => ({
-      firstName: userGetters.getFirstName(user.value),
-      lastName: userGetters.getLastName(user.value),
-      email: userGetters.getEmailAddress(user.value),
-      gender: userGetters.getGender(user.value)
-    });
-    const { send: sendNotification } = useUiNotification();
-    let form;
-    if (process.client) {
-      form = ref(getInitialForm());
-    }
 
-    // const handleForm = (fn) => async () => {
-    //   await fn({ user: form.value });
-    // };
+    const form = computed(() => ({
+      firstName: user.value ? userGetters.getFirstName(user.value) : '',
+      lastName: user.value ? userGetters.getLastName(user.value) : '',
+      email: user.value ? userGetters.getEmailAddress(user.value) : '',
+      gender: user.value ? userGetters.getGender(user.value) : ''
+    }));
 
     const submitForm = (resetValidationFn) => () => {
       const onComplete = (data) => {
-        form.value = getInitialForm();
-        console.log('submitForm data: ' + JSON.stringify(data));
-        currentPassword.value = '';
+        password.value = '';
         sendNotification({
           id: Symbol('user_updated'),
           message: data.message ? data.message : 'The user account data was successfully updated!',
@@ -171,23 +169,16 @@ export default defineComponent({
           title: 'User Account'
         });
       };
-      // const isEmailChanged = userGetters.getEmailAddress(user.value) !== form.value.email;
-      // if (isEmailChanged && !requirePassword.value) {
-      //   requirePassword.value = true;
-      // } else {
-      if (currentPassword.value) {
-        form.value.password = currentPassword.value;
-      }
-      // const eventPayload : SubmitEventPayload<ProfileUpdateFormFields> = ;
+
+      if (password.value) form.value.password = password.value;
+
       emit('submit', { form, onComplete, onError });
-      // }
     };
 
     return {
-      currentPassword,
+      password,
       form,
       submitForm,
-      // handleUpdate,
       genderOptions
     };
   }

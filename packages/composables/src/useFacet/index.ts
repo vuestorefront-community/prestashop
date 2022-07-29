@@ -55,6 +55,7 @@ const factoryParams = {
         params: {
           slug: params.input.categorySlug,
           q: facetParams(params.input.filters),
+          sortBy: params.input.sort,
           page: params.input.page,
           // eslint-disable-next-line camelcase
           with_all_images: '0',

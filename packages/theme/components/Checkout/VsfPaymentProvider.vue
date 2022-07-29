@@ -39,6 +39,9 @@ export default {
   },
 
   setup(_props, context) {
+    const { load, payment, loading } = usePayment();
+    onBeforeMount(async() => await load());
+
     const selectedMethod = ref(null);
     watch(selectedMethod, (newVal) => {
       context.emit('changeSelectedMethod', newVal);
@@ -46,12 +49,9 @@ export default {
     const selectMethod = (method)=> {
       selectedMethod.value = method;
     };
-    const { load, payment, loading } = usePayment();
-    onBeforeMount(async()=>{
-      await load();
-    });
+
     return {
-      paymentMethods: computed(()=> payment.value ? paymentProviderGetters.getPaymentProvidersList(payment.value) : []),
+      paymentMethods: computed(() => payment.value ? paymentProviderGetters.getPaymentProvidersList(payment.value) : []),
       selectedMethod,
       selectMethod,
       loading

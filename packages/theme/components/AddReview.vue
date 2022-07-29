@@ -96,8 +96,7 @@ export default {
     const addingToReview = (comment) => {
       addReview(comment)
         .then(() => {
-          // const response = productReviews;
-          console.log('AddReview productReviews: ' + JSON.stringify(productReviews));
+          // Logger.debug('AddReview productReviews: ' + JSON.stringify(productReviews));
 
           if (reviewError.value.addReview) throw {message: reviewError.value.addReview?.message};
 

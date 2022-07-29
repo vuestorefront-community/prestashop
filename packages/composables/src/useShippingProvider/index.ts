@@ -22,8 +22,6 @@ const params: UseShippingProviderParams<ShippingProvider, ShippingMethod> = {
     // @ts-ignore
     const { shippingMethod } = params;
 
-    console.log('useShippingProvider save params: ' + JSON.stringify(params));
-
 
     await handleRequest(context, {method: 'post',
       url: '/setcarriercheckout',

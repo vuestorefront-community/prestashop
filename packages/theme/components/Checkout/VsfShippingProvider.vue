@@ -66,18 +66,12 @@ export default {
       selectedMethod.value = method;
     };
     const goToBilling = async () => {
-      console.log('goToBilling selectedMethod.value: ' + JSON.stringify(selectedMethod.value));
-      console.log('goToBilling props.selectedAddress: ' + JSON.stringify(props.selectedAddress));
-
       const shippingMethod = { carrierId: selectedMethod.value.endsWith(',') ? selectedMethod.value.slice(0, -1) : selectedMethod.value, addressId: props.selectedAddress };
       await save({ shippingMethod });
       // console.log('VsfShippingProvider goToBilling');
       context.root.$router.push({ path: 'billing' });
     };
     const goToPayment = async () => {
-      console.log('goToBilling selectedMethod.value: ' + JSON.stringify(selectedMethod.value));
-      console.log('goToBilling props.selectedAddress: ' + JSON.stringify(props.selectedAddress));
-
       const shippingMethod = { carrierId: selectedMethod.value.endsWith(',') ? selectedMethod.value.slice(0, -1) : selectedMethod.value, addressId: props.selectedAddress };
       await save({ shippingMethod });
       // console.log('VsfShippingProvider goToBilling');

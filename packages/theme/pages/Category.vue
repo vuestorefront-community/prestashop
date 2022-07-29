@@ -13,7 +13,11 @@
             class="navbar__title" />
         </LazyHydrate>
       </div>
-      <CategoryPageHeader :pagination="pagination"/>
+      <CategoryPageHeader
+        :pagination="pagination"
+        :facets="facets"
+        :sortBy="sortBy"
+      />
     </div>
 
     <div class="main section">
@@ -26,20 +30,20 @@
               v-e2e="'categories-accordion'"
               :show-chevron="true">
               <SfAccordionItem
-                v-for="(cat, i) in categoryTree && categoryTree.items"
+                v-for="(category, i) in categoryTree && categoryTree.items"
                 :key="i"
-                :header="cat.label">
+                :header="category.label">
                 <template>
                   <SfList class="list">
                     <SfListItem class="list__item">
                       <SfMenuItem
-                        :count="cat.count || ''"
-                        :label="cat.label"
+                        :count="category.count || ''"
+                        :label="category.label"
                       >
                         <template #label>
                           <nuxt-link
-                            :to="localePath(th.getCatLink(cat))"
-                            :class="cat.isCurrent ? 'sidebar--cat-selected' : ''"
+                            :to="localePath(uiHelpers.getCatLink(category))"
+                            :class="category.isCurrent ? 'sidebar--cat-selected' : ''"
                           >
                             All
                           </nuxt-link>
@@ -48,17 +52,17 @@
                     </SfListItem>
                     <SfListItem
                       class="list__item"
-                      v-for="(subCat, j) in cat.items"
+                      v-for="(subCategory, j) in category.items"
                       :key="j"
                     >
                       <SfMenuItem
-                        :count="subCat.count || ''"
-                        :label="subCat.label"
+                        :count="subCategory.count || ''"
+                        :label="subCategory.label"
                       >
                         <template #label="{ label }">
                           <nuxt-link
-                            :to="localePath(th.getCatLink(subCat))"
-                            :class="subCat.isCurrent ? 'sidebar--cat-selected' : ''"
+                            :to="localePath(uiHelpers.getCatLink(subCategory))"
+                            :class="subCategory.isCurrent ? 'sidebar--cat-selected' : ''"
                           >
                             {{ label }}
                           </nuxt-link>
@@ -189,7 +193,7 @@
                 v-if="pagination.itemsPerPage"
                 :value="pagination.itemsPerPage.toString()"
                 class="products__items-per-page"
-                @input="th.changeItemsPerPage"
+                @input="uiHelpers.changeItemsPerPage"
               >
                 <SfSelectOption
                   v-for="option in pagination.pageOptions"
@@ -227,7 +231,7 @@ import {
   SfColor,
   SfProperty
 } from '@storefront-ui/vue';
-import {computed, ref, onMounted, useRouter} from '@nuxtjs/composition-api';
+import {computed, ref, onMounted, useRouter, useRoute} from '@nuxtjs/composition-api';
 // import { useCart, useWishlist, productGetters, useFacet, facetGetters, wishlistGetters } from '@vue-storefront/prestashop';
 import { useCart, productGetters, useFacet, facetGetters } from '@vue-storefront/prestashop';
 import { useUiHelpers, useUiState, useUiNotification, useAddToCart } from '~/composables';
@@ -246,8 +250,9 @@ export default {
     'stale-when-revalidate': 5
   }),
   setup(props, context) {
+    const route = useRoute();
     const router = useRouter();
-    const th = useUiHelpers();
+    const uiHelpers = useUiHelpers();
     const uiState = useUiState();
     const { isInCart } = useCart();
     const { result, search, loading } = useFacet();
@@ -258,9 +263,7 @@ export default {
     const productsQuantity = ref({});
     const products = computed(() => facetGetters.getProducts(result.value));
     const categoryTree = computed(() => facetGetters.getCategoryTree(result.value));
-    // Not used
     const breadcrumbs = computed(() => facetGetters.getBreadcrumbs(result.value));
-    // Not used
     const sortBy = computed(() => facetGetters.getSortOptions(result.value));
     const facets = computed(() => facetGetters.getGrouped(result.value));
     const pagination = computed(() => facetGetters.getPagination(result.value));
@@ -277,11 +280,10 @@ export default {
     };
 
     // only run client side
-    if (process.client) Promise.resolve(search(th.getFacetsFromURL()).then(() => setSelectedFilters()));
-    console.log('category result: ' + JSON.stringify(result.value));
+    if (process.client) Promise.resolve(search(uiHelpers.getFacetsFromURL()).then(() => setSelectedFilters()));
 
     // onSSR(async () => {
-    //   await search(th.getFacetsFromURL());
+    //   await search(uiHelpers.getFacetsFromURL());
     //   setSelectedFilters();
     // });
 
@@ -328,9 +330,10 @@ export default {
 
     return {
       ...uiState,
+      route,
       router,
       sendNotification,
-      th,
+      uiHelpers,
       products,
       categoryTree,
       loading,
@@ -351,9 +354,7 @@ export default {
       selectedFilters,
       clearFilters,
       applyFilters,
-      addBasePath//,
-      // useAddToCart,
-      // handleAddToCart: computed(({product, quantity}) => useAddToCart({ product, quantity }))
+      addBasePath
     };
   },
   components: {
