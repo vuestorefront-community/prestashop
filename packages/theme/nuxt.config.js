@@ -27,10 +27,6 @@ export default {
         rel: 'preconnect',
         href: 'https://fonts.gstatic.com',
         crossorigin: 'crossorigin'
-      },
-      {
-        rel: 'stylesheet',
-        href: 'https://fonts.googleapis.com/css?family=Raleway:300,400,400i,500,600,700|Roboto:300,300i,400,400i,500,700&display=swap'
       }
     ]
   },
@@ -46,6 +42,7 @@ export default {
     '@nuxtjs/composition-api/module',
     '@nuxt/typescript-build',
     '@nuxtjs/style-resources',
+    '@nuxtjs/google-fonts',
     ['@vue-storefront/nuxt', {
       // @core-development-only-start
       coreDevelopment: true,
@@ -177,5 +174,20 @@ export default {
     meta: {
       theme_color: '#5ECE7B'
     }
-  }
+  },
+  googleFonts: {
+    families: {
+      Roboto: true,
+      Montserrat: {
+        wght: [100, 200, 300, 400, 500, 600, 700, 800, 900]
+      },
+      Lato: {
+        wght: [100, 300, 400, 700, 900]
+      },
+      Raleway: {
+        wght: [100, 200, 300, 400, 500, 600, 700, 800, 900]
+      }
+    },
+    download: false,
+  },
 };
