@@ -10,3 +10,10 @@ Here I just cover the redirect method, because most of the current PrestaShop mo
 
 ## Redirect Method
 ![An image](./../img/vsf-redirect-payment.png)
+
+1. Customer clicks on Place Order in payment page. The request will be sent to the middlewre server (normally this happens when user clicks on something, like when user clicks on product detail page).
+2. Middleware logic (in app-client) calls our eCommerce API (PrestaShop) to get a redirect link to the payment gateway. Probably, we need to pass callback/redirect back link to our website (which is a middleware API).
+3. User will be redirected to payment gateway page.
+4. Gateway will call our callback API (our ExpressJs Middleware), regardless of being payment success or failure.
+5. Now it's time to create order on our eCommerce platform. In this step, we call our eCommerce API and will pass the required (all) data returned from payment gateway. Our eCommerce API will create an order and does its logic related to this payment option. The eCommerce API should be designed so that people cannot call it and place an arbitrary order. 
+6. The user will be redirected to success or failure page.
