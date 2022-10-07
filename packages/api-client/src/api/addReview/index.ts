@@ -1,6 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export default async function addReview(context, params) {
-  const url = new URL('/rest/postcomment', context.config.api.url);
+  const url = new URL(context.config.api.url + '/rest/postcomment');
 
   // eslint-disable-next-line camelcase
   const { id_product, comment_title, comment_content, criterion, key, value } = params;

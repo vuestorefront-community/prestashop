@@ -3,7 +3,7 @@ import { cookieParser } from '../../helpers/cookieParser';
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export default async function updateCart(context, params) {
   const {psCookieKey, psCookieValue, product, op} = params;
-  const url = new URL('/rest/cart', context.config.api.url);
+  const url = new URL(context.config.api.url + '/rest/cart');
 
   url.searchParams.set('id_product', product.id);
   url.searchParams.set('id_product_attribute', product.productAttributeId);
