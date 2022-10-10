@@ -12,7 +12,7 @@
         <SfInput
           v-e2e="'shipping-alias'"
           v-model="form.alias"
-          label="alias"
+          :label="$t('alias')"
           name="alias"
           class="form__element form__element--half"
           required
@@ -30,7 +30,7 @@
         <SfInput
           v-e2e="'shipping-phone'"
           v-model.trim="form.phone"
-          label="Phone number"
+          :label="$t('Phone number')"
           name="phone"
           class="form__element form__element--half form__element--half-even"
           :valid="!errors[0]"
@@ -46,7 +46,7 @@
         <SfSelect
           v-e2e="'shipping-country'"
           v-model="selectedCountry"
-          label="Country"
+          :label="$t('Country')"
           name="country"
           :disabled='loadingCountries'
           class="form__element form__element--half form__select sf-select--underlined"
@@ -72,7 +72,7 @@
         <SfSelect
           v-e2e="'shipping-state'"
           v-model="form.id_state"
-          label="State"
+          :label="$t('State')"
           name="state"
           :disabled='loadingCountries || !isStatesRequired '
           class="form__element form__element--half form__element--half-even form__select sf-select--underlined"
@@ -98,7 +98,7 @@
         <SfInput
           v-e2e="'shipping-city'"
           v-model="form.city"
-          label="City"
+          :label="$t('City')"
           name="city"
           class="form__element form__element--half"
           required
@@ -115,7 +115,7 @@
         <SfInput
           v-e2e="'shipping-zipcode'"
           v-model.trim="form.postcode"
-          label="Zip-code"
+          :label="$t('Zip-code')"
           name="zipCode"
           class="form__element form__element--half form__element--half-even"
           required
@@ -132,7 +132,7 @@
         <SfInput
           v-e2e="'shipping-address'"
           v-model="form.address1"
-          label="Address"
+          :label="$t('Address')"
           name="address"
           class="form__element form__element--half"
           required
@@ -148,7 +148,7 @@
         <SfInput
           v-e2e="'shipping-address2'"
           v-model="form.address2"
-          label="Address2"
+          :label="$t('Address2')"
           name="address2"
           class="form__element form__element--half form__element--half-even"
           :valid="!errors[0]"
