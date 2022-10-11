@@ -18,7 +18,8 @@ export const useCountryList = () => {
 
     try {
       loading.value = true;
-      const { data, cookieObject } = await context.$prestashop.api.getAvailableCountries();
+      const lang = context.$prestashop.config.app.$cookies.get('vsf-locale');
+      const { data, cookieObject } = await context.$prestashop.api.getAvailableCountries({ lang: lang });
       result.value = data;
       error.value.boot = null;
 

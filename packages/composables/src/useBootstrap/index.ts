@@ -6,6 +6,7 @@ export const useBootstrap = () => {
   const context = useVSFContext();
 
   const menuItems = sharedRef(null, 'menuItems');
+  const languages = sharedRef(null, 'languages');
 
   const loading = sharedRef(false, 'bootstrap-loading');
 
@@ -23,6 +24,8 @@ export const useBootstrap = () => {
 
       if (data.code === 200) {
         menuItems.value = data.psdata.menuItems;
+        languages.value = data.psdata.languages.languages;
+
         const vsfCookieKey = context.$prestashop.config.app.$config.psCustomerCookieKey;
         const vsfCookieValue = context.$prestashop.config.app.$config.psCustomerCookieValue;
 
@@ -42,10 +45,10 @@ export const useBootstrap = () => {
       loading.value = false;
     }
   };
-
   return {
     boot,
     menuItems: menuItems,
+    languages: languages,
     loading: computed(() => loading.value),
     error: computed(() => error.value)
   };

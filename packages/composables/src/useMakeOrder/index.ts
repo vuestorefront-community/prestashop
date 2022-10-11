@@ -16,8 +16,9 @@ const factoryParams: UseMakeOrderFactoryParams<Order> = {
 
     const psCookieKey = context.$prestashop.config.app.$cookies.get(vsfCookieKey);
     const psCookieValue = context.$prestashop.config.app.$cookies.get(vsfCookieValue);
+    const lang = context.$prestashop.config.app.$cookies.get('vsf-locale');
 
-    const { data, cookieObject } = await context.$prestashop.api.makeOrder({ methodName: methodName, psCookieKey, psCookieValue });
+    const { data, cookieObject } = await context.$prestashop.api.makeOrder({ methodName: methodName, psCookieKey, psCookieValue, lang: lang });
     if (data.code === 200) {
       if (cookieObject) {
         context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
