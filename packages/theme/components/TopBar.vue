@@ -16,12 +16,25 @@
 <script>
 import { SfButton, SfTopBar } from '@storefront-ui/vue';
 import LocaleSelector from './LocaleSelector';
+import { useBootstrap } from '@vue-storefront/prestashop';
 
 export default {
   components: {
     SfTopBar,
     SfButton,
     LocaleSelector
+  },
+  setup(props, context) {
+    const {
+      languages: languages
+    } = useBootstrap();
+
+    languages.value.forEach(el => {
+      if (!context.root.$i18n.locales.find(el2 => el2.iso === el.iso_code)) {
+        context.root.$i18n.locales.push({ code: el.iso_code, label: el.name_simple, file: `${el.iso_code}.js`, iso: el.iso_code });
+        context.root.$i18n.localeCodes.push(el.iso_code);
+      }
+    });
   }
 };
 

@@ -21,6 +21,8 @@ const params: UseProductFactoryParams<Product, SearchParams> = {
       }
       params.variantObj = variantObj;
     }
+
+    params.lang = context.$prestashop.config.app.$cookies.get('vsf-locale');
     const data = await context.$prestashop.api.getProduct(params);
     return data.psdata;
   }

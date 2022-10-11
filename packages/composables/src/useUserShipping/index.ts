@@ -19,7 +19,8 @@ const params: UseUserShippingFactoryParams<Address, AddressItem> = {
     const psCookieKey = context.$prestashop.config.app.$cookies.get(vsfCookieKey);
     const psCookieValue = context.$prestashop.config.app.$cookies.get(vsfCookieValue);
 
-    await context.$prestashop.api.addNewAddress({address, psCookieKey, psCookieValue });
+    const lang = context.$prestashop.config.app.$cookies.get('vsf-locale');
+    await context.$prestashop.api.addNewAddress({address, psCookieKey, psCookieValue, lang: lang });
     const { data, cookieObject } = await context.$prestashop.api.loadAddresses({ psCookieKey, psCookieValue });
     if (data.code === 200) {
       if (cookieObject) {
@@ -43,7 +44,8 @@ const params: UseUserShippingFactoryParams<Address, AddressItem> = {
     const psCookieKey = context.$prestashop.config.app.$cookies.get(vsfCookieKey);
     const psCookieValue = context.$prestashop.config.app.$cookies.get(vsfCookieValue);
 
-    await context.$prestashop.api.removeAddress({id, psCookieKey, psCookieValue });
+    const lang = context.$prestashop.config.app.$cookies.get('vsf-locale');
+    await context.$prestashop.api.removeAddress({id, psCookieKey, psCookieValue, lang: lang });
     const { data, cookieObject } = await context.$prestashop.api.loadAddresses({ psCookieKey, psCookieValue });
     if (data.code === 200) {
       if (cookieObject) {
@@ -65,7 +67,8 @@ const params: UseUserShippingFactoryParams<Address, AddressItem> = {
     const psCookieKey = context.$prestashop.config.app.$cookies.get(vsfCookieKey);
     const psCookieValue = context.$prestashop.config.app.$cookies.get(vsfCookieValue);
 
-    await context.$prestashop.api.updateOneAddress({address, psCookieKey, psCookieValue });
+    const lang = context.$prestashop.config.app.$cookies.get('vsf-locale');
+    await context.$prestashop.api.updateOneAddress({address, psCookieKey, psCookieValue, lang: lang });
     const { data, cookieObject } = await context.$prestashop.api.loadAddresses({ psCookieKey, psCookieValue });
     if (data.code === 200) {
       if (cookieObject) {
@@ -85,7 +88,8 @@ const params: UseUserShippingFactoryParams<Address, AddressItem> = {
     const psCookieKey = context.$prestashop.config.app.$cookies.get(vsfCookieKey);
     const psCookieValue = context.$prestashop.config.app.$cookies.get(vsfCookieValue);
 
-    const { data, cookieObject } = await context.$prestashop.api.loadAddresses({ psCookieKey, psCookieValue });
+    const lang = context.$prestashop.config.app.$cookies.get('vsf-locale');
+    const { data, cookieObject } = await context.$prestashop.api.loadAddresses({ psCookieKey, psCookieValue, lang: lang });
     if (data.code === 200) {
       if (cookieObject) {
         context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
@@ -109,9 +113,10 @@ const params: UseUserShippingFactoryParams<Address, AddressItem> = {
     const psCookieKey = context.$prestashop.config.app.$cookies.get(vsfCookieKey);
     const psCookieValue = context.$prestashop.config.app.$cookies.get(vsfCookieValue);
 
-    await context.$prestashop.api.setAddress({ id, psCookieKey, psCookieValue });
+    const lang = context.$prestashop.config.app.$cookies.get('vsf-locale');
+    await context.$prestashop.api.setAddress({ id, psCookieKey, psCookieValue, lang: lang });
 
-    const { data, cookieObject } = await context.$prestashop.api.loadAddresses({ psCookieKey, psCookieValue });
+    const { data, cookieObject } = await context.$prestashop.api.loadAddresses({ psCookieKey, psCookieValue, lang: lang });
     if (data.code === 200) {
       if (cookieObject) {
         context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
