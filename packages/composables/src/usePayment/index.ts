@@ -24,7 +24,7 @@ export const usePayment = () => {
       const psCookieKey = context.$prestashop.config.app.$cookies.get(vsfCookieKey);
       const psCookieValue = context.$prestashop.config.app.$cookies.get(vsfCookieValue);
 
-      const lang = context.$prestashop.config.app.$cookies.get('vsf-locale');
+      const lang = context.$prestashop.config.app.i18n.locales && context.$prestashop.config.app.i18n.locales.lenght > 1 ? '/' + context.$prestashop.config.app.$cookies.get('vsf-locale') : '';
       const { data, cookieObject } = await context.$prestashop.api.getPaymentMethods({ psCookieKey, psCookieValue, lang: lang });
 
       error.value.boot = null;

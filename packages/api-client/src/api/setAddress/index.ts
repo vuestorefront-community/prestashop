@@ -5,7 +5,7 @@ export default async function setAddress(context, params) {
   const { id } = params;
   // eslint-disable-next-line camelcase
   const body = { id_address: id };
-  const url = new URL(context.config.api.url + '/' + params.lang + '/rest/setaddresscheckout');
+  const url = new URL(context.config.api.url + params.lang + '/rest/setaddresscheckout');
 
   const { data, headers } = await context.client.post(url.href, body, {
     headers: {

@@ -19,7 +19,8 @@ export const useBootstrap = () => {
 
     try {
       loading.value = true;
-      const { data, cookieObject } = await context.$prestashop.api.bootstrap();
+      const lang = context.$prestashop.config.app.i18n.locales && context.$prestashop.config.app.i18n.locales.lenght > 1 ? '/' + context.$prestashop.config.app.$cookies.get('vsf-locale') : '';
+      const { data, cookieObject } = await context.$prestashop.api.bootstrap({ lang: lang });
       error.value.boot = null;
 
       if (data.code === 200) {

@@ -17,7 +17,7 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
 
     const key = context.$prestashop.config.app.$cookies.get(cookieKey);
     const value = context.$prestashop.config.app.$cookies.get(cookieValue);
-    const lang = context.$prestashop.config.app.$cookies.get('vsf-locale');
+    const lang = context.$prestashop.config.app.i18n.locales && context.$prestashop.config.app.i18n.locales.lenght > 1 ? '/' + context.$prestashop.config.app.$cookies.get('vsf-locale') : '';
     if (key && value) {
       const result: any = await context.$prestashop.api.loadCustomer({key, value, lang: lang});
       if (result.code === 410) {
@@ -51,7 +51,7 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
     const psCookieKey = context.$prestashop.config.app.$cookies.get(vsfCookieKey);
     const psCookieValue = context.$prestashop.config.app.$cookies.get(vsfCookieValue);
 
-    const lang = context.$prestashop.config.app.$cookies.get('vsf-locale');
+    const lang = context.$prestashop.config.app.i18n.locales && context.$prestashop.config.app.i18n.locales.lenght > 1 ? '/' + context.$prestashop.config.app.$cookies.get('vsf-locale') : '';
     const { data, cookieObject } = await context.$prestashop.api.updateCustomer({ psCookieKey, psCookieValue, updatedUserData, lang: lang });
     if (data.success) {
       if (cookieObject) {
@@ -78,7 +78,7 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
     const psCookieKey = context.$prestashop.config.app.$cookies.get(vsfCookieKey);
     const psCookieValue = context.$prestashop.config.app.$cookies.get(vsfCookieValue);
 
-    const lang = context.$prestashop.config.app.$cookies.get('vsf-locale');
+    const lang = context.$prestashop.config.app.i18n.locales && context.$prestashop.config.app.i18n.locales.lenght > 1 ? '/' + context.$prestashop.config.app.$cookies.get('vsf-locale') : '';
     const {data, cookieObject} = await context.$prestashop.api.register({email, password, firstName, lastName, psCookieKey, psCookieValue, lang: lang});
 
     const code = data.code;
@@ -110,7 +110,7 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
     const psCookieKey = context.$prestashop.config.app.$cookies.get(vsfCookieKey);
     const psCookieValue = context.$prestashop.config.app.$cookies.get(vsfCookieValue);
 
-    const lang = context.$prestashop.config.app.$cookies.get('vsf-locale');
+    const lang = context.$prestashop.config.app.i18n.locales && context.$prestashop.config.app.i18n.locales.lenght > 1 ? '/' + context.$prestashop.config.app.$cookies.get('vsf-locale') : '';
     const {data, cookieObject} = await context.$prestashop.api.login({username, password, psCookieKey, psCookieValue, lang: lang });
     const code = data.code;
 
@@ -141,7 +141,7 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
     const psCookieKey = context.$prestashop.config.app.$cookies.get(vsfCookieKey);
     const psCookieValue = context.$prestashop.config.app.$cookies.get(vsfCookieValue);
 
-    const lang = context.$prestashop.config.app.$cookies.get('vsf-locale');
+    const lang = context.$prestashop.config.app.i18n.locales && context.$prestashop.config.app.i18n.locales.lenght > 1 ? '/' + context.$prestashop.config.app.$cookies.get('vsf-locale') : '';
     const { data, cookieObject } = await context.$prestashop.api.updateCustomer({ psCookieKey, psCookieValue, updatedUserData, lang: lang });
     if (data.success) {
       if (cookieObject) {
