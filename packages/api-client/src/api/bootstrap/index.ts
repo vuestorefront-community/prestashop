@@ -1,8 +1,8 @@
 import {cookieParser} from '../../helpers/cookieParser';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export default async function bootstrap(context) {
-  const url = new URL(context.config.api.url + '/rest/lightbootstrap');
+export default async function bootstrap(context, params) {
+  const url = new URL(context.config.api.url + params.lang + '/rest/lightbootstrap');
 
   url.searchParams.set('menu_with_images', 'single');
 

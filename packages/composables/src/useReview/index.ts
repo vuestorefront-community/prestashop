@@ -13,7 +13,7 @@ const params: UseReviewFactoryParams<Review, SearchParams, AddParams> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   searchReviews: async (context: Context, params) => {
     const { customQuery, ...searchParams } = params;
-    const lang = context.$prestashop.config.app.$cookies.get('vsf-locale');
+    const lang = context.$prestashop.config.app.i18n.locales && context.$prestashop.config.app.i18n.locales.lenght > 1 ? '/' + context.$prestashop.config.app.$cookies.get('vsf-locale') : '';
     const item = await context.$prestashop.api.getReview({ ...searchParams, lang: lang }, customQuery);
     return item;
   },
@@ -27,7 +27,7 @@ const params: UseReviewFactoryParams<Review, SearchParams, AddParams> = {
 
     const key = context.$prestashop.config.app.$cookies.get(cookieKey);
     const value = context.$prestashop.config.app.$cookies.get(cookieValue);
-    const lang = context.$prestashop.config.app.$cookies.get('vsf-locale');
+    const lang = context.$prestashop.config.app.i18n.locales && context.$prestashop.config.app.i18n.locales.lenght > 1 ? '/' + context.$prestashop.config.app.$cookies.get('vsf-locale') : '';
     const item = await context.$prestashop.api.addReview({ ...AddParams, customQuery, key, value, lang: lang });
     return item;
   }
