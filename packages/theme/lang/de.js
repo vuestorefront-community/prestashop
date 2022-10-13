@@ -84,7 +84,7 @@ export default {
   'Delete': 'Löschen',
   'Add new address': 'Neue Adresse hinzufügen',
   'Add address': 'Add address',
-  "Edit address" : "Edit address",
+  "Edit address": "Edit address",
   'Set up newsletter': 'Richten Sie Ihren Newsletter ein und wir senden Ihnen wöchentlich Informationen zu neuen Produkten und Trends aus den von Ihnen ausgewählten Bereichen',
   'Sections that interest you': 'Abschnitte, die Sie interessieren',
   'Save changes': 'Änderungen speichern',
