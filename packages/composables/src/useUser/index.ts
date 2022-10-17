@@ -95,7 +95,15 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
 
     } else if (code === 306) {
       throw {
-        message: 'Registration failed'
+        message: data.psdata
+      };
+    } else if (code === 304) {
+      throw {
+        message: data.psdata
+      };
+    } else if (code === 308) {
+      throw {
+        message: data.psdata
       };
     }
 
@@ -120,7 +128,7 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
 
     } else if (code === 306) {
       throw {
-        message: 'The provided credentials are invalid'
+        message: data.psdata
       };
     }
 
