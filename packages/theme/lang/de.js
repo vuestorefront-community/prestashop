@@ -147,8 +147,8 @@ export default {
   'Password': 'Passwort',
   'Repeat Password': 'Wiederhole das Passwort',
   'Forgot Password Modal Email': 'E-Mail, mit der Sie sich einloggen:',
-  'forgotPasswordConfirmation': 'Vielen Dank! Wenn ein Konto mit der E-Mail-Adresse {0} registriert ist, finden Sie in Ihrem Posteingang eine Nachricht mit einem Link zum Zurücksetzen des Passworts.',
-  'subscribeToNewsletterModalContent':
+  forgotPasswordConfirmation: 'Vielen Dank! Wenn ein Konto mit der E-Mail-Adresse {0} registriert ist, finden Sie in Ihrem Posteingang eine Nachricht mit einem Link zum Zurücksetzen des Passworts.',
+  subscribeToNewsletterModalContent:
     'Wenn Sie sich für den Newsletter angemeldet haben, erhalten Sie spezielle Angebote und Nachrichten von VSF per E-Mail. Wir werden Ihre E-Mail zu keinem Zeitpunkt verkaufen oder weitergeben. Bitte beachten Sie unsere {0}.',
   'Subscribe': 'Abonnieren',
   'Subscribe to newsletter': 'Newsletter abonnieren',
