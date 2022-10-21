@@ -1,7 +1,6 @@
 /* eslint-disable  */
 
 export default {
-
     'Categories': 'Catégories',
     'Filters': 'Filtres',
     'Sort by': 'Trier par',
@@ -210,5 +209,6 @@ export default {
     'Status': 'Statut',
     'Returns': 'Retour',
     'Total orders': 'Commandes totales',
-    'All Orders': 'Tous les ordres'
+    'All Orders': 'Tous les ordres',
+  'Add to cart': 'Add to cart'
 };

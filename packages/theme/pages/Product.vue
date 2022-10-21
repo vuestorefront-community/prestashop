@@ -82,8 +82,18 @@
               :disabled="loading"
               :canAddToCart="stock > 0"
               class="product__add-to-cart"
-              @click="addingToCart({ product, quantity: parseInt(qty) } )"
-            />
+            >
+              <template #add-to-cart-btn>
+                <SfButton
+                  :disabled="loading"
+                  class="sf-add-to-cart__button"
+                  v-on="$listeners"
+                  @click="addingToCart({ product, quantity: parseInt(qty) } )"
+                >
+                  {{ $t('Add to cart') }}
+                </SfButton>
+              </template>
+            </SfAddToCart>
           </div>
 
           <LazyHydrate when-idle>

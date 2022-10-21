@@ -208,5 +208,6 @@ export default {
   'Status': 'Estado',
   'Returns': 'Devoluciones',
   'Total orders': 'Total de pedidos',
-  'All Orders': 'Todas las órdenes'
+  'All Orders': 'Todas las órdenes',
+  'Add to cart': 'Add to cart'
 };

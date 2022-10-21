@@ -210,5 +210,6 @@ export default {
   'Status': 'Status',
   'Returns': 'Returns',
   'Total orders': 'Total orders',
-  'All Orders': 'All Orders'
+  'All Orders': 'All Orders',
+  'Add to cart': 'Add to cart'
 };
