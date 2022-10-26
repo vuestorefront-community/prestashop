@@ -15,13 +15,13 @@
       :key="index"
       class="nav-item"
       v-e2e="`app-header-url_${category.slug}`"
+      @click="toggleMobileMenu"
     >
       <template #mobile-navigation-item>
         <SfMenuItem
           :label="category.label"
           class="sf-header-navigation-item__menu-item"
           :link="localePath(`/c/${category.slug}`)"
-          @click="toggleMobileMenu"
         />
       </template>
     </SfHeaderNavigationItem>

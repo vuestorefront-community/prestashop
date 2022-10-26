@@ -2,6 +2,7 @@
 export default async function getProduct(context, params) {
   if (params.id) {
     const url = new URL(context.config.api.url + params.lang + '/rest/productdetail');
+    url.searchParams.set('iso_currency', params.currency);
     params.id && url.searchParams.set('product_id', params.id);
     if (params.refresh) {
       params.refresh && url.searchParams.set('refresh', params.refresh);

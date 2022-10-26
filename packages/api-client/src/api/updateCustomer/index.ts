@@ -5,6 +5,7 @@ import { cookieParser } from '../../helpers/cookieParser';
 export default async function updateCustomer(context, params) {
   const { updatedUserData } = params;
   const url = new URL(context.config.api.url + params.lang + '/rest/accountedit');
+  url.searchParams.set('iso_currency', params.currency);
   const { data, headers } = await context.client.post(url.href, updatedUserData, {
     headers: {
       Cookie: params.psCookieKey + '=' + params.psCookieValue + ';'

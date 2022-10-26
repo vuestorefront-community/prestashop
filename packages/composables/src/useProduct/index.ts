@@ -22,8 +22,11 @@ const params: UseProductFactoryParams<Product, SearchParams> = {
       params.variantObj = variantObj;
     }
 
-    params.lang = context.$prestashop.config.app.i18n.locales && context.$prestashop.config.app.i18n.locales.lenght > 1 ? '/' + context.$prestashop.config.app.$cookies.get('vsf-locale') : '';
+    params.lang = context.$prestashop.config.app.i18n.locales && context.$prestashop.config.app.i18n.locales.length > 1 ? '/' + context.$prestashop.config.app.$cookies.get('vsf-locale') : '';
+    params.currency = context.$prestashop.config.app.$cookies.get('vsf-currency');
+
     const data = await context.$prestashop.api.getProduct(params);
+
     return data.psdata;
   }
 };

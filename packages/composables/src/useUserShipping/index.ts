@@ -19,9 +19,12 @@ const params: UseUserShippingFactoryParams<Address, AddressItem> = {
     const psCookieKey = context.$prestashop.config.app.$cookies.get(vsfCookieKey);
     const psCookieValue = context.$prestashop.config.app.$cookies.get(vsfCookieValue);
 
-    const lang = context.$prestashop.config.app.i18n.locales && context.$prestashop.config.app.i18n.locales.lenght > 1 ? '/' + context.$prestashop.config.app.$cookies.get('vsf-locale') : '';
-    await context.$prestashop.api.addNewAddress({address, psCookieKey, psCookieValue, lang: lang });
-    const { data, cookieObject } = await context.$prestashop.api.loadAddresses({ psCookieKey, psCookieValue });
+    const lang = context.$prestashop.config.app.i18n.locales && context.$prestashop.config.app.i18n.locales.length > 1 ? '/' + context.$prestashop.config.app.$cookies.get('vsf-locale') : '';
+    const currency = context.$prestashop.config.app.$cookies.get('vsf-currency');
+
+    await context.$prestashop.api.addNewAddress({address, psCookieKey, psCookieValue, lang: lang, currency: currency });
+
+    const { data, cookieObject } = await context.$prestashop.api.loadAddresses({ psCookieKey, psCookieValue, lang: lang, currency: currency });
     if (data.code === 200) {
       if (cookieObject) {
         context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
@@ -44,9 +47,13 @@ const params: UseUserShippingFactoryParams<Address, AddressItem> = {
     const psCookieKey = context.$prestashop.config.app.$cookies.get(vsfCookieKey);
     const psCookieValue = context.$prestashop.config.app.$cookies.get(vsfCookieValue);
 
-    const lang = context.$prestashop.config.app.i18n.locales && context.$prestashop.config.app.i18n.locales.lenght > 1 ? '/' + context.$prestashop.config.app.$cookies.get('vsf-locale') : '';
-    await context.$prestashop.api.removeAddress({id, psCookieKey, psCookieValue, lang: lang });
-    const { data, cookieObject } = await context.$prestashop.api.loadAddresses({ psCookieKey, psCookieValue });
+    const lang = context.$prestashop.config.app.i18n.locales && context.$prestashop.config.app.i18n.locales.length > 1 ? '/' + context.$prestashop.config.app.$cookies.get('vsf-locale') : '';
+    const currency = context.$prestashop.config.app.$cookies.get('vsf-currency');
+
+    await context.$prestashop.api.removeAddress({id, psCookieKey, psCookieValue, lang: lang, currency: currency });
+
+    const { data, cookieObject } = await context.$prestashop.api.loadAddresses({ psCookieKey, psCookieValue, lang: lang, currency: currency });
+
     if (data.code === 200) {
       if (cookieObject) {
         context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
@@ -67,9 +74,13 @@ const params: UseUserShippingFactoryParams<Address, AddressItem> = {
     const psCookieKey = context.$prestashop.config.app.$cookies.get(vsfCookieKey);
     const psCookieValue = context.$prestashop.config.app.$cookies.get(vsfCookieValue);
 
-    const lang = context.$prestashop.config.app.i18n.locales && context.$prestashop.config.app.i18n.locales.lenght > 1 ? '/' + context.$prestashop.config.app.$cookies.get('vsf-locale') : '';
-    await context.$prestashop.api.updateOneAddress({address, psCookieKey, psCookieValue, lang: lang });
-    const { data, cookieObject } = await context.$prestashop.api.loadAddresses({ psCookieKey, psCookieValue });
+    const lang = context.$prestashop.config.app.i18n.locales && context.$prestashop.config.app.i18n.locales.length > 1 ? '/' + context.$prestashop.config.app.$cookies.get('vsf-locale') : '';
+    const currency = context.$prestashop.config.app.$cookies.get('vsf-currency');
+
+    await context.$prestashop.api.updateOneAddress({address, psCookieKey, psCookieValue, lang: lang, currency: currency });
+
+    const { data, cookieObject } = await context.$prestashop.api.loadAddresses({ psCookieKey, psCookieValue, lang: lang, currency: currency });
+
     if (data.code === 200) {
       if (cookieObject) {
         context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
@@ -88,8 +99,11 @@ const params: UseUserShippingFactoryParams<Address, AddressItem> = {
     const psCookieKey = context.$prestashop.config.app.$cookies.get(vsfCookieKey);
     const psCookieValue = context.$prestashop.config.app.$cookies.get(vsfCookieValue);
 
-    const lang = context.$prestashop.config.app.i18n.locales && context.$prestashop.config.app.i18n.locales.lenght > 1 ? '/' + context.$prestashop.config.app.$cookies.get('vsf-locale') : '';
-    const { data, cookieObject } = await context.$prestashop.api.loadAddresses({ psCookieKey, psCookieValue, lang: lang });
+    const lang = context.$prestashop.config.app.i18n.locales && context.$prestashop.config.app.i18n.locales.length > 1 ? '/' + context.$prestashop.config.app.$cookies.get('vsf-locale') : '';
+    const currency = context.$prestashop.config.app.$cookies.get('vsf-currency');
+
+    const { data, cookieObject } = await context.$prestashop.api.loadAddresses({ psCookieKey, psCookieValue, lang: lang, currency: currency });
+
     if (data.code === 200) {
       if (cookieObject) {
         context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
@@ -113,10 +127,13 @@ const params: UseUserShippingFactoryParams<Address, AddressItem> = {
     const psCookieKey = context.$prestashop.config.app.$cookies.get(vsfCookieKey);
     const psCookieValue = context.$prestashop.config.app.$cookies.get(vsfCookieValue);
 
-    const lang = context.$prestashop.config.app.i18n.locales && context.$prestashop.config.app.i18n.locales.lenght > 1 ? '/' + context.$prestashop.config.app.$cookies.get('vsf-locale') : '';
-    await context.$prestashop.api.setAddress({ id, psCookieKey, psCookieValue, lang: lang });
+    const lang = context.$prestashop.config.app.i18n.locales && context.$prestashop.config.app.i18n.locales.length > 1 ? '/' + context.$prestashop.config.app.$cookies.get('vsf-locale') : '';
+    const currency = context.$prestashop.config.app.$cookies.get('vsf-currency');
 
-    const { data, cookieObject } = await context.$prestashop.api.loadAddresses({ psCookieKey, psCookieValue, lang: lang });
+    await context.$prestashop.api.setAddress({ id, psCookieKey, psCookieValue, lang: lang, currency: currency });
+
+    const { data, cookieObject } = await context.$prestashop.api.loadAddresses({ psCookieKey, psCookieValue, lang: lang, currency: currency });
+
     if (data.code === 200) {
       if (cookieObject) {
         context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);

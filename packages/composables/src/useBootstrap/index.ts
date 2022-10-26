@@ -7,6 +7,7 @@ export const useBootstrap = () => {
 
   const menuItems = sharedRef(null, 'menuItems');
   const languages = sharedRef(null, 'languages');
+  const currencies = sharedRef(null, 'currencies');
 
   const loading = sharedRef(false, 'bootstrap-loading');
 
@@ -19,14 +20,17 @@ export const useBootstrap = () => {
 
     try {
       loading.value = true;
-      const lang = context.$prestashop.config.app.i18n.locales && context.$prestashop.config.app.i18n.locales.lenght > 1 ? '/' + context.$prestashop.config.app.$cookies.get('vsf-locale') : '';
-      const { data, cookieObject } = await context.$prestashop.api.bootstrap({ lang: lang });
+      const lang = context.$prestashop.config.app.i18n.locales && context.$prestashop.config.app.i18n.locales.length > 1 ? '/' + context.$prestashop.config.app.i18n.cookieValues['vsf-locale'] : '';
+      const currency = context.$prestashop.config.app.i18n.cookieValues['vsf-currency'];
+
+      const { data, cookieObject } = await context.$prestashop.api.bootstrap({ lang: lang, currency: currency });
+
       error.value.boot = null;
 
       if (data.code === 200) {
         menuItems.value = data.psdata.menuItems;
         languages.value = data.psdata.languages.languages;
-
+        currencies.value = data.psdata.currencies.currencies;
         const vsfCookieKey = context.$prestashop.config.app.$config.psCustomerCookieKey;
         const vsfCookieValue = context.$prestashop.config.app.$config.psCustomerCookieValue;
 
@@ -50,6 +54,7 @@ export const useBootstrap = () => {
     boot,
     menuItems: menuItems,
     languages: languages,
+    currencies: currencies,
     loading: computed(() => loading.value),
     error: computed(() => error.value)
   };

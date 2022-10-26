@@ -4,6 +4,7 @@ import {cookieParser} from '../../helpers/cookieParser';
 export default async function removeFromCart(context, params) {
   const {psCookieKey, psCookieValue, product} = params;
   const url = new URL(context.config.api.url + params.lang + '/rest/cart');
+  url.searchParams.set('iso_currency', params.currency);
 
   url.searchParams.set('id_product', product.id);
   url.searchParams.set('id_product_attribute', product.productAttributeId);
