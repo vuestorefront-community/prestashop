@@ -55,8 +55,8 @@ function getTotals(cart: Cart): AgnosticTotals {
     let regularPrice = 0;
     let discountPrice = 0;
     for (const item of products) {
-      regularPrice += item.price_without_reduction;
-      discountPrice += item.price;
+      regularPrice += item.price_without_reduction * item.quantity;
+      discountPrice += item.total;
     }
     return {
       total: regularPrice,
