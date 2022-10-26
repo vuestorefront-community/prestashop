@@ -4,7 +4,7 @@ import {cookieParser} from '../../helpers/cookieParser';
 export default async function addToCart(context, params) {
   const {psCookieKey, psCookieValue, product, quantity} = params;
   const url = new URL(context.config.api.url + params.lang + '/rest/cart');
-
+  url.searchParams.set('iso_currency', params.currency);
   url.searchParams.set('id_product', product.id);
   url.searchParams.set('qty', quantity);
   url.searchParams.set('id_product_attribute', product.attributeId);

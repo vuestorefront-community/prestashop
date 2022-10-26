@@ -16,7 +16,6 @@
 <script>
 import { SfButton, SfTopBar } from '@storefront-ui/vue';
 import LocaleSelector from './LocaleSelector';
-import { useBootstrap } from '@vue-storefront/prestashop';
 import { computed } from '@nuxtjs/composition-api';
 
 export default {
@@ -26,18 +25,8 @@ export default {
     LocaleSelector
   },
   setup(props, context) {
-    const {
-      languages: languages
-    } = useBootstrap();
-
-    languages.value.forEach(el => {
-      if (!context.root.$i18n.locales.find(el2 => el2.iso === el.iso_code)) {
-        context.root.$i18n.locales.push({ code: el.iso_code, label: el.name_simple, file: `${el.iso_code}.js`, iso: el.iso_code });
-        context.root.$i18n.localeCodes.push(el.iso_code);
-      }
-    });
     return {
-      isMultiLang: computed(() => context.root.$i18n.locales ? context.root.$i18n.locales.lenght > 1 : false)
+      isMultiLang: computed(() => context.root.$i18n.locales ? context.root.$i18n.locales.length > 1 : false)
     };
   }
 };
