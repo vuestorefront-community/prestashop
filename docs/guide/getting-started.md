@@ -35,7 +35,7 @@ module.exports = {
 ```
 5. Build and Run the project:
 ```sh
-yarn install
+yarn build
 
 yarn dev
 ```
