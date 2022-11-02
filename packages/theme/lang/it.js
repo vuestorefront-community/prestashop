@@ -210,5 +210,5 @@ export default {
   'Returns': 'ritorna',
   'Total orders': 'Ordini totali',
   'All Orders': 'Tutti gli ordini',
-  'Add to cart': 'Add to cart'
+  'Add to cart': 'Aggiungi al carrello'
 };
