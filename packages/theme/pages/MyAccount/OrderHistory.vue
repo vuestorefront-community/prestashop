@@ -1,26 +1,26 @@
 <template>
   <SfTabs :open-tab="1">
-    <SfTab title="My orders">
+    <SfTab :title="$t('My orders')">
       <div v-if="currentOrder">
-        <SfButton class="sf-button--text all-orders" @click="backToAllOrders">All Orders</SfButton>
+        <SfButton class="sf-button--text all-orders" @click="backToAllOrders">{{$t('All Orders')}}</SfButton>
         <div class="highlighted highlighted--total">
           <SfProperty
-            name="Order ID"
+            :name="$t('Order ID')"
             :value="orderGetters.getId(currentOrder)"
             class="sf-property--full-width property"
           />
           <SfProperty
-            name="Date"
+            :name="$t('Date')"
             :value="orderGetters.getDate(currentOrder)"
             class="sf-property--full-width property"
           />
           <SfProperty
-            name="Status"
+            :name="$t('Status')"
             :value="orderGetters.getStatus(currentOrder)"
             class="sf-property--full-width property"
           />
           <SfProperty
-            name="Total"
+            :name="$t('Total')"
             :value="$n(orderGetters.getPrice(currentOrder), 'currency')"
             class="sf-property--full-width property"
           />
@@ -58,16 +58,13 @@
               </SfTableData>
             </SfTableRow>
           </SfTable>
-          <p>Total orders - {{ totalOrders }}</p>
+          <p>{{ $t('Total orders') }} - {{ totalOrders }}</p>
         </div>
       </SfLoader>
     </SfTab>
     <SfTab title="Returns">
       <p class="message">
-        This feature is not implemented yet! Please take a look at
-        <br />
-        <SfLink class="message__link" href="#">https://github.com/DivanteLtd/vue-storefront/issues</SfLink>
-        for our Roadmap!
+        This feature is not implemented yet!
       </p>
     </SfTab>
   </SfTabs>

@@ -18,7 +18,11 @@ export const useCountryList = () => {
 
     try {
       loading.value = true;
-      const { data, cookieObject } = await context.$prestashop.api.getAvailableCountries();
+      const lang = context.$prestashop.config.app.i18n.locales && context.$prestashop.config.app.i18n.locales.length > 1 ? '/' + context.$prestashop.config.app.i18n.cookieValues['vsf-locale'] : '';
+      const currency = context.$prestashop.config.app.i18n.cookieValues['vsf-currency'];
+
+      const { data, cookieObject } = await context.$prestashop.api.getAvailableCountries({ lang: lang, currency: currency });
+
       result.value = data;
       error.value.boot = null;
 

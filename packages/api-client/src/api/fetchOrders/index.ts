@@ -3,8 +3,8 @@ import { cookieParser } from '../../helpers/cookieParser';
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export default async function fetchOrders(context, params) {
   const {psCookieKey, psCookieValue, orderId} = params;
-  const url = new URL(context.config.api.url + '/rest/orderhistory');
-
+  const url = new URL(context.config.api.url + params.lang + '/rest/orderhistory');
+  url.searchParams.set('iso_currency', params.currency);
   if (orderId) {
     url.searchParams.set('id_order', orderId);
   }

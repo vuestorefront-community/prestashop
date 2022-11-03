@@ -33,7 +33,7 @@
 
     <LazyHydrate when-visible>
       <div class="similar-products">
-        <SfHeading title="Featured Products" :level="2"/>
+        <SfHeading :title="$t('Featured Products')" :level="2"/>
         <nuxt-link :to="localePath('/c/women')" class="smartphone-only">
           {{ $t('See all') }}
         </nuxt-link>
@@ -73,9 +73,9 @@
 
     <LazyHydrate when-visible>
       <SfCallToAction
-        title="Subscribe to Newsletters"
+        :title="$t('Subscribe to Newsletters')"
         button-text="Subscribe"
-        description="Be aware of upcoming sales and events. Receive gifts and special offers!"
+        :description="$t('Be aware of upcoming sales and events. Receive gifts and special offers!')"
         :image="addBasePath('/homepage/newsletter.webp')"
         class="call-to-action"
       >

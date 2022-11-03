@@ -13,7 +13,12 @@ const params: UseReviewFactoryParams<Review, SearchParams, AddParams> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   searchReviews: async (context: Context, params) => {
     const { customQuery, ...searchParams } = params;
-    const item = await context.$prestashop.api.getReview(searchParams, customQuery);
+
+    const lang = context.$prestashop.config.app.i18n.locales && context.$prestashop.config.app.i18n.locales.length > 1 ? '/' + context.$prestashop.config.app.$cookies.get('vsf-locale') : '';
+    const currency = context.$prestashop.config.app.$cookies.get('vsf-currency');
+
+    const item = await context.$prestashop.api.getReview({ ...searchParams, lang: lang, currency: currency }, customQuery);
+
     return item;
   },
 
@@ -27,7 +32,11 @@ const params: UseReviewFactoryParams<Review, SearchParams, AddParams> = {
     const key = context.$prestashop.config.app.$cookies.get(cookieKey);
     const value = context.$prestashop.config.app.$cookies.get(cookieValue);
 
-    const item = await context.$prestashop.api.addReview({ ...AddParams, customQuery, key, value });
+    const lang = context.$prestashop.config.app.i18n.locales && context.$prestashop.config.app.i18n.locales.length > 1 ? '/' + context.$prestashop.config.app.$cookies.get('vsf-locale') : '';
+    const currency = context.$prestashop.config.app.$cookies.get('vsf-currency');
+
+    const item = await context.$prestashop.api.addReview({ ...AddParams, customQuery, key, value, lang: lang, currency: currency });
+
     return item;
   }
 };

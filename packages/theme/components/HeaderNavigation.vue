@@ -10,21 +10,21 @@
     />
   </div>
   <SfModal v-else :visible="isMobileMenuOpen">
-    <SfHeaderNavigationItem
-      v-for="(category, index) in categories"
-      :key="index"
-      class="nav-item"
-      v-e2e="`app-header-url_${category.slug}`"
-    >
-      <template #mobile-navigation-item>
+    <SfList>
+      <SfListItem
+        v-for="category in categories"
+        :key="category.label"
+        class="nav-item sf-header-navigation-item"
+        v-e2e="`app-header-url_${category.slug}`"
+      >
         <SfMenuItem
           :label="category.label"
           class="sf-header-navigation-item__menu-item"
           :link="localePath(`/c/${category.slug}`)"
-          @click="toggleMobileMenu"
+          @click.native="toggleMobileMenu"
         />
-      </template>
-    </SfHeaderNavigationItem>
+      </SfListItem>
+    </SfList>
   </SfModal>
 </template>
 
@@ -76,5 +76,9 @@ export default {
   ::v-deep &__content {
     padding: var(--modal-content-padding, var(--spacer-base) 0);
   }
+}
+
+.sf-menu-item{
+  width: 100%;
 }
 </style>
