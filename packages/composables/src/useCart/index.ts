@@ -20,7 +20,6 @@ const params: UseCartFactoryParams<Cart, CartItem, PsProduct> = {
 
     const lang = context.$prestashop.config.app.i18n.locales && context.$prestashop.config.app.i18n.locales.length > 1 ? '/' + context.$prestashop.config.app.$cookies.get('vsf-locale') : '';
     const currency = context.$prestashop.config.app.$cookies.get('vsf-currency');
-    console.log(lang, currency);
     const { data, cookieObject } = await context.$prestashop.api.getCartItems({ psCookieKey, psCookieValue, lang: lang, currency: currency });
 
     if (cookieObject) {
