@@ -99,8 +99,7 @@ export default {
       { name: 'USD', label: 'Dollar' }
     ],
     locales: [
-      { code: 'en', label: 'English', file: 'en.js', iso: 'en' },
-      { code: 'de', label: 'German', file: 'de.js', iso: 'de' }
+      { code: 'en', label: 'English', file: 'en.js', iso: 'en' }
     ],
     defaultLocale: 'en',
     lazy: true,
