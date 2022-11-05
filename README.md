@@ -36,7 +36,7 @@ Want to contribute? Ping us on `prestashop` channel on [our Discord](https://dis
 
 ## Support
 
-If you have any questions about this integration we will be happy to answer them on `prestashop` channel on [our Discord](discord.vuestorefront.io).
+If you have any questions about this integration we will be happy to answer them on `prestashop` channel on [our Discord](https://discord.vuestorefront.io).
 
 ## Contributors ✨
 
