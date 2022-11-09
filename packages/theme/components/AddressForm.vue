@@ -207,6 +207,7 @@ import { computed, ref, watch } from '@nuxtjs/composition-api';
 import { useUserShipping, useCountryList, countryGetters } from '@vue-storefront/prestashop';
 import { required, min, digits } from 'vee-validate/dist/rules';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
+import { onSSR } from '@vue-storefront/core';
 
 extend('required', {
   ...required,
@@ -329,14 +330,14 @@ export default {
       }
       toggleAddNewAddress();
     };
-    const countriesLoading = async () => {
+
+    onSSR(async () => {
       await loadCountries();
-      // eslint-disable-next-line camelcase
       if (props.addressForEdit.id_country) {
         selectedCountry.value = props.addressForEdit.id_country;
       }
-    };
-    countriesLoading();
+    });
+
     return {
       loading,
       loadingCountries,
