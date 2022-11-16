@@ -52,16 +52,16 @@ function getItemSku(item: CartItem): string {
 function getTotals(cart: Cart): AgnosticTotals {
   if (cart) {
     const products = cart.psdata.products;
-    let regularPrice = 0;
+    // let regularPrice = 0;
     let discountPrice = 0;
     for (const item of products) {
-      regularPrice += item.price_without_reduction * item.quantity;
+      // regularPrice += item.price_without_reduction * item.quantity;
       discountPrice += item.total;
     }
     return {
-      total: regularPrice,
-      subtotal: regularPrice,
-      special: discountPrice
+      total: discountPrice,
+      subtotal: discountPrice,
+      special: 0
     };
   } else {
     return {subtotal: 0, total: 0};
