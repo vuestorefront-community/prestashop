@@ -6,7 +6,7 @@ const populateShippingProvidersList = (shippingProviders) => {
     const provider = shippingsArr[id];
     const features = {
       id: provider.id,
-      label: provider.name,
+      label: provider.label,
       value: provider.id + ',',
       description: provider.delay
     };

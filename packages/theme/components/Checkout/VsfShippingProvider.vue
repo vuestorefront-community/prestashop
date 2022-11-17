@@ -8,19 +8,11 @@
       :key="method.value"
       :label="method.label"
       :value="method.value"
-      :description="method.description"
       :selected ="selectedMethod"
       name="shippingMethod"
       class="form__radio shipping"
       @input="selectMethod(method.value)"
     >
-      <div class="shipping__label">
-        {{ method.label }}
-      </div>
-
-      <div class="shipping__description">
-        {{ method.description }}
-      </div>
     </SfRadio>
       </div>
     </SfLoader>
