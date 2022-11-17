@@ -51,17 +51,10 @@ function getItemSku(item: CartItem): string {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getTotals(cart: Cart): AgnosticTotals {
   if (cart) {
-    const products = cart.psdata.products;
-    // let regularPrice = 0;
-    let discountPrice = 0;
-    for (const item of products) {
-      // regularPrice += item.price_without_reduction * item.quantity;
-      discountPrice += item.total;
-    }
     return {
-      total: discountPrice,
-      subtotal: discountPrice,
-      special: 0
+      total: cart.psdata.totals.total.amount,
+      subtotal: cart.psdata.subtotals.products.amount,
+      special: cart.psdata.subtotals.products.amount
     };
   } else {
     return {subtotal: 0, total: 0};
@@ -70,7 +63,11 @@ function getTotals(cart: Cart): AgnosticTotals {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getShippingPrice(cart: Cart): number {
-  return 0;
+  if (cart) {
+    return cart.psdata.subtotals.shipping.amount;
+  } else {
+    return 0;
+  }
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
