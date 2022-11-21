@@ -36,7 +36,7 @@ const params: UseShippingProviderParams<ShippingProvider, ShippingMethod> = {
     const lang = context.$prestashop.config.app.i18n.locales && context.$prestashop.config.app.i18n.locales.length > 1 ? '/' + context.$prestashop.config.app.$cookies.get('vsf-locale') : '';
     const currency = context.$prestashop.config.app.$cookies.get('vsf-currency');
 
-    await context.$prestashop.api.setShippingMethod({ ...params, psCookieKey, psCookieValue, lang: lang, currency: currency });
+    await context.$prestashop.api.setShippingMethod({ ...params.customQuery, psCookieKey, psCookieValue, lang: lang, currency: currency });
 
     const { data, cookieObject } = await context.$prestashop.api.getShippingMethods({ psCookieKey, psCookieValue, lang: lang, currency: currency });
     if (data.code === 200) {

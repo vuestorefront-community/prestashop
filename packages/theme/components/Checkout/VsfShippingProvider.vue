@@ -58,7 +58,7 @@ export default {
       selectedMethod.value = method;
     };
     const goToPayment = async () => {
-      await save({shippingMethodId: selectedMethod.value, addressId: props.selectedAddress });
+      await save({ customQuery: { shippingMethodId: selectedMethod.value, addressId: props.selectedAddress }});
       context.root.$router.push({ path: 'payment' });
     };
     const shippingProvidersList = computed(()=> state.value ? shippingProviderGetters.getShippingProvidersList(state.value) : []);
