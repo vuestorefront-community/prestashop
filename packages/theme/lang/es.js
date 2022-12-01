@@ -209,5 +209,6 @@ export default {
   'Returns': 'Devoluciones',
   'Total orders': 'Total de pedidos',
   'All Orders': 'Todas las órdenes',
-  'Add to cart': 'Añadir al Carrito'
+  'Add to cart': 'Añadir al Carrito',
+  'Shipping cost': 'Shipping cost'
 };

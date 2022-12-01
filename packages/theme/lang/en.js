@@ -211,5 +211,6 @@ export default {
   'Returns': 'Returns',
   'Total orders': 'Total orders',
   'All Orders': 'All Orders',
-  'Add to cart': 'Add to cart'
+  'Add to cart': 'Add to cart',
+  'Shipping cost': 'Shipping cost'
 };
