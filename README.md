@@ -39,7 +39,8 @@ Want to contribute? Ping us on `prestashop` channel on [our Discord](https://dis
 
 ## Resources
 
-- [Vue Storeftont Tutorial](https://www.binshops.com/tutorial/vue-storefront-tutorial) If you are new to Vue Storefront, you can check this tutorial.
+- [Vue Storefront Tutorial](https://www.binshops.com/tutorial/vue-storefront-tutorial) If you are new to Vue Storefront, you can check this tutorial.
+- [How to contribute to open-source projects Tutorial](https://www.binshops.com/tutorial/learn-how-to-contribute-to-open-source-and-github-projects-tutorial)
 - [Vue Storefront Documentation](https://docs.vuestorefront.io/v2/)
 - [PrestaShop integration Documentation](https://docs.vuestorefront.io/prestashop)
 - [Community Chat](https://discord.vuestorefront.io)
