@@ -88,6 +88,7 @@ module.exports = {
         children: [
           ['/guide/releases/v1.0.0', 'v1.0.0'],
           ['/guide/releases/v1.1.0', 'v1.1.0'],
+          ['/guide/releases/v1.1.1', 'v1.1.1'],
         ]
       }
     ]
