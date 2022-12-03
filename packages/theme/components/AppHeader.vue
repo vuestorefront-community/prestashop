@@ -14,7 +14,7 @@
       <template #navigation>
         <HeaderNavigation :isMobile="isMobile" />
       </template>
-      <template #aside>
+      <template #aside v-if='isMultiLang'>
         <LocaleSelector class="smartphone-only" />
       </template>
       <template #header-icons>
@@ -229,7 +229,8 @@ export default {
       isMobile,
       isMobileMenuOpen,
       removeSearchResults,
-      addBasePath
+      addBasePath,
+      isMultiLang: computed(() => root.$i18n.locales ? root.$i18n.locales.length > 1 : false)
     };
   }
 };
