@@ -3948,6 +3948,16 @@
     lodash-es "^4.17.15"
     vue "^2.6.11"
 
+"@vue-storefront/core@~2.7.2":
+  version "2.7.4"
+  resolved "https://registry.yarnpkg.com/@vue-storefront/core/-/core-2.7.4.tgz#a50aa693e61e976265ab4457ce63036ac48f3121"
+  integrity sha512-ZhyfJ0ynuh69okymWaEZDew7b2+HLeW5MPUgKJbKH3eNFyZFB40qkP0gV1knqPBkdo2SmSUPxgZl6M3o6fb1kA==
+  dependencies:
+    axios "0.22.0"
+    express "^4.17.1"
+    lodash-es "^4.17.15"
+    vue "^2.6.11"
+
 "@vue-storefront/middleware@~2.5.4":
   version "2.5.4"
   resolved "https://registry.yarnpkg.com/@vue-storefront/middleware/-/middleware-2.5.4.tgz#d4a953d7aa88f65ca2710c235370a14d1ba57a50"
@@ -4746,6 +4756,13 @@ axios@0.21.1:
   integrity sha512-dKQiRHxGD9PPRIUNIWvZhPTPpl1rf/OxTYKsqKUDjBwYylTvV7SjSHJb9ratfyzM6wCdLCOYLzs73qpg5c4iGA==
   dependencies:
     follow-redirects "^1.10.0"
+
+axios@0.22.0:
+  version "0.22.0"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-0.22.0.tgz#bf702c41fb50fbca4539589d839a077117b79b25"
+  integrity sha512-Z0U3uhqQeg1oNcihswf4ZD57O3NrR1+ZXhxaROaWpDmsDTx7T2HNBV2ulBtie2hwJptu8UvgnJoK+BIqdzh/1w==
+  dependencies:
+    follow-redirects "^1.14.4"
 
 axios@^0.23.0:
   version "0.23.0"
