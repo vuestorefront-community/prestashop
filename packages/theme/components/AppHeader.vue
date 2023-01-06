@@ -1,8 +1,7 @@
 <template>
   <div>
     <SfHeader
-      class="sf-header--has-mobile-search"
-      :class="{'header-on-top': isSearchOpen}"
+      class="sf-header--has-mobile-search header-on-top"
       :isNavVisible="isMobileMenuOpen"
     >
       <!-- TODO: add mobile view buttons after SFUI team PR -->
@@ -164,10 +163,6 @@ export default {
     };
 
     const closeSearch = () => {
-      const wishlistClassName = 'sf-product-card__wishlist-icon';
-      const isWishlistIconClicked = event.path.find(p => wishlistClassName.search(p.className) > 0);
-      if (isWishlistIconClicked || !isSearchOpen.value) return;
-
       term.value = '';
       isSearchOpen.value = false;
     };
