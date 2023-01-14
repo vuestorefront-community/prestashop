@@ -60,26 +60,50 @@
     </SfHeaderNavigationItem>
   </div>
   <SfModal v-else :visible="isMobileMenuOpen">
-    <SfList>
-      <SfListItem
-        v-for="category in categories"
-        :key="category.label"
-        class="nav-item sf-header-navigation-item"
-        v-e2e="`app-header-url_${category.slug}`"
+    <SfAccordion
+      v-e2e="'categories-accordion'"
+      :show-chevron="true"
+    >
+      <AccordionItem
+        v-for="(cat, i) in categories"
+        :key="i"
+        :hasItems="cat.children.length"
       >
-        <SfMenuItem
-          :label="category.label"
-          class="sf-header-navigation-item__menu-item"
-          :link="localePath(`/c/${category.slug}`)"
-          @click.native="toggleMobileMenu"
-        />
-      </SfListItem>
-    </SfList>
+        <template #title>
+          <nuxt-link
+            :to="localePath(`/c/${cat.slug}`)"
+            @click.native="toggleMobileMenu"
+          >
+            {{ cat.label }}
+          </nuxt-link>
+        </template>
+
+        <template #default>
+          <SfList class="list">
+            <SfListItem
+              class="list__item"
+              v-for="(subCat, j) in cat.children"
+              :key="j"
+            >
+              <nuxt-link
+                :to="localePath(`/c/${subCat.slug}`)"
+                :class="subCat.isCurrent ? 'sidebar--cat-selected' : ''"
+                @click.native="toggleMobileMenu">
+              <SfMenuItem
+                :count="subCat.count || ''"
+                :label="subCat.label"
+              />
+              </nuxt-link>
+            </SfListItem>
+          </SfList>
+        </template>
+      </AccordionItem>
+    </SfAccordion>
   </SfModal>
 </template>
 
 <script>
-import { SfMenuItem, SfModal, SfMegaMenu } from '@storefront-ui/vue';
+import { SfMenuItem, SfModal, SfMegaMenu, SfAccordion, SfList } from '@storefront-ui/vue';
 
 import { useUiState } from '~/composables';
 import {
@@ -87,13 +111,17 @@ import {
 } from '@vue-storefront/prestashop';
 import { computed } from '@nuxtjs/composition-api';
 import { addBasePath } from '@vue-storefront/core';
+import AccordionItem from '~/components/AccordionItem';
 
 export default {
   name: 'HeaderNavigation',
   components: {
+    SfList,
     SfMenuItem,
     SfModal,
-    SfMegaMenu
+    SfMegaMenu,
+    SfAccordion,
+    AccordionItem
   },
   props: {
     isMobile: {
