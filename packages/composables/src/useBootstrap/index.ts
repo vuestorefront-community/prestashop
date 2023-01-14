@@ -11,6 +11,8 @@ export const useBootstrap = () => {
 
   const loading = sharedRef(false, 'bootstrap-loading');
 
+  const menuMouseStatus = sharedRef(false, 'bootstrap-menuMouseStatus');
+
   const error = sharedRef({
     search: null
   }, 'bootstrap-error');
@@ -31,6 +33,10 @@ export const useBootstrap = () => {
         menuItems.value = data.psdata.menuItems;
         languages.value = data.psdata.languages.languages;
         currencies.value = data.psdata.currencies.currencies;
+        const dataModel = {};
+        menuItems.value.forEach(el => dataModel[el.label] = false);
+        menuMouseStatus.value = dataModel;
+
         const vsfCookieKey = context.$prestashop.config.app.$config.psCustomerCookieKey;
         const vsfCookieValue = context.$prestashop.config.app.$config.psCustomerCookieValue;
 
@@ -52,6 +58,7 @@ export const useBootstrap = () => {
   };
   return {
     boot,
+    menuMouseStatus,
     menuItems: menuItems,
     languages: languages,
     currencies: currencies,

@@ -12,16 +12,15 @@
     >
       <SfMegaMenu
         :visible="menuMouseStatus[category.label]"
-        :title="$t('Search results')"
-        class="search"
+        class="menu"
         isAbsolute
       >
         <transition name="sf-fade" mode="out-in">
-          <div v-if="category.children && category.children.length > 0" class="search__wrapper-results" key="results">
-            <SfMegaMenuColumn :title="$t('Product suggestions')" class="sf-mega-menu-column--pined-content-on-mobile search__results">
+          <div v-if="category.children && category.children.length > 0" class="menu__wrapper-items" key="items">
+            <SfMegaMenuColumn :title="$t('Product suggestions')" class="sf-mega-menu-column--pined-content-on-mobile menu__items">
               <template #title="{title}">
-                <SfScrollable class="results--desktop desktop-only" show-text="" hide-text="">
-                  <div class="results-listing container">
+                <SfScrollable class="items--desktop desktop-only" show-text="" hide-text="">
+                  <div class="items-listing container">
                     <div v-for="(firstChildren, index) in category.children"
                          :key="index"
                     >
@@ -29,7 +28,7 @@
                       :label="firstChildren.label"
                       :link="localePath(`/c/${category.slug}/${firstChildren.slug}`)"
                     />
-                      <div v-if='firstChildren.children && firstChildren.children.length > 0' class="results-listing">
+                      <div v-if='firstChildren.children && firstChildren.children.length > 0' class="items-listing">
                         <div v-for="(secondChildren, secondIndex) in firstChildren.children"
                              :key="secondIndex"
                         >
@@ -37,7 +36,7 @@
                           :label="secondChildren.label"
                           :link="localePath(`/c/${category.slug}/${firstChildren.slug}/${secondChildren.slug}`)"
                         />
-                          <div v-if='secondChildren.children && secondChildren.children.length > 0' class="results-listing">
+                          <div v-if='secondChildren.children && secondChildren.children.length > 0' class="items-listing">
                             <SfMenuItem
                               v-for="(thirdChildren, thirdIndex) in secondChildren.children"
                               :key="thirdIndex"
@@ -51,36 +50,6 @@
                   </div>
                 </SfScrollable>
               </template>
-              <SfScrollable class="results--desktop desktop-only" show-text="" hide-text="">
-                <div class="results-listing">
-                  <SfProductCard
-                    v-for="(product, index) in products"
-                    :key="index"
-                    class="result-card"
-                    :regular-price="$n(productGetters.getPrice(product).regular, 'currency')"
-                    :score-rating="productGetters.getAverageRating(product)"
-                    :reviews-count="7"
-                    :image="addBasePath(productGetters.getCoverImage(product))"
-                    :alt="productGetters.getName(product)"
-                    :title="productGetters.getName(product)"
-                    :link="`/p/${productGetters.getId(product)}/${productGetters.getSlug(product)}`"
-                  />
-                </div>
-              </SfScrollable>
-              <div class="results--mobile smartphone-only">
-                <SfProductCard
-                  v-for="(product, index) in products"
-                  :key="index"
-                  class="result-card"
-                  :regular-price="$n(productGetters.getPrice(product).regular, 'currency')"
-                  :score-rating="productGetters.getAverageRating(product)"
-                  :reviews-count="7"
-                  :image="addBasePath(productGetters.getCoverImage(product))"
-                  :alt="productGetters.getName(product)"
-                  :title="productGetters.getName(product)"
-                  :link="`/p/${productGetters.getId(product)}/${productGetters.getSlug(product)}`"
-                />
-              </div>
             </SfMegaMenuColumn>
             <div class="action-buttons smartphone-only">
               <SfButton class="action-buttons__button color-light" @click="$emit('close')">{{ $t('Cancel') }}</SfButton>
@@ -186,7 +155,7 @@ export default {
 .sf-menu-item{
   width: 100%;
 }
-.search {
+.menu {
   position: absolute;
   right: 0;
   left: 0;
@@ -197,7 +166,7 @@ export default {
   @include for-desktop {
     --mega-menu-content-padding: var(--spacer-xl) 0;
   }
-  &__wrapper-results {
+  &__wrapper-items {
     display: flex;
     flex-direction: column;
     @include for-desktop {
@@ -208,7 +177,7 @@ export default {
   &__categories {
     flex: 0 0 220px;
   }
-  &__results {
+  &__items {
     flex: 1
   }
   &__header {
@@ -224,7 +193,7 @@ export default {
     }
   }
 }
-.results {
+.items {
   &--desktop {
     --scrollable-max-height: 35vh;
   }
@@ -248,7 +217,7 @@ export default {
     width: calc(100% - 32px);
   }
 }
-.results-listing {
+.items-listing {
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
@@ -257,14 +226,14 @@ export default {
     margin-left: calc( var(--spacer-2xl) + 50px );
   }
 }
-.result-card {
+.item-card {
   margin: var(--spacer-sm) 0;
   @include for-desktop {
     margin: var(--spacer-2xs) 0;
   }
 }
 
-.before-results {
+.before-items {
   box-sizing: border-box;
   padding: var(--spacer-base) var(--spacer-sm) var(--spacer-2xl);
   width: 100%;
