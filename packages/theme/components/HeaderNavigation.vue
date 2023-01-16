@@ -103,7 +103,7 @@
 </template>
 
 <script>
-import { SfMenuItem, SfModal, SfMegaMenu, SfAccordion, SfList } from '@storefront-ui/vue';
+import { SfMenuItem, SfModal, SfMegaMenu, SfAccordion, SfList, SfScrollable, SfButton } from '@storefront-ui/vue';
 
 import { useUiState } from '~/composables';
 import {
@@ -121,7 +121,9 @@ export default {
     SfModal,
     SfMegaMenu,
     SfAccordion,
-    AccordionItem
+    AccordionItem,
+    SfScrollable,
+    SfButton
   },
   props: {
     isMobile: {
