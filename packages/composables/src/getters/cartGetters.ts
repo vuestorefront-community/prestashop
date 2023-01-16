@@ -8,6 +8,10 @@ import {
 import type { Cart, CartItem } from '@vue-storefront/prestashop-api';
 import { populateCartItems } from '../helpers';
 
+interface ExtendedCartGetters extends CartGetters<Cart, CartItem> {
+  getErrors: (cart: Cart) => any
+}
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getItems (cart: Cart): CartItem[] {
   return populateCartItems(cart.psdata.products);
@@ -98,7 +102,15 @@ function getDiscounts(cart: Cart): AgnosticDiscount[] {
   return [];
 }
 
-export const cartGetters: CartGetters<Cart, CartItem> = {
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+function getErrors(cart: Cart) {
+  if (cart) {
+    console.log(cart.psdata.errors);
+    return cart.psdata.errors;
+  }
+}
+
+export const cartGetters: ExtendedCartGetters = {
   getTotals,
   getShippingPrice,
   getItems,
@@ -111,5 +123,6 @@ export const cartGetters: CartGetters<Cart, CartItem> = {
   getFormattedPrice,
   getTotalItems,
   getCoupons,
-  getDiscounts
+  getDiscounts,
+  getErrors
 };
