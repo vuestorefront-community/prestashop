@@ -61,8 +61,9 @@ module.exports = {
         children: [
           ['/', 'Introduction'],
           ['/guide/getting-started', 'Getting started'],
+          ['/guide/internationalization', 'Internationalization'],
           ['/guide/payment-options', 'Payment Basics'],
-          ['/guide/multi-language', 'Multi Language'],
+          ['/guide/supported-features', 'Supported Features'],
           ['/guide/about', 'About'],
         ]
       },
