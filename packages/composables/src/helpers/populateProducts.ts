@@ -29,6 +29,7 @@ const populateProducts = (psProducts: Array<any>) => {
       ),
     attributes: product.attributes,
     groups: product.groups,
+    quantity: product.quantity,
     description: product.description,
     shortDescription: product.description_short,
     brand: product.manufacturer_name,
