@@ -47,6 +47,7 @@ export type PsProduct = {
     coverImageMedium: string;
     coverImageLarge: string;
     images: AgnosticMediaGalleryItem[];
+    quantity: number;
     description: any;
     shortDescription: any;
     brand: string;

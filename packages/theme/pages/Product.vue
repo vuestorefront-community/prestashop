@@ -85,7 +85,7 @@
             >
               <template #add-to-cart-btn>
                 <SfButton
-                  :disabled="loading"
+                  :disabled="loading || quantity <= 0"
                   class="sf-add-to-cart__button"
                   v-on="$listeners"
                   @click="addingToCart({ product, quantity: parseInt(qty) } )"
@@ -269,6 +269,9 @@ export default {
     const reviews = computed(() =>
       reviewGetters.getItems(productReviews.value.psdata)
     );
+    const quantity = computed(() =>
+      productGetters.getQuantity(product.value)
+    );
     const selectedAttribute = (optionKey) => {
       const option = options.value[Number(optionKey)];
       const attrs = option.attributes;
@@ -358,7 +361,8 @@ export default {
       productGetters,
       productGallery,
       isAuthenticated,
-      goNext
+      goNext,
+      quantity
     };
   },
   methods: {
