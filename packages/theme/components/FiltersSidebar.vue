@@ -90,7 +90,7 @@ import {
   SfColor
 } from '@storefront-ui/vue';
 
-import { ref, computed, onMounted } from '@nuxtjs/composition-api';
+import { ref, computed, onMounted, watch } from '@nuxtjs/composition-api';
 import { useFacet, facetGetters } from '@vue-storefront/prestashop';
 import { useUiHelpers, useUiState } from '~/composables';
 import Vue from 'vue';
@@ -108,7 +108,7 @@ export default {
   setup(props, context) {
     const { changeFilters, isFacetColor } = useUiHelpers();
     const { toggleFilterSidebar, isFilterSidebarOpen } = useUiState();
-    const { result } = useFacet();
+    const { result, loading: facetLoading } = useFacet();
 
     const facets = computed(() => facetGetters.getGrouped(result.value, ['color', 'size']));
     const selectedFilters = ref({});
@@ -151,7 +151,11 @@ export default {
 
     onMounted(() => {
       context.root.$scrollTo(context.root.$el, 2000);
-      setSelectedFilters();
+      watch(facetLoading, (value) => {
+        if (value === false) {
+          setSelectedFilters();
+        }
+      }, { immediate: true });
     });
 
     return {
