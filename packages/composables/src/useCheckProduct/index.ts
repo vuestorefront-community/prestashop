@@ -12,7 +12,7 @@ export const useCheckProduct = () => {
     search: null
   });
 
-  const check = async (productId, attrId, qty) => {
+  const check = async (productId, groupId, attrId, qty) => {
     Logger.debug('checkProduct');
 
     try {
@@ -20,15 +20,18 @@ export const useCheckProduct = () => {
       const lang = context.$prestashop.config.app.i18n.locales && context.$prestashop.config.app.i18n.locales.length > 1 ? '/' + context.$prestashop.config.app.$cookies.get('vsf-locale') : '';
       const currency = context.$prestashop.config.app.$cookies.get('vsf-currency');
 
-      const { data } = await context.$prestashop.api.getProduct(
+      const data = await context.$prestashop.api.getProduct(
         { lang: lang,
           currency: currency,
           id: productId,
+          groupId: groupId,
           refresh: true,
           checkProduct: true,
           qty: qty,
           attrId: attrId }
       );
+
+      product.value = data.psdata;
 
       if (data.code === 200) {
 
