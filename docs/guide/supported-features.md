@@ -7,6 +7,7 @@
 | Product description     | ✅      |              |
 | Product combinations (Attributes) | ✅      |              |
 | Product features     | ✅      |              |
+| Checking product availability     | ✅      |              |
 | List comments        | ✅      | Native comment module | 
 | Add a comment        | ✅      | Native comment module |
 | Product customization        | ❌       |
