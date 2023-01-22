@@ -393,7 +393,7 @@ export default {
       });
     },
     async handleSpinUpDown(event) {
-      if (!this.selectedGroupId || this.selectedAttrId) {
+      if (!this.selectedGroupId || !this.selectedAttrId) {
         const defaultGroupId = Object.keys(this.product.groups)[0];
         const defaultAttr = this.product.groups[defaultGroupId].default;
 
