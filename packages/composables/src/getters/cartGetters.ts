@@ -106,7 +106,7 @@ function getDiscounts(cart: Cart): AgnosticDiscount[] {
 function getErrors(cart: Cart) {
   if (cart) {
     console.log(cart.psdata.errors);
-    return cart.psdata.errors;
+    return cart.psdata.errors || [];
   }
 }
 
