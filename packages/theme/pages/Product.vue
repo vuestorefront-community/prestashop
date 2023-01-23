@@ -82,10 +82,12 @@
               :disabled="loading"
               :canAddToCart="stock > 0"
               class="product__add-to-cart"
+              @input="handleSpinUpDown($event)"
             >
               <template #add-to-cart-btn>
                 <SfButton
-                  :disabled="loading || quantity <= 0"
+                  :disabled="loading"
+                  :disabled="loading || quantity <= 0 || disableAddToCart"
                   class="sf-add-to-cart__button"
                   v-on="$listeners"
                   @click="addingToCart({ product, quantity: parseInt(qty) } )"
@@ -94,6 +96,10 @@
                 </SfButton>
               </template>
             </SfAddToCart>
+
+            <div v-if="disableAddToCart" class="product-message">
+              {{productMessage}}
+            </div>
           </div>
 
           <LazyHydrate when-idle>
@@ -222,7 +228,8 @@ import {
   productGetters,
   useReview,
   useUser,
-  reviewGetters
+  reviewGetters,
+  useCheckProduct
 } from '@vue-storefront/prestashop';
 import { onSSR } from '@vue-storefront/core';
 import LazyHydrate from 'vue-lazy-hydration';
@@ -240,6 +247,7 @@ export default {
     const qty = ref(1);
     const { id } = context.root.$route.params;
     const { products, search, loading: productLoading } = useProduct('products');
+    const { product: checkedProduct, check: checkProduct } = useCheckProduct();
     const {
       products: featureProducts,
       search: searchRelatedProducts,
@@ -252,6 +260,11 @@ export default {
     const { send: sendNotification } = useUiNotification();
     // const pagination = computed(() => facetGetters.getPagination(result.value));
     const { isAuthenticated } = useUser();
+
+    const selectedAttrId = ref(false);
+    const selectedGroupId = ref(false);
+    const disableAddToCart = ref(false);
+    const productMessage = ref(false);
 
     const product = computed(
       () =>
@@ -277,6 +290,8 @@ export default {
       const attrs = option.attributes;
       for (const key in attrs) {
         if (attrs[key].selected) {
+          selectedAttrId.value = key;
+          selectedGroupId.value = optionKey;
           return `${optionKey}-${key}-${attrs[key].name.replace(/[\s&/#,+()$~%.':*?<>{}]/g, '_')}`;
         }
       }
@@ -361,8 +376,7 @@ export default {
       productGetters,
       productGallery,
       isAuthenticated,
-      goNext,
-      quantity
+      goNext
     };
   },
   methods: {
@@ -377,6 +391,27 @@ export default {
         });
         this.qty = 1;
       });
+    },
+    async handleSpinUpDown(event) {
+      if (!this.selectedGroupId || !this.selectedAttrId) {
+        if (this.product.groups.length === 0) {
+          await this.checkProduct(this.product.id, 0, 0, event);
+        } else {
+          const defaultGroupId = Object.keys(this.product.groups)[0];
+          const defaultAttr = this.product.groups[defaultGroupId].default;
+
+          await this.checkProduct(this.product.id, defaultGroupId, defaultAttr, event);
+        }
+      } else {
+        await this.checkProduct(this.product.id, this.selectedGroupId, this.selectedAttrId, event);
+      }
+
+      if (this.checkedProduct.availability === 'unavailable') {
+        this.disableAddToCart = true;
+        this.productMessage = this.checkedProduct.availability_message;
+      } else {
+        this.disableAddToCart = false;
+      }
     }
   },
   components: {
@@ -603,5 +638,13 @@ export default {
   100% {
     transform: translate3d(0, 0, 0);
   }
+}
+
+.product-message{
+  margin-top: 2rem;
+  padding: 10px;
+  background-color: #ebcccc;
+  color: #a94442;
+  border-radius: 2px;
 }
 </style>

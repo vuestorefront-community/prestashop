@@ -19,6 +19,7 @@ export { useWishlist } from './useWishlist';
 export { useBootstrap } from './useBootstrap';
 export { useCountryList } from './useCountryList';
 export { usePayment } from './usePayment';
+export { useCheckProduct } from './useCheckProduct';
 
 // Getters
 export { cartGetters } from './getters/cartGetters';

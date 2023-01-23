@@ -90,7 +90,7 @@
                 />
               </template>
             </SfProperty>
-            <nuxt-link :to="isAuthenticated ? localePath({ name: 'shipping' }) : localePath({ name: 'user-account' })">
+            <nuxt-link :to="isAuthenticated ? localePath({ name: 'shipping' }) : localePath({ name: 'user-account' })" :class="{ disabled: errors.length > 0 }">
               <SfButton
                 class="sf-button--full-width color-secondary"
                 @click="toggleCartSidebar"
@@ -279,5 +279,9 @@ export default {
   background-color: #ebcccc;
   color: #a94442;
   border-radius: 2px;
+}
+
+.disabled {
+  pointer-events: none
 }
 </style>
