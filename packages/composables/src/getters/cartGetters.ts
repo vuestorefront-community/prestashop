@@ -105,7 +105,6 @@ function getDiscounts(cart: Cart): AgnosticDiscount[] {
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 function getErrors(cart: Cart) {
   if (cart) {
-    console.log(cart.psdata.errors);
     return cart.psdata.errors || [];
   }
 }
