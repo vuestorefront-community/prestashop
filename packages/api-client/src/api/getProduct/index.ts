@@ -6,7 +6,9 @@ export default async function getProduct(context, params) {
     params.id && url.searchParams.set('product_id', params.id);
 
     if (params.checkProduct && params.refresh) {
-      url.searchParams.set(`group[${params.groupId}]`, params.attrId);
+      if (params.groupId !== 0 && params.attrId !== 0) {
+        url.searchParams.set(`group[${params.groupId}]`, params.attrId);
+      }
       url.searchParams.set('quantity_wanted', params.qty);
       url.searchParams.set('refresh', params.refresh);
     } else if (params.refresh) {

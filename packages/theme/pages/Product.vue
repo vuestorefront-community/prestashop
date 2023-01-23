@@ -394,10 +394,14 @@ export default {
     },
     async handleSpinUpDown(event) {
       if (!this.selectedGroupId || !this.selectedAttrId) {
-        const defaultGroupId = Object.keys(this.product.groups)[0];
-        const defaultAttr = this.product.groups[defaultGroupId].default;
+        if (this.product.groups.length === 0) {
+          await this.checkProduct(this.product.id, 0, 0, event);
+        } else {
+          const defaultGroupId = Object.keys(this.product.groups)[0];
+          const defaultAttr = this.product.groups[defaultGroupId].default;
 
-        await this.checkProduct(this.product.id, defaultGroupId, defaultAttr, event);
+          await this.checkProduct(this.product.id, defaultGroupId, defaultAttr, event);
+        }
       } else {
         await this.checkProduct(this.product.id, this.selectedGroupId, this.selectedAttrId, event);
       }
