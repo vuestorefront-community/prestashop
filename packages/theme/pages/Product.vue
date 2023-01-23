@@ -86,7 +86,6 @@
             >
               <template #add-to-cart-btn>
                 <SfButton
-                  :disabled="loading"
                   :disabled="loading || quantity <= 0 || disableAddToCart"
                   class="sf-add-to-cart__button"
                   v-on="$listeners"
@@ -376,7 +375,14 @@ export default {
       productGetters,
       productGallery,
       isAuthenticated,
-      goNext
+      goNext,
+      quantity,
+      productMessage,
+      disableAddToCart,
+      checkedProduct,
+      checkProduct,
+      selectedAttrId,
+      selectedGroupId
     };
   },
   methods: {
