@@ -34,7 +34,9 @@
           </p>
           <div v-if="ordersList.length == 0" class="no-orders">
             <p class="no-orders__title">{{ $t('You currently have no orders') }}</p>
-            <SfButton class="no-orders__button">{{ $t('Start shopping') }}</SfButton>
+            <nuxt-link :to="localePath({ name: 'home' })">
+              <SfButton class="no-orders__button">{{ $t('Start shopping') }}</SfButton>
+            </nuxt-link>
           </div>
           <SfTable v-else class="orders">
             <SfTableHeading>
