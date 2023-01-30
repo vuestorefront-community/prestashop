@@ -61,8 +61,9 @@ module.exports = {
         children: [
           ['/', 'Introduction'],
           ['/guide/getting-started', 'Getting started'],
+          ['/guide/internationalization', 'Internationalization'],
           ['/guide/payment-options', 'Payment Basics'],
-          ['/guide/multi-language', 'Multi Language'],
+          ['/guide/supported-features', 'Supported Features'],
           ['/guide/about', 'About'],
         ]
       },
@@ -88,6 +89,8 @@ module.exports = {
         children: [
           ['/guide/releases/v1.0.0', 'v1.0.0'],
           ['/guide/releases/v1.1.0', 'v1.1.0'],
+          ['/guide/releases/v1.1.1', 'v1.1.1'],
+          ['/guide/releases/v1.2.0', 'v1.2.0'],
         ]
       }
     ]
