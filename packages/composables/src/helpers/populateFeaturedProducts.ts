@@ -10,6 +10,7 @@ const populateFeaturedProducts = (psProducts: Array<any>) => {
     coverImageMedium: product.cover.url,
     coverImageLarge: product.cover.url,
     images: [],
+    quantity: product.quantity,
     description: null,
     shortDescription: null,
     brand: null,

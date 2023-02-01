@@ -211,5 +211,6 @@ export default {
   'Returns': 'Rückgaben',
   'Total orders': 'Gesamtbestellungen',
   'All Orders': 'Alle Bestellungen',
-  'Add to cart': 'In der Warenkorb'
+  'Add to cart': 'In der Warenkorb',
+  'Shipping cost': 'Shipping cost'
 };

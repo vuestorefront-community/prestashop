@@ -8,19 +8,11 @@
       :key="method.value"
       :label="method.label"
       :value="method.value"
-      :description="method.description"
       :selected ="selectedMethod"
       name="shippingMethod"
       class="form__radio shipping"
       @input="selectMethod(method.value)"
     >
-      <div class="shipping__label">
-        {{ method.label }}
-      </div>
-
-      <div class="shipping__description">
-        {{ method.description }}
-      </div>
     </SfRadio>
       </div>
     </SfLoader>
@@ -66,7 +58,7 @@ export default {
       selectedMethod.value = method;
     };
     const goToPayment = async () => {
-      await save({shippingMethodId: selectedMethod.value, addressId: props.selectedAddress });
+      await save({ customQuery: { shippingMethodId: selectedMethod.value, addressId: props.selectedAddress }});
       context.root.$router.push({ path: 'payment' });
     };
     const shippingProvidersList = computed(()=> state.value ? shippingProviderGetters.getShippingProvidersList(state.value) : []);

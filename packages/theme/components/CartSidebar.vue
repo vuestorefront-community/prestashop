@@ -76,6 +76,9 @@
       <template #content-bottom>
         <transition name="sf-fade">
           <div v-if="totalItems">
+            <div v-if="errors.length > 0" class="cart-error">
+              {{errors[0]}}
+            </div>
             <SfProperty
               :name="$t('Subtotal price')"
               class="sf-property--full-width sf-property--large my-cart__total-price"
@@ -87,10 +90,11 @@
                 />
               </template>
             </SfProperty>
-            <nuxt-link :to="isAuthenticated ? localePath({ name: 'shipping' }) : localePath({ name: 'user-account' })">
+            <nuxt-link :to="isAuthenticated ? localePath({ name: 'shipping' }) : localePath({ name: 'user-account' })" :class="{ disabled: errors.length > 0 }">
               <SfButton
                 class="sf-button--full-width color-secondary"
                 @click="toggleCartSidebar"
+                :disabled="errors.length > 0"
               >
                 {{ $t('Go to checkout') }}
               </SfButton>
@@ -146,6 +150,7 @@ export default {
     const products = computed(() => cartGetters.getItems(cart.value));
     const totals = computed(() => cartGetters.getTotals(cart.value));
     const totalItems = computed(() => cartGetters.getTotalItems(cart.value));
+    const errors = computed(() => cartGetters.getErrors(cart.value));
 
     onSSR(async () => {
       await loadCart();
@@ -162,7 +167,8 @@ export default {
       toggleCartSidebar,
       totals,
       totalItems,
-      cartGetters
+      cartGetters,
+      errors
     };
   }
 };
@@ -265,5 +271,17 @@ export default {
       }
     }
   }
+}
+
+.cart-error{
+  margin-bottom: 2rem;
+  padding: 10px;
+  background-color: #ebcccc;
+  color: #a94442;
+  border-radius: 2px;
+}
+
+.disabled {
+  pointer-events: none
 }
 </style>

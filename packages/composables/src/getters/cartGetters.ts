@@ -8,6 +8,10 @@ import {
 import type { Cart, CartItem } from '@vue-storefront/prestashop-api';
 import { populateCartItems } from '../helpers';
 
+interface ExtendedCartGetters extends CartGetters<Cart, CartItem> {
+  getErrors: (cart: Cart) => any
+}
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getItems (cart: Cart): CartItem[] {
   return populateCartItems(cart.psdata.products);
@@ -51,17 +55,10 @@ function getItemSku(item: CartItem): string {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getTotals(cart: Cart): AgnosticTotals {
   if (cart) {
-    const products = cart.psdata.products;
-    let regularPrice = 0;
-    let discountPrice = 0;
-    for (const item of products) {
-      regularPrice += item.price_without_reduction * item.quantity;
-      discountPrice += item.total;
-    }
     return {
-      total: regularPrice,
-      subtotal: regularPrice,
-      special: discountPrice
+      total: cart.psdata.totals.total.amount,
+      subtotal: cart.psdata.subtotals.products.amount,
+      special: cart.psdata.subtotals.products.amount
     };
   } else {
     return {subtotal: 0, total: 0};
@@ -70,7 +67,11 @@ function getTotals(cart: Cart): AgnosticTotals {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getShippingPrice(cart: Cart): number {
-  return 0;
+  if (cart) {
+    return cart.psdata.subtotals.shipping.amount;
+  } else {
+    return 0;
+  }
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -101,7 +102,14 @@ function getDiscounts(cart: Cart): AgnosticDiscount[] {
   return [];
 }
 
-export const cartGetters: CartGetters<Cart, CartItem> = {
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+function getErrors(cart: Cart) {
+  if (cart) {
+    return cart.psdata.errors || [];
+  }
+}
+
+export const cartGetters: ExtendedCartGetters = {
   getTotals,
   getShippingPrice,
   getItems,
@@ -114,5 +122,6 @@ export const cartGetters: CartGetters<Cart, CartItem> = {
   getFormattedPrice,
   getTotalItems,
   getCoupons,
-  getDiscounts
+  getDiscounts,
+  getErrors
 };

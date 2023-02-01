@@ -210,5 +210,6 @@ export default {
     'Returns': 'Retour',
     'Total orders': 'Commandes totales',
     'All Orders': 'Tous les ordres',
-  'Add to cart': 'Ajouter au Panier'
+  'Add to cart': 'Ajouter au Panier',
+  'Shipping cost': 'Shipping cost'
 };

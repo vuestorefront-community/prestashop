@@ -109,6 +109,10 @@ function getTotalReviews(product: PsProduct): number {
 function getAverageRating(product: PsProduct): number {
   return 0;
 }
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function getQuantity(product: PsProduct): any {
+  return product?.quantity || 0;
+}
 
 export const productGetters: ProductGetters<PsProduct, ProductFilter> = {
   getName,
@@ -128,5 +132,6 @@ export const productGetters: ProductGetters<PsProduct, ProductFilter> = {
   getShortDescription,
   getBrand,
   getCategory,
-  getProductInfo
+  getProductInfo,
+  getQuantity
 };

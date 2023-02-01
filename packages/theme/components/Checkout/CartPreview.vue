@@ -14,6 +14,11 @@
         class="sf-property--full-width sf-property--large property"
       />
       <SfProperty
+        :name="$t('Shipping cost')"
+        :value="$n(shippingPrice, 'currency')"
+        :class="['sf-property--full-width', 'sf-property--large property']"
+      />
+      <SfProperty
         :name="$t('Subtotal')"
         :value="$n(totals.subtotal, 'currency')"
         :class="['sf-property--full-width', 'sf-property--large property']"
@@ -80,6 +85,7 @@ export default defineComponent({
     const products = computed(() => cartGetters.getItems(cart.value));
     const totalItems = computed(() => cartGetters.getTotalItems(cart.value));
     const totals = computed(() => cartGetters.getTotals(cart.value));
+    const shippingPrice = computed(() => cartGetters.getShippingPrice(cart.value));
     const discounts = computed(() => cartGetters.getDiscounts(cart.value));
     const hasDiscounts = computed(() => discounts.value.length > 0);
     const discountsAmount = computed(
@@ -95,6 +101,7 @@ export default defineComponent({
       listIsHidden,
       products,
       totals,
+      shippingPrice,
       removeItem,
       updateItemQty,
       cartGetters,
