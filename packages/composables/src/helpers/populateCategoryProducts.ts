@@ -1,6 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const populateCategoryProducts = (psProducts: Array<any>) => {
-  const populateCategoryProducts = psProducts.map((product) => ({
+  return psProducts.map((product) => ({
     id: product.id_product,
     name: product.name,
     slug: product.link_rewrite,
@@ -14,10 +14,9 @@ const populateCategoryProducts = (psProducts: Array<any>) => {
     shortDescription: null,
     brand: null,
     category: null,
-    productInfo: null
+    productInfo: null,
+    quantity: product.quantity
   }));
-
-  return populateCategoryProducts;
 };
 
 export default populateCategoryProducts;

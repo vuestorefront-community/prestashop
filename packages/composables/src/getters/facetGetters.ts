@@ -113,7 +113,7 @@ function getBreadcrumbs(params: FacetSearchResult<Facet>): AgnosticBreadcrumb[] 
   return [];
 }
 
-export const facetGetters: FacetsGetters<Facet, FacetSearchCriteria> = {
+export const facetGetters: FacetsGetters<Facet, PsProduct[], FacetSearchCriteria> = {
   getSortOptions,
   getGrouped,
   getAll,
