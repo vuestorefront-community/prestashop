@@ -1,6 +1,6 @@
 {
   "name": "@vue-storefront/prestashop-theme",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "private": true,
   "scripts": {
     "build": "nuxt build -m",
@@ -24,7 +24,7 @@
     "@vue-storefront/middleware": "~2.7.5",
     "@vue-storefront/nuxt": "~2.7.5",
     "@vue-storefront/nuxt-theme": "~2.7.5",
-    "@vue-storefront/prestashop": "1.2.0",
+    "@vue-storefront/prestashop": "1.2.1",
     "cookie-universal-nuxt": "^2.1.5",
     "core-js": "^3.19.0",
     "nuxt": "^2.15.8",
