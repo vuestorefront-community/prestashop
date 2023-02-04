@@ -3937,7 +3937,7 @@
     "@typescript-eslint/types" "4.31.2"
     eslint-visitor-keys "^2.0.0"
 
-"@vue-storefront/core@~2.7.1", "@vue-storefront/core@~2.7.5":
+"@vue-storefront/core@~2.7.5":
   version "2.7.5"
   resolved "https://registry.yarnpkg.com/@vue-storefront/core/-/core-2.7.5.tgz#69b629d1c540f52e39220de18fb6e836552ea240"
   integrity sha512-mtUXY5FtFEUKUDcaOWGvOuYpPzT9nMvbJ1Z8CjcT48y4bEEnaq6doiAsMFGXGvUFJzOXqXiN3jpRZ3q9QRAsyA==
@@ -3947,7 +3947,7 @@
     lodash-es "^4.17.15"
     vue "^2.6.11"
 
-"@vue-storefront/middleware@~2.7.1":
+"@vue-storefront/middleware@~2.7.5":
   version "2.7.5"
   resolved "https://registry.yarnpkg.com/@vue-storefront/middleware/-/middleware-2.7.5.tgz#b4654a7a08264973347153daa3d11345d35233bb"
   integrity sha512-K79iuf8vLF5XbW65Ycx46jahTpIaI4Nim+Yl3guT+k8it3U3OQsjbI0K0ExALPOGDxwpIMxbQzKlCa3ACvF0+w==
@@ -3959,7 +3959,7 @@
     express "^4.17.1"
     helmet "^5.0.2"
 
-"@vue-storefront/nuxt-theme@~2.7.1":
+"@vue-storefront/nuxt-theme@~2.7.5":
   version "2.7.5"
   resolved "https://registry.yarnpkg.com/@vue-storefront/nuxt-theme/-/nuxt-theme-2.7.5.tgz#be4671a6692e0db50d24950ca61fe3e1316fb1dc"
   integrity sha512-6R3qpWlezBA9n5unRMvBk7BVjCLETCxEuTEXYtxGRuSqoJKm7jrAVwxVJ/UiJTrz7G/Wuxh20EX+MecgLRqWyQ==
@@ -3969,7 +3969,7 @@
     lodash.merge "^4.6.2"
     vue-lazy-hydration "^2.0.0-beta.4"
 
-"@vue-storefront/nuxt@~2.7.1":
+"@vue-storefront/nuxt@~2.7.5":
   version "2.7.5"
   resolved "https://registry.yarnpkg.com/@vue-storefront/nuxt/-/nuxt-2.7.5.tgz#bb79f17aa8cb7233bf460e827362c16dfc0e3cb3"
   integrity sha512-I0hoxPy5Re2honlvETQsrgSlyy7zdfpOmkqZ/ME6cH4rpfRN317B+5ijqVQzY9j+K64AKyoHqhg0Os0yjypWIA==
