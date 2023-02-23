@@ -22,7 +22,11 @@ export const useBootstrap = () => {
 
     try {
       loading.value = true;
-      const lang = context.$prestashop.config.app.i18n.locales && context.$prestashop.config.app.i18n.locales.length > 1 ? '/' + context.$prestashop.config.app.$cookies.get('vsf-locale') : '';
+      const lang = context.$prestashop.config.app.i18n.locales &&
+      context.$prestashop.config.app.i18n.locales.length > 1 &&
+      context.$prestashop.config.app.$cookies.get('vsf-locale')
+        ? '/' + context.$prestashop.config.app.$cookies.get('vsf-locale') : '';
+
       const currency = context.$prestashop.config.app.$cookies.get('vsf-currency');
 
       const { data, cookieObject } = await context.$prestashop.api.bootstrap({ lang: lang, currency: currency });

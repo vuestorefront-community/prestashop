@@ -18,7 +18,12 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
     const key = context.$prestashop.config.app.$cookies.get(cookieKey);
     const value = context.$prestashop.config.app.$cookies.get(cookieValue);
 
-    const lang = context.$prestashop.config.app.i18n.locales && context.$prestashop.config.app.i18n.locales.length > 1 ? '/' + context.$prestashop.config.app.$cookies.get('vsf-locale') : '';
+    // todo: lang detection should be another helper - removing duplicates (and cookie mgmt)
+    const lang = context.$prestashop.config.app.i18n.locales &&
+    context.$prestashop.config.app.i18n.locales.length > 1 &&
+    context.$prestashop.config.app.$cookies.get('vsf-locale')
+      ? '/' + context.$prestashop.config.app.$cookies.get('vsf-locale') : '';
+
     const currency = context.$prestashop.config.app.$cookies.get('vsf-currency');
 
     if (key && value) {
@@ -54,7 +59,11 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
     const psCookieKey = context.$prestashop.config.app.$cookies.get(vsfCookieKey);
     const psCookieValue = context.$prestashop.config.app.$cookies.get(vsfCookieValue);
 
-    const lang = context.$prestashop.config.app.i18n.locales && context.$prestashop.config.app.i18n.locales.length > 1 ? '/' + context.$prestashop.config.app.$cookies.get('vsf-locale') : '';
+    const lang = context.$prestashop.config.app.i18n.locales &&
+    context.$prestashop.config.app.i18n.locales.length > 1 &&
+    context.$prestashop.config.app.$cookies.get('vsf-locale')
+      ? '/' + context.$prestashop.config.app.$cookies.get('vsf-locale') : '';
+
     const currency = context.$prestashop.config.app.$cookies.get('vsf-currency');
 
     const { data, cookieObject } = await context.$prestashop.api.updateCustomer({ psCookieKey, psCookieValue, updatedUserData, lang: lang, currency: currency });
@@ -84,7 +93,11 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
     const psCookieKey = context.$prestashop.config.app.$cookies.get(vsfCookieKey);
     const psCookieValue = context.$prestashop.config.app.$cookies.get(vsfCookieValue);
 
-    const lang = context.$prestashop.config.app.i18n.locales && context.$prestashop.config.app.i18n.locales.length > 1 ? '/' + context.$prestashop.config.app.$cookies.get('vsf-locale') : '';
+    const lang = context.$prestashop.config.app.i18n.locales &&
+    context.$prestashop.config.app.i18n.locales.length > 1 &&
+    context.$prestashop.config.app.$cookies.get('vsf-locale')
+      ? '/' + context.$prestashop.config.app.$cookies.get('vsf-locale') : '';
+
     const currency = context.$prestashop.config.app.$cookies.get('vsf-currency');
 
     const {data, cookieObject} = await context.$prestashop.api.register({email, password, firstName, lastName, psCookieKey, psCookieValue, lang: lang, currency: currency});
@@ -126,7 +139,11 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
     const psCookieKey = context.$prestashop.config.app.$cookies.get(vsfCookieKey);
     const psCookieValue = context.$prestashop.config.app.$cookies.get(vsfCookieValue);
 
-    const lang = context.$prestashop.config.app.i18n.locales && context.$prestashop.config.app.i18n.locales.length > 1 ? '/' + context.$prestashop.config.app.$cookies.get('vsf-locale') : '';
+    const lang = context.$prestashop.config.app.i18n.locales &&
+    context.$prestashop.config.app.i18n.locales.length > 1 &&
+    context.$prestashop.config.app.$cookies.get('vsf-locale')
+      ? '/' + context.$prestashop.config.app.$cookies.get('vsf-locale') : '';
+
     const currency = context.$prestashop.config.app.$cookies.get('vsf-currency');
 
     const {data, cookieObject} = await context.$prestashop.api.login({username, password, psCookieKey, psCookieValue, lang: lang, currency });
@@ -160,7 +177,11 @@ const params: UseUserFactoryParams<User, UpdateParams, RegisterParams> = {
     const psCookieKey = context.$prestashop.config.app.$cookies.get(vsfCookieKey);
     const psCookieValue = context.$prestashop.config.app.$cookies.get(vsfCookieValue);
 
-    const lang = context.$prestashop.config.app.i18n.locales && context.$prestashop.config.app.i18n.locales.length > 1 ? '/' + context.$prestashop.config.app.$cookies.get('vsf-locale') : '';
+    const lang = context.$prestashop.config.app.i18n.locales &&
+    context.$prestashop.config.app.i18n.locales.length > 1 &&
+    context.$prestashop.config.app.$cookies.get('vsf-locale')
+      ? '/' + context.$prestashop.config.app.$cookies.get('vsf-locale') : '';
+
     const currency = context.$prestashop.config.app.$cookies.get('vsf-currency');
 
     const { data, cookieObject } = await context.$prestashop.api.updateCustomer({ psCookieKey, psCookieValue, updatedUserData, lang: lang, currency: currency });
