@@ -18,7 +18,11 @@ const params: UseCartFactoryParams<Cart, CartItem, PsProduct> = {
     const psCookieKey = context.$prestashop.config.app.$cookies.get(vsfCookieKey);
     const psCookieValue = context.$prestashop.config.app.$cookies.get(vsfCookieValue);
 
-    const lang = context.$prestashop.config.app.i18n.locales && context.$prestashop.config.app.i18n.locales.length > 1 ? '/' + context.$prestashop.config.app.$cookies.get('vsf-locale') : '';
+    const lang = context.$prestashop.config.app.i18n.locales &&
+    context.$prestashop.config.app.i18n.locales.length > 1 &&
+    context.$prestashop.config.app.$cookies.get('vsf-locale')
+      ? '/' + context.$prestashop.config.app.$cookies.get('vsf-locale') : '';
+
     const currency = context.$prestashop.config.app.$cookies.get('vsf-currency');
     const { data, cookieObject } = await context.$prestashop.api.getCartItems({ psCookieKey, psCookieValue, lang: lang, currency: currency });
 
@@ -43,7 +47,11 @@ const params: UseCartFactoryParams<Cart, CartItem, PsProduct> = {
     const psCookieKey = context.$prestashop.config.app.$cookies.get(vsfCookieKey);
     const psCookieValue = context.$prestashop.config.app.$cookies.get(vsfCookieValue);
 
-    const lang = context.$prestashop.config.app.i18n.locales && context.$prestashop.config.app.i18n.locales.length > 1 ? '/' + context.$prestashop.config.app.$cookies.get('vsf-locale') : '';
+    const lang = context.$prestashop.config.app.i18n.locales &&
+    context.$prestashop.config.app.i18n.locales.length > 1 &&
+    context.$prestashop.config.app.$cookies.get('vsf-locale')
+      ? '/' + context.$prestashop.config.app.$cookies.get('vsf-locale') : '';
+
     const currency = context.$prestashop.config.app.$cookies.get('vsf-currency');
 
     const { data, cookieObject } = await context.$prestashop.api.addToCart({ psCookieKey, psCookieValue, product, quantity, lang: lang, currency: currency });
@@ -68,7 +76,11 @@ const params: UseCartFactoryParams<Cart, CartItem, PsProduct> = {
     const psCookieKey = context.$prestashop.config.app.$cookies.get(vsfCookieKey);
     const psCookieValue = context.$prestashop.config.app.$cookies.get(vsfCookieValue);
 
-    const lang = context.$prestashop.config.app.i18n.locales && context.$prestashop.config.app.i18n.locales.length > 1 ? '/' + context.$prestashop.config.app.$cookies.get('vsf-locale') : '';
+    const lang = context.$prestashop.config.app.i18n.locales &&
+    context.$prestashop.config.app.i18n.locales.length > 1 &&
+    context.$prestashop.config.app.$cookies.get('vsf-locale')
+      ? '/' + context.$prestashop.config.app.$cookies.get('vsf-locale') : '';
+
     const currency = context.$prestashop.config.app.$cookies.get('vsf-currency');
 
     const { data, cookieObject } = await context.$prestashop.api.removeFromCart({ psCookieKey, psCookieValue, product, lang: lang, currency: currency });
@@ -100,7 +112,11 @@ const params: UseCartFactoryParams<Cart, CartItem, PsProduct> = {
     const psCookieKey = context.$prestashop.config.app.$cookies.get(vsfCookieKey);
     const psCookieValue = context.$prestashop.config.app.$cookies.get(vsfCookieValue);
 
-    const lang = context.$prestashop.config.app.i18n.locales && context.$prestashop.config.app.i18n.locales.length > 1 ? '/' + context.$prestashop.config.app.$cookies.get('vsf-locale') : '';
+    const lang = context.$prestashop.config.app.i18n.locales &&
+    context.$prestashop.config.app.i18n.locales.length > 1 &&
+    context.$prestashop.config.app.$cookies.get('vsf-locale')
+      ? '/' + context.$prestashop.config.app.$cookies.get('vsf-locale') : '';
+
     const currency = context.$prestashop.config.app.$cookies.get('vsf-currency');
 
     const { data, cookieObject } = await context.$prestashop.api.updateCart({ psCookieKey, psCookieValue, product, op, lang: lang, currency: currency });
