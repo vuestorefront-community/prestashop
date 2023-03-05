@@ -223,6 +223,10 @@ extend('digits', {
 });
 
 extend('zipcode', (data, input) => {
+  if (!input[0]) {
+    return true;
+  }
+
   let format = input[0];
   format = format.replace(/N/g, '\\d');
   format = format.replace(/L/g, '[a-zA-Z]');
