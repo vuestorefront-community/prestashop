@@ -155,6 +155,23 @@
           :errorMessage="errors[0]"
         />
       </ValidationProvider>
+      <ValidationProvider
+        name="identificationNumber"
+        rules="required"
+        v-slot="{ errors }"
+        slim
+        v-if="needIdentificationNumber"
+      >
+        <SfInput
+          v-e2e="'dni'"
+          v-model="form.dni"
+          :label="$t('Identification Number')"
+          name="identificationNumber"
+          class="form__element form__element--half"
+          :valid="!errors[0]"
+          :errorMessage="errors[0]"
+        />
+      </ValidationProvider>
     </div>
     <div class="form">
       <div class="form__action"
@@ -282,7 +299,8 @@ export default {
           id_country: null,
           country: null,
           postcode: '',
-          phone: null
+          phone: null,
+          dni: ''
         };
       }
     }
@@ -305,12 +323,15 @@ export default {
       id_country: props.addressForEdit.id_country,
       country: props.addressForEdit.country,
       postcode: props.addressForEdit.postcode,
-      phone: props.addressForEdit.phone
+      phone: props.addressForEdit.phone,
+      dni: props.addressForEdit.dni
     });
     const countriesList = computed(() => countries.value ? countryGetters.getCountriesList(countries.value.countries) : []);
     const statesList = computed(() => selectedCountry.value && countriesList.value.length >= 1 ? countriesList.value.find(el => el.id === selectedCountry.value).states : []);
 
     const zipCodeFormat = computed(() => selectedCountry.value && countriesList.value.length >= 1 ? countriesList.value.find(el => el.id === selectedCountry.value).zipCodeFormat : []);
+
+    const needIdentificationNumber = computed(() => selectedCountry.value && countriesList.value.length >= 1 ? countriesList.value.find(el => el.id === selectedCountry.value).needIdentificationNumber : []);
 
     const needZipCode = computed(() => selectedCountry.value && countriesList.value.length >= 1 ? countriesList.value.find(el => el.id === selectedCountry.value).needZipCode : []);
 
@@ -355,7 +376,8 @@ export default {
       removeAddress,
       toggleAddNewAddress,
       zipCodeFormat,
-      needZipCode
+      needZipCode,
+      needIdentificationNumber
     };
   }
 };

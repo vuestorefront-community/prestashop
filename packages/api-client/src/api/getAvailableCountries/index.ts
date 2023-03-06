@@ -9,5 +9,4 @@ export default async function getAvailableCountries(context, params) {
   const cookieObject = cookieParser(headers);
 
   return {data, cookieObject};
-
 }
