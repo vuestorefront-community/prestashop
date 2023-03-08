@@ -14,6 +14,9 @@
       @input="selectMethod(method.value)"
     >
     </SfRadio>
+        <div v-if="shippingMethods.length === 0" class="shipping-error">
+          {{ $t('Unfortunately, there are no carriers available for your delivery address.') }}
+        </div>
       </div>
     </SfLoader>
     <div class="summary__action">
@@ -132,6 +135,14 @@ export default {
   &__property-total {
     margin: var(--spacer-xl) 0 0 0;
   }
+}
+
+.shipping-error{
+  margin-bottom: 2rem;
+  padding: 10px;
+  background-color: #ebcccc;
+  color: #a94442;
+  border-radius: 2px;
 }
 
 </style>

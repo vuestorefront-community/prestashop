@@ -212,5 +212,6 @@ export default {
   'Total orders': 'Total orders',
   'All Orders': 'All Orders',
   'Add to cart': 'Add to cart',
-  'Shipping cost': 'Shipping cost'
+  'Shipping cost': 'Shipping cost',
+  'Unfortunately, there are no carriers available for your delivery address.': 'Unfortunately, there are no carriers available for your delivery address.'
 };
