@@ -26,7 +26,7 @@
                 :image="addBasePath(cartGetters.getItemImage(product))"
                 :title="cartGetters.getItemName(product)"
                 :regular-price="$n(cartGetters.getItemPrice(product).regular, 'currency')"
-                :special-price="cartGetters.getItemPrice(product).special && $n(cartGetters.getItemPrice(product).special, 'currency')"
+                :special-price="$n(cartGetters.getItemPrice(product).regular, 'currency') === $n(cartGetters.getItemPrice(product).special, 'currency')? '': $n(cartGetters.getItemPrice(product).special, 'currency')"
                 :stock="99999"
                 @click:remove="removeItem({ product })"
                 class="collected-product"
