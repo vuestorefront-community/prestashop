@@ -1,7 +1,7 @@
 <template>
   <SfLoader
     :class="{ 'loading--categories': productLoading }"
-    :loading="productLoading">
+    :loading="productLoading && !isAnFilterUpdate">
     <div id="product" >
       <SfBreadcrumbs class="breadcrumbs desktop-only" :breadcrumbs="breadcrumbs" />
       <div class="product">
@@ -244,7 +244,7 @@ export default {
   }),
   setup(props, context) {
     const qty = ref(1);
-    const { id } = context.root.$route.params;
+    const { id, isAnFilterUpdate } = context.root.$route.params;
     const { products, search, loading: productLoading } = useProduct('products');
     const { product: checkedProduct, check: checkProduct } = useCheckProduct();
     const {
@@ -321,7 +321,11 @@ export default {
     const updateFilter = (filter) => {
       const variant = context.root.$route.query;
       context.root.$router.push({
-        path: context.root.$route.path,
+        name: context.root.$route.name,
+        params: {
+          ...context.root.$route.params,
+          isAnFilterUpdate: 'true'
+        },
         query: {
           ...variant,
           ...filter
@@ -382,7 +386,8 @@ export default {
       checkedProduct,
       checkProduct,
       selectedAttrId,
-      selectedGroupId
+      selectedGroupId,
+      isAnFilterUpdate
     };
   },
   methods: {
