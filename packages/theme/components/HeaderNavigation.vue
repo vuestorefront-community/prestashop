@@ -82,6 +82,7 @@
         <template #default>
           <SfAccordion v-e2e="'subcategories-accordion'" :show-chevron="true" multiple>
             <AccordionItem
+              class="inner-accordion"
               v-for="(subCat, i) in cat.children"
               :key="i"
               :hasItems="Boolean(subCat.children.length)"
@@ -185,6 +186,12 @@ export default {
   }
 };
 </script>
+
+<style>
+.inner-accordion > button{
+  border: none !important;
+}
+</style>
 
 <style lang="scss" scoped>
 .sf-header-navigation-item {
