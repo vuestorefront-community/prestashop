@@ -16,7 +16,8 @@ This integration is being maintained by [Binshops](https://www.binshops.com).
 ------
 
 ## [Quick Start Video](https://youtu.be/WkhiWemU43E)
-[![PrestaShop Vue Storefront](https://i1.ytimg.com/vi/WkhiWemU43E/hqdefault.jpg)](https://youtu.be/WkhiWemU43E)
+## [Headless Commerce Benefits](https://youtu.be/G1lm1fkraQQ)
+[![Headless PrestaShop](https://img.youtube.com/vi/G1lm1fkraQQ/0.jpg)](https://youtu.be/G1lm1fkraQQ)
 
 ### Requirements:
 - NodeJS v14 or later
