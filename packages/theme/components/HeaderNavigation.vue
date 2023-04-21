@@ -191,6 +191,9 @@ export default {
 .inner-accordion > button{
   border: none !important;
 }
+.inner-accordion > div > div {
+  border-bottom: none !important;
+}
 </style>
 
 <style lang="scss" scoped>
