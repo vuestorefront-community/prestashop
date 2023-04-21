@@ -63,11 +63,12 @@
     <SfAccordion
       v-e2e="'categories-accordion'"
       :show-chevron="true"
+      multiple
     >
       <AccordionItem
         v-for="(cat, i) in categories"
         :key="i"
-        :hasItems="cat.children.length"
+        :hasItems="Boolean(cat.children.length)"
       >
         <template #title>
           <nuxt-link
@@ -79,23 +80,42 @@
         </template>
 
         <template #default>
-          <SfList class="list">
-            <SfListItem
-              class="list__item"
-              v-for="(subCat, j) in cat.children"
-              :key="j"
+          <SfAccordion v-e2e="'subcategories-accordion'" :show-chevron="true" multiple>
+            <AccordionItem
+              class="inner-accordion"
+              v-for="(subCat, i) in cat.children"
+              :key="i"
+              :hasItems="Boolean(subCat.children.length)"
             >
-              <nuxt-link
-                :to="localePath(`/c/${subCat.slug}`)"
-                :class="subCat.isCurrent ? 'sidebar--cat-selected' : ''"
-                @click.native="toggleMobileMenu">
-              <SfMenuItem
-                :count="subCat.count || ''"
-                :label="subCat.label"
-              />
-              </nuxt-link>
-            </SfListItem>
-          </SfList>
+              <template #title>
+                <nuxt-link
+                  :to="localePath(`/c/${subCat.slug}`)"
+                  @click.native="toggleMobileMenu"
+                >
+                  {{ subCat.label }}
+                </nuxt-link>
+              </template>
+              <template #default>
+                <SfList class="list">
+                  <SfListItem
+                    class="list__item"
+                    v-for="(subsubCat, j) in subCat.children"
+                    :key="j"
+                  >
+                    <nuxt-link
+                      :to="localePath(`/c/${subsubCat.slug}`)"
+                      :class="
+                        subsubCat.isCurrent ? 'sidebar--cat-selected' : ''
+                      "
+                      @click.native="toggleMobileMenu"
+                    >
+                      {{ subsubCat.label }}
+                    </nuxt-link>
+                  </SfListItem>
+                </SfList>
+              </template>
+            </AccordionItem>
+          </SfAccordion>
         </template>
       </AccordionItem>
     </SfAccordion>
@@ -166,6 +186,15 @@ export default {
   }
 };
 </script>
+
+<style>
+.inner-accordion > button{
+  border: none !important;
+}
+.inner-accordion > div > div {
+  border-bottom: none !important;
+}
+</style>
 
 <style lang="scss" scoped>
 .sf-header-navigation-item {
