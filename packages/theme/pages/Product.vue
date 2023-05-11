@@ -220,7 +220,7 @@ import {
 import InstagramFeed from '~/components/InstagramFeed.vue';
 import AddReview from '~/components/AddReview.vue';
 import RelatedProducts from '~/components/RelatedProducts.vue';
-import { ref, computed } from '@nuxtjs/composition-api';
+import { ref, computed, useMeta, defineComponent } from '@nuxtjs/composition-api';
 import {
   useProduct,
   useCart,
@@ -235,13 +235,14 @@ import LazyHydrate from 'vue-lazy-hydration';
 import cacheControl from './../helpers/cacheControl';
 import useUiNotification from '~/composables/useUiNotification';
 
-export default {
+export default defineComponent({
   name: 'Product',
   transition: 'fade',
   middleware: cacheControl({
     'max-age': 60,
     'stale-when-revalidate': 5
   }),
+  head: {},
   setup(props, context) {
     const qty = ref(1);
     const { id, isAnFilterUpdate } = context.root.$route.params;
@@ -351,6 +352,20 @@ export default {
         searchReviews({ productId: this.id, page: this.currentPage });
       });
     };
+
+    const { title: metaTitle, meta } = useMeta();
+    metaTitle.value = productGetters.getMetaTitle(product.value) ? productGetters.getMetaTitle(product.value) : productGetters.getName(product.value);
+
+    meta.value = [
+      {
+        name: 'description',
+        content: productGetters.getMetaDescription(product.value)
+      }, {
+        name: 'keywords',
+        content: productGetters.getMetaKeywords(product.value)
+      },
+      { name: 'viewport', content: 'width=device-width, initial-scale=1' }
+    ];
 
     return {
       selectedAttribute,
@@ -471,7 +486,7 @@ export default {
       stock: 1
     };
   }
-};
+});
 </script>
 
 <style lang="scss" scoped>

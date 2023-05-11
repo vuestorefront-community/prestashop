@@ -53,6 +53,9 @@ export type PsProduct = {
     brand: string;
     category: string;
     productInfo: any;
+    metaTitle: any;
+    metaDescription: any;
+    metaKeywords: any;
 }
 
 export type ProductFilter = TODO;

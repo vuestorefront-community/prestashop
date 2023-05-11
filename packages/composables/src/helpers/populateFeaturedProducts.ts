@@ -15,7 +15,10 @@ const populateFeaturedProducts = (psProducts: Array<any>) => {
     shortDescription: null,
     brand: null,
     category: null,
-    productInfo: null
+    productInfo: null,
+    metaTitle: null,
+    metaDescription: null,
+    metaKeywords: null
   }));
   return populateFeaturedProducts;
 };

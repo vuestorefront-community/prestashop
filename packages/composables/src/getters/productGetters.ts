@@ -114,6 +114,21 @@ function getQuantity(product: PsProduct): any {
   return product?.quantity || 0;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function getMetaTitle(product: PsProduct): any {
+  return product?.metaTitle || [];
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function getMetaDescription(product: PsProduct): any {
+  return product?.metaDescription || [];
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function getMetaKeywords(product: PsProduct): any {
+  return product?.metaKeywords || [];
+}
+
 export const productGetters: ProductGetters<PsProduct, ProductFilter> = {
   getName,
   getSlug,
@@ -133,5 +148,8 @@ export const productGetters: ProductGetters<PsProduct, ProductFilter> = {
   getBrand,
   getCategory,
   getProductInfo,
-  getQuantity
+  getQuantity,
+  getMetaTitle,
+  getMetaDescription,
+  getMetaKeywords
 };
