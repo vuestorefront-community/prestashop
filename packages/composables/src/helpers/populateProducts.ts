@@ -34,7 +34,10 @@ const populateProducts = (psProducts: Array<any>) => {
     shortDescription: product.description_short,
     brand: product.manufacturer_name,
     category: product.category_name,
-    productInfo: product.product_info
+    productInfo: product.product_info,
+    metaTitle: product.meta_title,
+    metaDescription: product.meta_description,
+    metaKeywords: product.meta_keywords
   }));
 
   return populateProducts;

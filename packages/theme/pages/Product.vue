@@ -220,7 +220,7 @@ import {
 import InstagramFeed from '~/components/InstagramFeed.vue';
 import AddReview from '~/components/AddReview.vue';
 import RelatedProducts from '~/components/RelatedProducts.vue';
-import { ref, computed } from '@nuxtjs/composition-api';
+import { ref, computed, defineComponent } from '@nuxtjs/composition-api';
 import {
   useProduct,
   useCart,
@@ -235,7 +235,7 @@ import LazyHydrate from 'vue-lazy-hydration';
 import cacheControl from './../helpers/cacheControl';
 import useUiNotification from '~/composables/useUiNotification';
 
-export default {
+export default defineComponent({
   name: 'Product',
   transition: 'fade',
   middleware: cacheControl({
@@ -470,8 +470,23 @@ export default {
       ],
       stock: 1
     };
+  },
+  head() {
+    return {
+      title: this.product.metaTitle ? this.product.metaTitle : this.product.name,
+      meta: [
+        {
+          name: 'description',
+          content: this.product.metaDescription
+        }, {
+          name: 'keywords',
+          content: this.product.metaKeywords
+        },
+        { name: 'viewport', content: 'width=device-width, initial-scale=1' }
+      ]
+    };
   }
-};
+});
 </script>
 
 <style lang="scss" scoped>
