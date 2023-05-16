@@ -82,7 +82,7 @@ function getCategoryTree(psdata: any): AgnosticCategoryTree {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars,@typescript-eslint/explicit-module-boundary-types
-function getProducts(psdata: any): PsProduct[] {
+function getProducts(psdata: any): any[] {
   if (!psdata.data) {
     return [];
   }
