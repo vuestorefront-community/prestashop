@@ -209,8 +209,8 @@ import {
   SfColor,
   SfProperty
 } from '@storefront-ui/vue';
-import { computed, ref, onMounted } from '@nuxtjs/composition-api';
-import { useCart, useWishlist, productGetters, useFacet, facetGetters, wishlistGetters } from '@vue-storefront/prestashop';
+import {computed, ref, onMounted, defineComponent} from '@nuxtjs/composition-api';
+import { useCart, useWishlist, productGetters, useFacet, facetGetters, wishlistGetters, categoryGetters } from '@vue-storefront/prestashop';
 import { useUiHelpers, useUiState, useUiNotification } from '~/composables';
 import { onSSR } from '@vue-storefront/core';
 import LazyHydrate from 'vue-lazy-hydration';
@@ -219,8 +219,7 @@ import cacheControl from './../helpers/cacheControl';
 import CategoryPageHeader from '~/components/CategoryPageHeader';
 import { addBasePath } from '@vue-storefront/core';
 
-// TODO(addToCart qty, horizontal): https://github.com/vuestorefront/storefront-ui/issues/1606
-export default {
+export default defineComponent({
   transition: 'fade',
   middleware: cacheControl({
     'max-age': 60,
@@ -241,6 +240,7 @@ export default {
     const sortBy = computed(() => facetGetters.getSortOptions(result.value));
     const facets = computed(() => facetGetters.getGrouped(result.value));
     const pagination = computed(() => facetGetters.getPagination(result.value));
+    const categoryInfo = computed(() => categoryGetters.getCategoryInfo(result.value));
 
     const selectedFilters = ref({});
     const setSelectedFilters = () => {
@@ -304,6 +304,7 @@ export default {
       sendNotification,
       th,
       products,
+      categoryInfo,
       categoryTree,
       loading,
       productGetters,
@@ -358,8 +359,23 @@ export default {
     SfHeading,
     SfProperty,
     LazyHydrate
+  },
+  head() {
+    return {
+      title: this.categoryInfo.metaTitle ? this.categoryInfo.metaTitle : this.categoryInfo.categoryLabel,
+      meta: [
+        {
+          name: 'description',
+          content: this.categoryInfo.metaDescription
+        }, {
+          name: 'keywords',
+          content: this.categoryInfo.metaKeywords
+        },
+        { name: 'viewport', content: 'width=device-width, initial-scale=1' }
+      ]
+    };
   }
-};
+});
 </script>
 
 <style lang="scss" scoped>

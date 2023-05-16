@@ -21,7 +21,12 @@ export type CartItem = {
     reference: string;
 };
 
-export type Category = TODO;
+export type PsCategory = {
+    metaTitle: any;
+    metaDescription: any;
+    metaKeywords: any;
+    categoryLabel: any;
+};
 
 export type Coupon = TODO;
 

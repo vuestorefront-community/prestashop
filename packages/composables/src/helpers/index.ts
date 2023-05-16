@@ -9,6 +9,7 @@ import populateCountriesList from './populateCountriesList';
 import populateShippingProvidersList from './populateShippingProvidersList';
 import populatePaymentProvidersList from './populatePaymentProvidersList';
 import populateCategoryTree from './populateCategoryTree';
+import populateCategoryInfo from './populateCategoryInfo';
 
 export {
   populateCategoryProducts,
@@ -21,6 +22,7 @@ export {
   populateCountriesList,
   populateShippingProvidersList,
   populatePaymentProvidersList,
-  populateCategoryTree
+  populateCategoryTree,
+  populateCategoryInfo
 };
 

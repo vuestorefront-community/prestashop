@@ -1,8 +1,9 @@
 import { CategoryGetters, AgnosticCategoryTree } from '@vue-storefront/core';
-import type { Category } from '@vue-storefront/prestashop-api';
+import type { PsCategory } from '@vue-storefront/prestashop-api';
+import { populateCategoryInfo } from '../helpers';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getTree(category: Category): AgnosticCategoryTree {
+function getTree(category: PsCategory): AgnosticCategoryTree {
   return {
     label: '',
     slug: '',
@@ -11,6 +12,15 @@ function getTree(category: Category): AgnosticCategoryTree {
   };
 }
 
-export const categoryGetters: CategoryGetters<Category> = {
-  getTree
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+function getCategoryInfo(psdata) : any {
+  if (!psdata.data) {
+    return {};
+  }
+  return populateCategoryInfo(psdata.data);
+}
+
+export const categoryGetters: CategoryGetters<PsCategory> = {
+  getTree,
+  getCategoryInfo
 };
