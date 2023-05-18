@@ -65,7 +65,10 @@
             :show-add-to-cart-button="true"
             :link="localePath(`/p/${productGetters.getId(product)}/${productGetters.getSlug(product)}`)"
             class="carousel__item__product"
+            :isInWishlist="isInWishlist({product})"
             @click:add-to-cart="HandleAddToCart({ product, quantity:1 })"
+            @click:wishlist="HandleAddToWishList({ product })"
+
           />
         </SfCarouselItem>
       </SfCarousel>
@@ -92,11 +95,11 @@
     </LazyHydrate>
 
     <LazyHydrate when-visible>
-      <NewsletterModal @email-submitted="onSubscribe" />
+      <NewsletterModal @email-submitted="onSubscribe"/>
     </LazyHydrate>
 
     <LazyHydrate when-visible>
-      <InstagramFeed />
+      <InstagramFeed/>
     </LazyHydrate>
 
   </div>
@@ -115,82 +118,84 @@ import {
   SfArrow,
   SfButton
 } from '@storefront-ui/vue';
-import { ref, useContext } from '@nuxtjs/composition-api';
+import {ref, useContext} from '@nuxtjs/composition-api';
 import InstagramFeed from '~/components/InstagramFeed.vue';
 import NewsletterModal from '~/components/NewsletterModal.vue';
 import LazyHydrate from 'vue-lazy-hydration';
-import { useUiState } from '../composables';
+import {useUiState} from '../composables';
 import cacheControl from './../helpers/cacheControl';
-import { onSSR, addBasePath } from '@vue-storefront/core';
-import { computed } from '@nuxtjs/composition-api';
-import { useUiNotification } from '~/composables';
+import {onSSR, addBasePath} from '@vue-storefront/core';
+import {computed} from '@nuxtjs/composition-api';
+import {useUiNotification} from '~/composables';
 
 import {
   useProduct,
   productGetters,
-  useCart
+  useCart,
+  useWishlist, useUser
 } from '@vue-storefront/prestashop';
 
 export default {
   name: 'Home',
   setup() {
-    const { $config } = useContext();
-    const { toggleNewsletterModal } = useUiState();
+    const {$config} = useContext();
+    const {toggleNewsletterModal} = useUiState();
+    const {isAuthenticated} = useUser();
     const products = ref([
       {
         title: 'Cream Beach Bag',
         image: addBasePath('/homepage/productA.webp'),
-        price: { regular: '50.00 $' },
-        rating: { max: 5, score: 4 },
+        price: {regular: '50.00 $'},
+        rating: {max: 5, score: 4},
         isInWishlist: true
       },
       {
         title: 'Cream Beach Bag 2',
         image: addBasePath('/homepage/productB.webp'),
-        price: { regular: '50.00 $' },
-        rating: { max: 5, score: 4 },
+        price: {regular: '50.00 $'},
+        rating: {max: 5, score: 4},
         isInWishlist: false
       },
       {
         title: 'Cream Beach Bag 3',
         image: addBasePath('/homepage/productC.webp'),
-        price: { regular: '50.00 $' },
-        rating: { max: 5, score: 4 },
+        price: {regular: '50.00 $'},
+        rating: {max: 5, score: 4},
         isInWishlist: false
       },
       {
         title: 'Cream Beach Bag RR',
         image: addBasePath('/homepage/productA.webp'),
-        price: { regular: '50.00 $' },
-        rating: { max: 5, score: 4 },
+        price: {regular: '50.00 $'},
+        rating: {max: 5, score: 4},
         isInWishlist: false
       },
       {
         title: 'Cream Beach Bag',
         image: addBasePath('/homepage/productB.webp'),
-        price: { regular: '50.00 $' },
-        rating: { max: 5, score: 4 },
+        price: {regular: '50.00 $'},
+        rating: {max: 5, score: 4},
         isInWishlist: false
       },
       {
         title: 'Cream Beach Bag',
         image: addBasePath('/homepage/productC.webp'),
-        price: { regular: '50.00 $' },
-        rating: { max: 5, score: 4 },
+        price: {regular: '50.00 $'},
+        rating: {max: 5, score: 4},
         isInWishlist: false
       },
       {
         title: 'Cream Beach Bag',
         image: addBasePath('/homepage/productA.webp'),
-        price: { regular: '50.00 $' },
-        rating: { max: 5, score: 4 },
+        price: {regular: '50.00 $'},
+        rating: {max: 5, score: 4},
         isInWishlist: false
       },
       {
         title: 'Cream Beach Bag',
         image: addBasePath('/homepage/productB.webp'),
-        price: { regular: '50.00 $' },
-        rating: { max: 5, score: 4 },
+        price: {regular: '50.00 $'},
+        rating: {max: 5, score: 4},
         isInWishlist: false
       }
     ]);
@@ -275,17 +280,22 @@ export default {
       loading: productsLoading
     } = useProduct('relatedProducts');
 
-    const { send: sendNotification } = useUiNotification();
-    const { addItem: addItemToCart, isInCart } = useCart();
+    const {send: sendNotification} = useUiNotification();
+    const {addItem: addItemToCart, isInCart} = useCart();
+    const {addItem: addItemToWishList, removeItem: removeFromWishList, isInWishlist} = useWishlist();
 
     onSSR(async () => {
-      await productsSearch({ featured: true });
+      await productsSearch({featured: true});
     });
 
     return {
+      isAuthenticated,
       sendNotification,
       isInCart,
+      isInWishlist,
       addItemToCart,
+      addItemToWishList,
+      removeFromWishList,
       productGetters,
       productsLoading,
       products: computed(() =>
@@ -310,6 +320,41 @@ export default {
           icon: 'check'
         });
       });
+    },
+    HandleAddToWishList(productObj) {
+      if (this.isAuthenticated) {
+        if (this.isInWishlist(productObj)) {
+          this.removeFromWishList(productObj).then(() => {
+            this.sendNotification({
+              key: 'removed_from_wishlist',
+              message: 'Product has been successfully removed from the wishlist !',
+              type: 'warning',
+              title: 'Product removed!',
+              icon: 'check'
+            });
+            // console.log(typeof productObj);
+          });
+        } else
+          this.addItemToWishList(productObj).then(() => {
+            this.sendNotification({
+              key: 'added_to_wishlist',
+              message: 'Product has been successfully added to the wishlist !',
+              type: 'success',
+              title: 'Product added!',
+              icon: 'check'
+            });
+            // console.log(typeof productObj);
+          });
+      } else {
+        this.sendNotification({
+          key: 'authentication_required',
+          message: 'To add this product to your wishlist, you need to login first.',
+          type: 'danger',
+          title: 'Authentication required!',
+          icon: 'error',
+          action: {text: 'Login NOW'}
+        });
+      }
     }
   },
   middleware: cacheControl({
@@ -352,6 +397,7 @@ export default {
   @include for-desktop {
     margin: var(--spacer-xl) auto var(--spacer-2xl);
   }
+
   .sf-hero-item {
     &:nth-child(even) {
       --hero-item-background-position: left;
@@ -366,6 +412,7 @@ export default {
       }
     }
   }
+
   ::v-deep .sf-hero__control {
     &--right, &--left {
       display: none;
@@ -376,9 +423,11 @@ export default {
 .banner-grid {
   --banner-container-width: 50%;
   margin: var(--spacer-xl) 0;
+
   ::v-deep .sf-link:hover {
     color: var(--c-white);
   }
+
   @include for-desktop {
     margin: var(--spacer-2xl) 0;
     ::v-deep .sf-link {
@@ -392,6 +441,7 @@ export default {
   &__tshirt {
     background-position: left;
   }
+
   &-central {
     @include for-desktop {
       --banner-container-flex: 0 0 70%;
@@ -426,15 +476,18 @@ export default {
   @include for-desktop {
     margin: 0;
   }
+
   &__item {
     margin: 1.375rem 0 2.5rem 0;
     @include for-desktop {
       margin: var(--spacer-xl) 0 var(--spacer-xl) 0;
     }
+
     &__product {
       --product-card-add-button-transform: translate3d(0, 30%, 0);
     }
   }
+
   ::v-deep .sf-arrow--long .sf-arrow--right {
     --arrow-icon-transform: rotate(180deg);
     -webkit-transform-origin: center;
@@ -445,7 +498,7 @@ export default {
 </style>
 
 <style lang="scss">
-.sf-circle-icon{
+.sf-circle-icon {
   z-index: 10;
   bottom: var(--product-card-add-button-bottom, 0rem);
 }
