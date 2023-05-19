@@ -66,6 +66,8 @@
             :link="localePath(`/p/${productGetters.getId(product)}/${productGetters.getSlug(product)}`)"
             class="carousel__item__product"
             @click:add-to-cart="HandleAddToCart({ product, quantity:1 })"
+            @click:wishlist="HandleAddToWishList({ product })"
+            :isInWishlist="isInWishlist({product})"
           />
         </SfCarouselItem>
       </SfCarousel>
@@ -128,7 +130,9 @@ import { useUiNotification } from '~/composables';
 import {
   useProduct,
   productGetters,
-  useCart
+  useCart,
+  useWishlist,
+  useUser
 } from '@vue-storefront/prestashop';
 
 export default {
@@ -136,6 +140,7 @@ export default {
   setup() {
     const { $config } = useContext();
     const { toggleNewsletterModal } = useUiState();
+    const {isAuthenticated} = useUser();
     const products = ref([
       {
         title: 'Cream Beach Bag',
@@ -277,15 +282,20 @@ export default {
 
     const { send: sendNotification } = useUiNotification();
     const { addItem: addItemToCart, isInCart } = useCart();
+    const {addItem: addItemToWishList, removeItem: removeFromWishList, isInWishlist} = useWishlist();
 
     onSSR(async () => {
       await productsSearch({ featured: true });
     });
 
     return {
+      isAuthenticated,
       sendNotification,
       isInCart,
       addItemToCart,
+      addItemToWishList,
+      removeFromWishList,
+      isInWishlist,
       productGetters,
       productsLoading,
       products: computed(() =>
@@ -306,10 +316,44 @@ export default {
           key: 'added_to_cart',
           message: 'Product has been successfully added to cart !',
           type: 'success',
-          title: 'Product added!',
+          title: this.$t('Product added'),
           icon: 'check'
         });
       });
+    },
+    HandleAddToWishList(productObj) {
+      if (this.isAuthenticated) {
+        if (this.isInWishlist(productObj)) {
+          this.removeFromWishList(productObj).then(() => {
+            this.sendNotification({
+              key: 'removed_from_wishlist',
+              message: this.$t('Product has been successfully removed from the wishlist'),
+              type: 'warning',
+              title: this.$t('Product removed'),
+              icon: 'check'
+            });
+            // console.log(typeof productObj);
+          });
+        } else
+          this.addItemToWishList(productObj).then(() => {
+            this.sendNotification({
+              key: 'added_to_wishlist',
+              message: this.$t('Product has been successfully added to the wishlist'),
+              type: 'success',
+              title: this.$t('Product added'),
+              icon: 'check'
+            });
+            // console.log(typeof productObj);
+          });
+      } else {
+        this.sendNotification({
+          key: 'authentication_required',
+          message: this.$t('To add this product to your wishlist, you need to login first.'),
+          type: 'danger',
+          title: 'Authentication required!',
+          icon: 'error'
+        });
+      }
     }
   },
   middleware: cacheControl({

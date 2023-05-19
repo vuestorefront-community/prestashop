@@ -10,6 +10,7 @@ import populateShippingProvidersList from './populateShippingProvidersList';
 import populatePaymentProvidersList from './populatePaymentProvidersList';
 import populateCategoryTree from './populateCategoryTree';
 import populateCategoryInfo from './populateCategoryInfo';
+import populateWishlistItems from './populateWishlistItems';
 
 export {
   populateCategoryProducts,
@@ -23,6 +24,7 @@ export {
   populateShippingProvidersList,
   populatePaymentProvidersList,
   populateCategoryTree,
-  populateCategoryInfo
+  populateCategoryInfo,
+  populateWishlistItems
 };
 

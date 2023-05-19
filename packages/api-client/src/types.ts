@@ -91,6 +91,13 @@ export type ShippingProvider = TODO;
 
 export type Store = TODO;
 
-export type Wishlist = TODO;
+export type Wishlist = any;
 
-export type WishlistItem = TODO;
+export declare type WishlistItem = {
+    id: string;
+    name: string;
+    image: string;
+    regularPrice: number;
+    discountPrice: number;
+    reference: string;
+};
