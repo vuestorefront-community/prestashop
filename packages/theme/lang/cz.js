@@ -211,5 +211,6 @@ export default {
   'All Orders': 'Všechny objednávky',
   'Add to cart': 'Přidat do košíku',
   'Shipping cost': 'Cena dopravy',
-  'Unfortunately, there are no carriers available for your delivery address.': 'Unfortunately, there are no carriers available for your delivery address.'
+  'Unfortunately, there are no carriers available for your delivery address.': 'Unfortunately, there are no carriers available for your delivery address.',
+  'Log in to your account or Create one': 'Log in to your account or Create one'
 };

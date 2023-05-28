@@ -3,18 +3,11 @@
     <SfHeading
       v-e2e="'user-account-heading'"
       :level="3"
-      :title="$t('User Account')"
+      :title="$t('Log in to your account or Create one')"
       class="sf-heading--left sf-heading--no-underline title"
     />
     <div v-if="!isAuthenticated">
-      <div class="mb-20">
-        Register |
-        <SfButton class="sf-button--text" @click="handleAccountClick">
-          {{ $t('Sign in') }}
-        </SfButton>
-      </div>
-
-      <CreateAccountForm @submit="updatePersonalData"/>
+      <CheckoutAuthForm @submit="submitCheckoutAuthForm"/>
     </div>
     <div v-if="isAuthenticated">
       You are logged in. <SfLink @click="logOut" >Log out</SfLink>
@@ -36,7 +29,7 @@ import { onSSR } from '@vue-storefront/core';
 import {useShipping, useUser} from '@vue-storefront/prestashop';
 import {required, min, email, confirmed} from 'vee-validate/dist/rules';
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
-import CreateAccountForm from '~/components/MyAccount/CreateAccountForm';
+import CheckoutAuthForm from '~/components/Checkout/CheckoutAuthForm';
 
 const COUNTRIES = [
   { key: 'US', label: 'United States' },
@@ -85,7 +78,7 @@ export default {
     SfLink,
     ValidationProvider,
     ValidationObserver,
-    CreateAccountForm,
+    CheckoutAuthForm,
     VsfShippingProvider: () => import('~/components/Checkout/VsfShippingProvider')
   },
   setup (props, context) {
@@ -93,7 +86,7 @@ export default {
     const isFormSubmitted = ref(false);
     const { load, save, loading } = useShipping();
     const { toggleLoginModal } = useUiState();
-    const { isAuthenticated, logout, register } = useUser();
+    const { isAuthenticated, logout, register, login } = useUser();
 
     const form = ref({
       firstName: '',
@@ -134,7 +127,15 @@ export default {
       }
     };
 
-    const updatePersonalData = ({ form, onComplete, onError }) => formHandler(() => register({ user: form.value }), onComplete, onError);
+    const submitCheckoutAuthForm = ({ form, onComplete, onError }) => formHandler(() => {
+      switch (form.value.whichForm) {
+        case 'register':
+          return register({ user: form.value });
+        case 'login':
+          form.value.username = form.value.email;
+          return login({ user: form.value });
+      }
+    }, onComplete, onError);
 
     return {
       isAuthenticated,
@@ -145,7 +146,7 @@ export default {
       form,
       countries: COUNTRIES,
       handleFormSubmit,
-      updatePersonalData
+      submitCheckoutAuthForm
     };
   }
 };
