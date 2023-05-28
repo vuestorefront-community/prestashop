@@ -16,7 +16,7 @@
                 <SfInput
                   v-model="form.firstName"
                   name="firstName"
-                  label="First Name"
+                  :label="$t('First Name')"
                   required
                   :valid="!errors[0]"
                   :error-message="errors[0]"
@@ -30,7 +30,7 @@
                 <SfInput
                   v-model="form.lastName"
                   name="lastName"
-                  label="Last Name"
+                  :label="$t('Last Name')"
                   required
                   :valid="!errors[0]"
                   :error-message="errors[0]"
@@ -47,7 +47,7 @@
                   v-model="form.email"
                   type="email"
                   name="email"
-                  label="Your e-mail"
+                  :label="$t('Your email')"
                   required
                   :valid="!errors[0]"
                   :error-message="errors[0]"
@@ -65,7 +65,7 @@
                   v-model="password"
                   type="password"
                   name="password"
-                  label="Password"
+                  :label="$t('Password')"
                   required
                   class="form__element"
                 />
@@ -95,7 +95,7 @@
                   v-model="form.email"
                   type="email"
                   name="email"
-                  label="Your e-mail"
+                  :label="$t('Your email')"
                   required
                   :valid="!errors[0]"
                   :error-message="errors[0]"
@@ -113,7 +113,7 @@
                   v-model="password"
                   type="password"
                   name="password"
-                  label="Password"
+                  :label="$t('Password')"
                   required
                   class="form__element"
                 />

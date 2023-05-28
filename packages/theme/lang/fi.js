@@ -213,5 +213,6 @@ export default {
   'All Orders': 'Kaikki tilaukset',
   'Add to cart': 'Lisää koriin',
   'Shipping cost': 'Toimituskulut',
-  'Unfortunately, there are no carriers available for your delivery address.': 'Valitettavasti toimitusosoitteeseesi ei ole saatavilla toimitustapoja.'
+  'Unfortunately, there are no carriers available for your delivery address.': 'Valitettavasti toimitusosoitteeseesi ei ole saatavilla toimitustapoja.',
+  'Log in to your account or Create one': 'Log in to your account or Create one'
 };
