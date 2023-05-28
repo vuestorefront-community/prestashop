@@ -72,6 +72,7 @@
               </ValidationProvider>
             </div>
             <SfButton
+              :disabled="formSubmit"
               class="form__button"
             >
               {{ $t('Submit') }}
@@ -167,6 +168,7 @@ export default defineComponent({
     const emit = context.emit;
     const { $router } = context.root;
     const password = ref('');
+    const formSubmit = ref(false);
     const genderOptions = [
       { value: 1, label: 'male' },
       { value: 2, label: 'female' }
@@ -183,12 +185,15 @@ export default defineComponent({
     const form = ref(resetForm());
     const submitForm = (resetValidationFn, whichForm) => () => {
       const onComplete = () => {
+        formSubmit.value = false;
         form.value = resetForm();
         password.value = '';
         $router.push(context.root.localePath({ name: 'shipping' }));
         resetValidationFn();
       };
       const onError = () => {
+        formSubmit.value = false;
+
         sendNotification({
           id: Symbol('user_create_failed'),
           message: 'Could not create user! Check password or lastname, firstname format.',
@@ -202,13 +207,16 @@ export default defineComponent({
         form.value.password = password.value;
       }
       form.value.whichForm = whichForm;
+      formSubmit.value = true;
+
       emit('submit', { form, onComplete, onError });
     };
     return {
       password,
       form,
       submitForm,
-      genderOptions
+      genderOptions,
+      formSubmit
     };
   }
 });
