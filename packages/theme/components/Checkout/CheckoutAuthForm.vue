@@ -121,6 +121,7 @@
               </ValidationProvider>
             </div>
             <SfButton
+              :disabled="formSubmit"
               class="form__button"
             >
               {{ $t('Login') }}
@@ -196,7 +197,7 @@ export default defineComponent({
 
         sendNotification({
           id: Symbol('user_create_failed'),
-          message: 'Could not create user! Check password or lastname, firstname format.',
+          message: 'Could not proceed! Check email or your password.',
           type: 'danger',
           icon: 'error',
           persist: false,

@@ -130,12 +130,10 @@ export default {
     const submitCheckoutAuthForm = ({ form, onComplete, onError }) => formHandler(() => {
       switch (form.value.whichForm) {
         case 'register':
-          register({ user: form.value });
-          break;
+          return register({ user: form.value });
         case 'login':
           form.value.username = form.value.email;
-          login({ user: form.value });
-          break;
+          return login({ user: form.value });
       }
     }, onComplete, onError);
 
