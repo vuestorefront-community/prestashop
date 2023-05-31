@@ -192,16 +192,16 @@ export default defineComponent({
         $router.push(context.root.localePath({ name: 'shipping' }));
         resetValidationFn();
       };
-      const onError = () => {
+      const onError = (error) => {
         formSubmit.value = false;
+        const message = error.register ? error.register : error.login;
 
         sendNotification({
           id: Symbol('user_create_failed'),
-          message: 'Could not proceed! Check email or your password.',
+          message: message,
           type: 'danger',
           icon: 'error',
-          persist: false,
-          title: 'User Account Create'
+          persist: false
         });
       };
       if (password.value) {
