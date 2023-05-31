@@ -23,7 +23,7 @@ import {
   SfSelect,
   SfLink
 } from '@storefront-ui/vue';
-import { ref } from '@nuxtjs/composition-api';
+import {reactive, ref} from '@nuxtjs/composition-api';
 import { useUiState } from '~/composables';
 import { onSSR } from '@vue-storefront/core';
 import {useShipping, useUser} from '@vue-storefront/prestashop';
@@ -86,7 +86,7 @@ export default {
     const isFormSubmitted = ref(false);
     const { load, save, loading } = useShipping();
     const { toggleLoginModal } = useUiState();
-    const { isAuthenticated, logout, register, login } = useUser();
+    const { isAuthenticated, logout, register, login, error: userError } = useUser();
 
     const form = ref({
       firstName: '',
@@ -118,9 +118,22 @@ export default {
       $router.push(context.root.localePath({ name: 'home' }));
     };
 
+    const errorObj = reactive({
+      login: null,
+      register: null
+    });
+
     const formHandler = async (fn, onComplete, onError) => {
       try {
         const data = await fn();
+
+        const hasUserErrors = userError.value.register || userError.value.login;
+        if (hasUserErrors) {
+          errorObj.login = userError.value.login?.message;
+          errorObj.register = userError.value.register?.message;
+
+          onError(errorObj);
+        }
         await onComplete(data);
       } catch (error) {
         onError(error);
