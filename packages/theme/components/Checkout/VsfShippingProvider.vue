@@ -19,23 +19,6 @@
         </div>
       </div>
     </SfLoader>
-    <div class="summary__action">
-      <SfButton
-        type="button"
-        class="sf-button color-secondary summary__back-button"
-        @click.prevent="$emit('go-back')"
-      >
-        {{ $t('Go back') }}
-      </SfButton>
-    <SfButton
-      v-e2e="'continue-to-billing'"
-      :disabled="!selectedMethod"
-      type="button"
-      @click="goToPayment"
-    >
-      {{ $t('Continue to payment') }}
-    </SfButton>
-    </div>
   </div>
 </template>
 
@@ -56,13 +39,10 @@ export default {
   },
   setup(props, context) {
     const selectedMethod = ref(null);
-    const { load, state, save, loading } = useShippingProvider();
+    const { load, state, loading } = useShippingProvider();
     const selectMethod = async(method) => {
       selectedMethod.value = method;
-    };
-    const goToPayment = async () => {
-      await save({ customQuery: { shippingMethodId: selectedMethod.value, addressId: props.selectedAddress }});
-      context.root.$router.push({ path: 'payment' });
+      context.emit('shipping-method', method);
     };
     const shippingProvidersList = computed(()=> state.value ? shippingProviderGetters.getShippingProvidersList(state.value) : []);
     const loadShippingProviders = async () => {
@@ -73,7 +53,6 @@ export default {
       shippingMethods: shippingProvidersList,
       selectedMethod,
       selectMethod,
-      goToPayment,
       loading
     };
   }
