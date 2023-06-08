@@ -6,71 +6,74 @@
       :title="$t('Shipping')"
       class="sf-heading--left sf-heading--no-underline title"
     />
-    <form v-if='addressesList.length >= 1 && !addressFormVisibility' @submit.prevent="handleSelectedAddressSubmit">
-      <SfLoader :class="{ loading }" :loading="loading">
-        <div>
-      <sf-address-picker v-model='selectedAddress' class='address-picker'>
-        <div  v-for="address in addressesList" :key="address.id">
-        <sf-address :name="address.id" v-if='!isFormSubmitted || isSelectedAddress(address.id)'>
-          <div>
-          <span>{{address.alias}}</span>
-          <span>{{address.address1}}</span>
-          <span>{{address.address2}}</span>
-          <span>{{address.postcode}}</span>
-          <span>{{address.city}}</span>
-          <span>{{address.country}}</span>
-          <span>{{address.phone}}</span>
-          </div>
-          <div class='flex-row' v-if='!isFormSubmitted'>
-            <div>
-              <SfLink
-                @click.prevent='editAddress(address)'
-              >
-                {{ $t('Edit') }}
-              </SfLink>
-            </div>
-            <div>
-              <SfLink
-                @click.prevent='removeAddress(address.id)'
-              >
-                {{ $t('Remove') }}
-              </SfLink>
-            </div>
-          </div>
-        </sf-address>
+    <form v-if='addressesList.length >= 1 && !addressFormVisibility' @submit.prevent="handleSelectedShippingOptionSubmit">
+      <div>
+        <sf-address-picker v-model='selectedAddress' class='address-picker'>
+          <div @change='selectAddress' v-for="address in addressesList" :key="address.id">
+            <sf-address :name="address.id" v-if='!isFormSubmitted || isSelectedShippingOption(address.id)'>
+              <div>
+                <span>{{address.alias}}</span>
+                <span>{{address.address1}}</span>
+                <span>{{address.address2}}</span>
+                <span>{{address.postcode}}</span>
+                <span>{{address.city}}</span>
+                <span>{{address.country}}</span>
+                <span>{{address.phone}}</span>
+              </div>
+              <div class='flex-row' v-if='!isFormSubmitted'>
+                <div>
+                  <SfLink
+                    @click.prevent='editAddress(address)'
+                  >
+                    {{ $t('Edit') }}
+                  </SfLink>
+                </div>
+                <div>
+                  <SfLink
+                    @click.prevent='removeAddress(address.id)'
+                  >
+                    {{ $t('Remove') }}
+                  </SfLink>
+                </div>
+              </div>
+            </sf-address>
 
+          </div>
+        </sf-address-picker>
+
+        <div class="shipping-items">
+            <VsfShippingProvider
+              v-if="selectedAddress"
+              :selected-address="selectedAddress"
+              @go-back='goBack'
+              @shipping-method='selectShippingMethod'
+            />
         </div>
-      </sf-address-picker>
-      <div class="form" v-if="!isFormSubmitted">
-        <div class='form__action'>
-          <SfButton
-            v-e2e="'add-new-address'"
-            :disabled="loading"
-            class="form__action-button"
-            @click='addNewAddress'
-          >
-            {{ $t('Add new address') }}
-          </SfButton>
-          <SfButton
-            v-e2e="'select-shipping'"
-            :disabled="loading || !selectedAddress"
-            class="form__action-button"
-            type="submit"
-          >
-            {{ $t('Select shipping method') }}
-          </SfButton>
+
+        <div class="form" v-if="!isFormSubmitted">
+          <div class='form__action'>
+            <SfButton
+              v-e2e="'add-new-address'"
+              :disabled="loading"
+              class="form__action-button"
+              @click='addNewAddress'
+            >
+              {{ $t('Add new address') }}
+            </SfButton>
+            <SfButton
+              v-e2e="'select-shipping'"
+              :disabled="loading || !selectedAddress"
+              class="form__action-button"
+              type="submit"
+            >
+              {{ $t('Continue to payment') }}
+            </SfButton>
+          </div>
         </div>
       </div>
-        </div>
-      </SfLoader>
     </form>
     <address-form v-else-if='isEdit' edit :addressForEdit='addressForEdit' :addressesCount='addressesList.length' @toggle='toggleAddressFormVisibility' />
     <address-form v-else :addressesCount='addressesList.length' @toggle='toggleAddressFormVisibility' />
-    <VsfShippingProvider
-      v-if="isFormSubmitted"
-      :selected-address="selectedAddress"
-      @go-back='goBack'
-    />
   </ValidationObserver>
 </template>
 
@@ -84,7 +87,7 @@ import {
 } from '@storefront-ui/vue';
 import { computed, ref } from '@nuxtjs/composition-api';
 import { onSSR } from '@vue-storefront/core';
-import { userShippingGetters, useUserShipping } from '@vue-storefront/prestashop';
+import { userShippingGetters, useUserShipping, useShippingProvider } from '@vue-storefront/prestashop';
 import { required, min, digits } from 'vee-validate/dist/rules';
 import { ValidationObserver, extend } from 'vee-validate';
 
@@ -113,19 +116,21 @@ export default {
     AddressForm: () => import('../../components/AddressForm.vue'),
     VsfShippingProvider: () => import('~/components/Checkout/VsfShippingProvider')
   },
-  setup () {
+  setup (props, context) {
     const isFormSubmitted = ref(false);
     const { shipping, load, setDefaultAddress, loading, deleteAddress } = useUserShipping();
+    const { save } = useShippingProvider();
     const selectedAddress = ref(null);
     const addressFormVisibility = ref(false);
     const addressForEdit = ref(null);
     const isEdit = ref(false);
+    const selectedShippingMethod = ref(false);
     const addressesList = computed(()=> shipping.value ? userShippingGetters.getAddresses(shipping.value) : []);
     const toggleAddressFormVisibility = (() => addressFormVisibility.value = !addressFormVisibility.value);
     const removeAddress = async (id) => {
       await deleteAddress({address: {id: id} });
     };
-    const isSelectedAddress = (id) => {
+    const isSelectedShippingOption = (id) => {
       if (selectedAddress.value && id === selectedAddress.value) {
         return true;
       }
@@ -141,9 +146,10 @@ export default {
       isEdit.value = true;
       toggleAddressFormVisibility();
     };
-    const handleSelectedAddressSubmit = async() => {
-      await setDefaultAddress({address: {id: selectedAddress.value} });
-      isFormSubmitted.value = true;
+
+    const handleSelectedShippingOptionSubmit = async() => {
+      await save({ customQuery: { shippingMethodId: selectedShippingMethod.value, addressId: selectedAddress.value }});
+      context.root.$router.push({ path: 'payment' });
     };
     const goBack = () => {
       isFormSubmitted.value = false;
@@ -153,6 +159,14 @@ export default {
       await load();
     });
 
+    const selectAddress = async () =>{
+      await setDefaultAddress({address: {id: selectedAddress.value} });
+    };
+
+    const selectShippingMethod = (method) => {
+      selectedShippingMethod.value = method;
+    };
+
     return {
       addressesList,
       selectedAddress,
@@ -160,14 +174,16 @@ export default {
       isFormSubmitted,
       addressFormVisibility,
       toggleAddressFormVisibility,
-      handleSelectedAddressSubmit,
+      handleSelectedShippingOptionSubmit,
       removeAddress,
       editAddress,
       isEdit,
       addNewAddress,
       addressForEdit,
-      isSelectedAddress,
-      goBack
+      isSelectedShippingOption,
+      goBack,
+      selectAddress,
+      selectShippingMethod
     };
   }
 };
@@ -268,5 +284,9 @@ export default {
 }
 .address-picker{
   margin-bottom:2rem
+}
+
+.shipping-items{
+  margin-bottom: 2rem;
 }
 </style>
