@@ -66,8 +66,18 @@ function getGrouped(searchResult, criteria?: FacetSearchCriteria): AgnosticGroup
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars,@typescript-eslint/explicit-module-boundary-types
 function getSortOptions(params: any): AgnosticSort {
+  const sortOrders = params?.data?.sort_orders;
+
+  if (sortOrders) {
+    const sortList = populateSortItems(params?.data?.sort_orders);
+    return {
+      options: sortList.items,
+      selected: sortList.selectedItem
+    };
+  }
+
   return {
-    options: populateSortItems(params?.data?.sort_orders),
+    options: [],
     selected: ''
   };
 }

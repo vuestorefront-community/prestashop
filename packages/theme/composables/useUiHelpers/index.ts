@@ -36,7 +36,7 @@ const useUiHelpers = () => {
       rootCatSlug: params.slug_1,
       categorySlug,
       page: parseInt(query.page as string, 10) || 1,
-      sort: query.sort || 'latest',
+      sort: query.sort || '',
       filters: getFiltersDataFromUrl(context, true),
       itemsPerPage: parseInt(query.itemsPerPage as string, 12) || 20,
       term: query.term

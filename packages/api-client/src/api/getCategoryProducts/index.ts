@@ -19,6 +19,7 @@ export default async function getCategoryProducts(context, params) {
     url.searchParams.set('page', params.input.page);
     url.searchParams.set('with_all_images', '0');
     url.searchParams.set('with_category_tree', '1');
+    url.searchParams.set('order', params.input.sort);
 
     const { data } = await context.client.get(url.href);
     return data;
