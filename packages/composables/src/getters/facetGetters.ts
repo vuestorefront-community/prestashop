@@ -11,6 +11,7 @@ import {
 import type { PsProduct, Facet, FacetSearchCriteria } from '@vue-storefront/prestashop-api';
 import { populateCategoryProducts } from '../helpers';
 import { populateCategoryTree } from '../helpers';
+import { populateSortItems } from '../helpers';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function getAll(params: FacetSearchResult<Facet>, criteria?: FacetSearchCriteria): AgnosticFacet[] {
@@ -63,8 +64,18 @@ function getGrouped(searchResult, criteria?: FacetSearchCriteria): AgnosticGroup
   return [];
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function getSortOptions(params: FacetSearchResult<Facet>): AgnosticSort {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars,@typescript-eslint/explicit-module-boundary-types
+function getSortOptions(params: any): AgnosticSort {
+  const sortOrders = params?.data?.sort_orders;
+
+  if (sortOrders) {
+    const sortList = populateSortItems(params?.data?.sort_orders);
+    return {
+      options: sortList.items,
+      selected: sortList.selectedItem
+    };
+  }
+
   return {
     options: [],
     selected: ''
