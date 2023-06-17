@@ -17,7 +17,7 @@ git clone git@github.com:vuestorefront-community/prestashop.git
 yarn install
 ```
 
-4. Change API url in this file: 
+4. Change API url in this file `packages/theme/middleware.config.js`: 
 
 ```js
 module.exports = {
