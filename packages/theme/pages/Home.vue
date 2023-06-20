@@ -66,6 +66,7 @@
             :link="localePath(`/p/${productGetters.getId(product)}/${productGetters.getSlug(product)}`)"
             class="carousel__item__product"
             @click:add-to-cart="HandleAddToCart({ product, quantity:1 })"
+            @click:wishlist="HandleAddItemToWishlist({ product })"
           />
         </SfCarouselItem>
       </SfCarousel>
@@ -128,7 +129,8 @@ import { useUiNotification } from '~/composables';
 import {
   useProduct,
   productGetters,
-  useCart
+  useCart,
+  useWishlist
 } from '@vue-storefront/prestashop';
 
 export default {
@@ -277,6 +279,7 @@ export default {
 
     const { send: sendNotification } = useUiNotification();
     const { addItem: addItemToCart, isInCart } = useCart();
+    const { addItem: addItemToWishlist } = useWishlist();
 
     onSSR(async () => {
       await productsSearch({ featured: true });
@@ -296,7 +299,8 @@ export default {
       onSubscribe,
       addBasePath,
       banners,
-      heroes
+      heroes,
+      addItemToWishlist
     };
   },
   methods: {
@@ -305,6 +309,17 @@ export default {
         this.sendNotification({
           key: 'added_to_cart',
           message: 'Product has been successfully added to cart !',
+          type: 'success',
+          title: 'Product added!',
+          icon: 'check'
+        });
+      });
+    },
+    HandleAddItemToWishlist(productObj) {
+      this.addItemToWishlist(productObj).then(() => {
+        this.sendNotification({
+          key: 'added_to_wishlist',
+          message: 'Product has been successfully added to Wishlsit!',
           type: 'success',
           title: 'Product added!',
           icon: 'check'
