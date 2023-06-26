@@ -22,3 +22,6 @@ export { default as setShippingMethod } from './setShippingMethod';
 export { default as getPaymentMethods } from './getPaymentMethods';
 export { default as makeOrder } from './makeOrder';
 export { default as updateCustomer } from './updateCustomer';
+export { default as addItemToWishlist } from './addItemToWishlist';
+export { default as getWhishlistItems } from './getWishlistItems';
+export { default as removeFromWishlist } from './removeFromWishlist';

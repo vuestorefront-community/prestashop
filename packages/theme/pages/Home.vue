@@ -39,7 +39,6 @@
         </nuxt-link>
       </div>
     </LazyHydrate>
-
     <LazyHydrate when-visible>
       <SfCarousel class="carousel" :settings="{ peek: 16, breakpoints: { 1023: { peek: 0, perView: 2 } } }">
         <template #prev="{go}">
@@ -66,6 +65,14 @@
             :link="localePath(`/p/${productGetters.getId(product)}/${productGetters.getSlug(product)}`)"
             class="carousel__item__product"
             @click:add-to-cart="HandleAddToCart({ product, quantity:1 })"
+            @click:wishlist="isAuthenticated ? HandleAddItemToWishlist({ product }) 
+            : sendNotification({
+                key: 'added_to_wishlist',
+                message: 'You must be logged in to use wishlist',
+                type: 'danger',
+                title: 'add product error',
+                icon: 'error'
+            }) "
           />
         </SfCarouselItem>
       </SfCarousel>
@@ -128,14 +135,19 @@ import { useUiNotification } from '~/composables';
 import {
   useProduct,
   productGetters,
-  useCart
+  useCart,
+  useWishlist,
+  useUser
 } from '@vue-storefront/prestashop';
+import isAuthenticated from '~/middleware/is-authenticated';
+
 
 export default {
   name: 'Home',
   setup() {
     const { $config } = useContext();
     const { toggleNewsletterModal } = useUiState();
+    const { isAuthenticated } = useUser();
     const products = ref([
       {
         title: 'Cream Beach Bag',
@@ -277,6 +289,7 @@ export default {
 
     const { send: sendNotification } = useUiNotification();
     const { addItem: addItemToCart, isInCart } = useCart();
+    const { addItem: addItemToWishlist } = useWishlist();
 
     onSSR(async () => {
       await productsSearch({ featured: true });
@@ -296,7 +309,9 @@ export default {
       onSubscribe,
       addBasePath,
       banners,
-      heroes
+      heroes,
+      addItemToWishlist,
+      isAuthenticated
     };
   },
   methods: {
@@ -310,6 +325,17 @@ export default {
           icon: 'check'
         });
       });
+    },
+    HandleAddItemToWishlist(productObj) {
+      this.addItemToWishlist(productObj).then(() => {
+        this.sendNotification({
+          key: 'added_to_wishlist',
+          message: 'Product has been successfully added to Wishlsit!',
+          type: 'success',
+          title: 'Product added!',
+          icon: 'check'
+        });
+      })
     }
   },
   middleware: cacheControl({
