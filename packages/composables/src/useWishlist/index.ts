@@ -27,7 +27,6 @@ const params: UseWishlistFactoryParams<Wishlist, WishlistItem, Product> = {
     const { data, cookieObject } = await context.$prestashop.api.getWhishlistItems({ psCookieKey, psCookieValue, lang: lang, currency: currency });
 
     if (data && data.code === 200) {
-      console.log( 'data' , data)
       if (cookieObject) {
         context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
         context.$prestashop.config.app.$cookies.set(vsfCookieValue, cookieObject.vsfPsValCookie);
@@ -71,6 +70,30 @@ const params: UseWishlistFactoryParams<Wishlist, WishlistItem, Product> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   removeItem: async (context: Context, { currentWishlist, product }) => {
     console.log('Mocked: useWishlist.removeItem');
+    const vsfCookieKey = context.$prestashop.config.app.$config.psCustomerCookieKey;
+    const vsfCookieValue = context.$prestashop.config.app.$config.psCustomerCookieValue;
+
+    const psCookieKey = context.$prestashop.config.app.$cookies.get(vsfCookieKey);
+    const psCookieValue = context.$prestashop.config.app.$cookies.get(vsfCookieValue);
+
+    const lang = context.$prestashop.config.app.i18n.locales &&
+    context.$prestashop.config.app.i18n.locales.length > 1 &&
+    context.$prestashop.config.app.$cookies.get('vsf-locale')
+      ? '/' + context.$prestashop.config.app.$cookies.get('vsf-locale') : '';
+
+    const currency = context.$prestashop.config.app.$cookies.get('vsf-currency');
+    const { data, cookieObject } = await context.$prestashop.api.removeFromWishlist({ psCookieKey, psCookieValue, product, lang: lang, currency: currency });
+
+    if (data.code === 200) {
+      if (cookieObject) {
+        context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
+        context.$prestashop.config.app.$cookies.set(vsfCookieValue, cookieObject.vsfPsValCookie);
+      }
+      return data;
+    } else {
+      // remove from cart failed
+      return {};
+    }
     return {};
   },
 
