@@ -98,7 +98,6 @@ export default {
     const { isAuthenticated } = useUser();
     const products = computed(() =>isAuthenticated.value ? wishlist.value.psdata.products : []);
     const totalItems = computed(() =>isAuthenticated.value ? wishlist.value.psdata.products.length : 0);
-    console.log('wishlist' , wishlist)
     return {
       addBasePath,
       isAuthenticated,
