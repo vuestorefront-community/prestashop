@@ -68,7 +68,7 @@
             @click:wishlist="isAuthenticated ? HandleAddItemToWishlist({ product })
             : sendNotification({
                 key: 'added_to_wishlist',
-                message: $n('You need to be logged in to save products in your wishlist.'),
+                message: $t('You need to be logged in to save products in your wishlist.'),
                 type: 'warning',
                 title: 'add product error',
                 icon: 'error'

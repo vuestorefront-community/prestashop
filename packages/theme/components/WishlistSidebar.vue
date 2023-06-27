@@ -94,8 +94,8 @@ export default {
     const { isWishlistSidebarOpen, toggleWishlistSidebar } = useUiState();
     const { wishlist, removeItem } = useWishlist();
     const { isAuthenticated } = useUser();
-    const products = computed(() => wishlist.value ? wishlist.value.psdata.products : []);
-    const totalItems = computed(() => wishlist.value ? wishlist.value.psdata.products.length : 0);
+    const products = computed(() => wishlist.value?.psdata ? wishlist.value.psdata.products : []);
+    const totalItems = computed(() => wishlist.value?.psdata ? wishlist.value.psdata.products.length : 0);
     return {
       addBasePath,
       isAuthenticated,
