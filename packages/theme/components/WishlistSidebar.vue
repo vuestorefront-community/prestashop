@@ -3,21 +3,21 @@
     <SfSidebar
       :visible="isWishlistSidebarOpen"
       :button="false"
-      title="My Wishlist"
+      :title="$t('My Wishlist')"
       @close="toggleWishlistSidebar"
       class="sidebar sf-sidebar--right"
     >
       <template #title>
         <div class="heading__wrapper">
           <SfHeading :level="3" title="My wishlist" class="sf-heading--left"/>
-          <SfButton class="heading__close-button sf-button--pure" aria-label="Wishlist sidebar close button" @click="toggleWishlistSidebar">
+          <SfButton class="heading__close-button sf-button--pure" :aria-label="$t('Wishlist sidebar close button')" @click="toggleWishlistSidebar">
             <SfIcon icon="cross" size="14px" color="gray-primary"/>
           </SfButton>
         </div>
       </template>
       <transition name="fade" mode="out-in">
         <div v-if="totalItems" class="my-wishlist" key="my-wishlist">
-          <div class="my-wishlist__total-items">Total items: <strong>{{ totalItems }}</strong></div>
+          <div class="my-wishlist__total-items">{{ $t('Total items') }}: <strong>{{ totalItems }}</strong></div>
           <div class="collected-product-list">
             <transition-group name="fade" tag="div">
               <SfCollectedProduct
@@ -45,11 +45,10 @@
         </div>
         <div v-else class="empty-wishlist" key="empty-wishlist">
           <div class="empty-wishlist__banner">
-            <SfImage :src="addBasePath('/icons/empty-cart.svg')" alt="Empty bag" class="empty-wishlist__icon" />
+            <SfImage :src="addBasePath('/icons/empty-cart.svg')" :alt="$t('Empty bag')" class="empty-wishlist__icon" />
             <SfHeading
-              title="Your bag is empty"
-              description="Looks like you haven’t added any items to the bag yet. Start
-              shopping to fill it in."
+              :title="$t('Your bag is empty')"
+              :description="$t('Looks like you haven’t added any items to the bag yet. Start shopping to fill it in.')"
               class="empty-wishlist__label"
             />
           </div>
@@ -78,7 +77,6 @@ import { computed } from '@nuxtjs/composition-api';
 import { useWishlist, useUser, wishlistGetters } from '@vue-storefront/prestashop';
 import { useUiState } from '~/composables';
 import { addBasePath } from '@vue-storefront/core';
-import { integer } from 'vee-validate/dist/rules';
 
 export default {
   name: 'Wishlist',
