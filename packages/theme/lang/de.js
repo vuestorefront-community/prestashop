@@ -214,5 +214,11 @@ export default {
   'Add to cart': 'In der Warenkorb',
   'Shipping cost': 'Shipping cost',
   'Unfortunately, there are no carriers available for your delivery address.': 'Unfortunately, there are no carriers available for your delivery address.',
-  'Log in to your account or Create one': 'Log in to your account or Create one'
+  'Log in to your account or Create one': 'Log in to your account or Create one',
+  'You need to be logged in to save products in your wishlist.': 'You need to be logged in to save products in your wishlist.',
+  'Product added!': 'Product added!',
+  'Product has been successfully added to cart!': 'Product has been successfully added to cart!',
+  'Product has been successfully added to Wishlsit!': 'Product has been successfully added to Wishlsit!',
+  'Looks like you haven’t added any items to the bag yet. Start shopping to fill it in.': 'Looks like you haven’t added any items to the bag yet. Start shopping to fill it in.',
+  'Wishlist sidebar close button': 'Wishlist sidebar close button'
 };

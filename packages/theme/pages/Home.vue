@@ -65,11 +65,11 @@
             :link="localePath(`/p/${productGetters.getId(product)}/${productGetters.getSlug(product)}`)"
             class="carousel__item__product"
             @click:add-to-cart="HandleAddToCart({ product, quantity:1 })"
-            @click:wishlist="isAuthenticated ? HandleAddItemToWishlist({ product }) 
+            @click:wishlist="isAuthenticated ? HandleAddItemToWishlist({ product })
             : sendNotification({
                 key: 'added_to_wishlist',
-                message: 'You must be logged in to use wishlist',
-                type: 'danger',
+                message: $n('You need to be logged in to save products in your wishlist.'),
+                type: 'warning',
                 title: 'add product error',
                 icon: 'error'
             }) "
@@ -139,13 +139,12 @@ import {
   useWishlist,
   useUser
 } from '@vue-storefront/prestashop';
-import isAuthenticated from '~/middleware/is-authenticated';
-
 
 export default {
   name: 'Home',
   setup() {
     const { $config } = useContext();
+    const { app } = useContext();
     const { toggleNewsletterModal } = useUiState();
     const { isAuthenticated } = useUser();
     const products = ref([
@@ -296,6 +295,7 @@ export default {
     });
 
     return {
+      app,
       sendNotification,
       isInCart,
       addItemToCart,
@@ -319,9 +319,9 @@ export default {
       this.addItemToCart(productObj).then(() => {
         this.sendNotification({
           key: 'added_to_cart',
-          message: 'Product has been successfully added to cart !',
+          message: this.app.i18n.t('Product has been successfully added to cart!'),
           type: 'success',
-          title: 'Product added!',
+          title: this.app.i18n.t('Product added!'),
           icon: 'check'
         });
       });
@@ -330,12 +330,12 @@ export default {
       this.addItemToWishlist(productObj).then(() => {
         this.sendNotification({
           key: 'added_to_wishlist',
-          message: 'Product has been successfully added to Wishlsit!',
+          message: this.app.i18n.t('Product has been successfully added to Wishlsit!'),
           type: 'success',
-          title: 'Product added!',
+          title: this.app.i18n.t('Product added!'),
           icon: 'check'
         });
-      })
+      });
     }
   },
   middleware: cacheControl({
