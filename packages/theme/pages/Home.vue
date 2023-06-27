@@ -319,9 +319,9 @@ export default {
       this.addItemToCart(productObj).then(() => {
         this.sendNotification({
           key: 'added_to_cart',
-          message: this.app.i18n.n('Product has been successfully added to cart!'),
+          message: this.app.i18n.t('Product has been successfully added to cart!'),
           type: 'success',
-          title: this.app.i18n.n('Product added!'),
+          title: this.app.i18n.t('Product added!'),
           icon: 'check'
         });
       });
@@ -330,9 +330,9 @@ export default {
       this.addItemToWishlist(productObj).then(() => {
         this.sendNotification({
           key: 'added_to_wishlist',
-          message: this.app.i18n.n('Product has been successfully added to Wishlsit!'),
+          message: this.app.i18n.t('Product has been successfully added to Wishlsit!'),
           type: 'success',
-          title: this.app.i18n.n('Product added!'),
+          title: this.app.i18n.t('Product added!'),
           icon: 'check'
         });
       });
