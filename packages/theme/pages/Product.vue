@@ -473,14 +473,14 @@ export default defineComponent({
   },
   head() {
     return {
-      title: this.product.metaTitle ? this.product.metaTitle : this.product.name,
+      title: this.product?.metaTitle ? this.product?.metaTitle : this.product?.name,
       meta: [
         {
           name: 'description',
-          content: this.product.metaDescription
+          content: this.product?.metaDescription
         }, {
           name: 'keywords',
-          content: this.product.metaKeywords
+          content: this.product?.metaKeywords
         },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' }
       ]
