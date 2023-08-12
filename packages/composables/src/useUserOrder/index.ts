@@ -26,13 +26,9 @@ const params: UseUserOrderFactoryParams<Order, SearchParams> = {
 
     const currency = context.$prestashop.config.app.$cookies.get('vsf-currency');
 
-    const { data, cookieObject } = await context.$prestashop.api.fetchOrders({ psCookieKey, psCookieValue, orderId, lang: lang, currency: currency });
+    const { data } = await context.$prestashop.api.fetchOrders({ psCookieKey, psCookieValue, orderId, lang: lang, currency: currency });
 
     if (data.code === 200) {
-      if (cookieObject) {
-        context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
-        context.$prestashop.config.app.$cookies.set(vsfCookieValue, cookieObject.vsfPsValCookie);
-      }
       return data.psdata;
     } else {
       return [];

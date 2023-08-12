@@ -16,12 +16,8 @@ const params: UseShippingProviderParams<ShippingProvider, ShippingMethod> = {
       ? '/' + context.$prestashop.config.app.$cookies.get('vsf-locale') : '';
 
     const currency = context.$prestashop.config.app.$cookies.get('vsf-currency');
-    const { data, cookieObject } = await context.$prestashop.api.getShippingMethods({ psCookieKey, psCookieValue, lang: lang, currency: currency });
+    const { data } = await context.$prestashop.api.getShippingMethods({ psCookieKey, psCookieValue, lang: lang, currency: currency });
     if (data.code === 200) {
-      if (cookieObject) {
-        context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
-        context.$prestashop.config.app.$cookies.set(vsfCookieValue, cookieObject.vsfPsValCookie);
-      }
       return data.psdata;
     } else {
       // add to cart failed
@@ -46,12 +42,8 @@ const params: UseShippingProviderParams<ShippingProvider, ShippingMethod> = {
 
     await context.$prestashop.api.setShippingMethod({ ...params.customQuery, psCookieKey, psCookieValue, lang: lang, currency: currency });
 
-    const { data, cookieObject } = await context.$prestashop.api.getShippingMethods({ psCookieKey, psCookieValue, lang: lang, currency: currency });
+    const { data } = await context.$prestashop.api.getShippingMethods({ psCookieKey, psCookieValue, lang: lang, currency: currency });
     if (data.code === 200) {
-      if (cookieObject) {
-        context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
-        context.$prestashop.config.app.$cookies.set(vsfCookieValue, cookieObject.vsfPsValCookie);
-      }
       return data.psdata;
     } else {
       // add to cart failed

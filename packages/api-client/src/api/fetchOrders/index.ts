@@ -1,5 +1,4 @@
 
-import { cookieParser } from '../../helpers/cookieParser';
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export default async function fetchOrders(context, params) {
   const {psCookieKey, psCookieValue, orderId} = params;
@@ -11,14 +10,12 @@ export default async function fetchOrders(context, params) {
 
   if (psCookieKey && psCookieValue) {
     // It's not possible to get cart items without cookies (or any operation on cart)
-    const { data, headers } = await context.client.get(url.href, {
+    const { data } = await context.client.get(url.href, {
       headers: {
         Cookie: psCookieKey + '=' + psCookieValue + ';'
       }
     });
 
-    const cookieObject = cookieParser(headers);
-
-    return {data, cookieObject};
+    return {data};
   } else return null;
 }

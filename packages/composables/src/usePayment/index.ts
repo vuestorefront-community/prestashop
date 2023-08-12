@@ -31,17 +31,13 @@ export const usePayment = () => {
 
       const currency = context.$prestashop.config.app.$cookies.get('vsf-currency');
 
-      const { data, cookieObject } = await context.$prestashop.api.getPaymentMethods({ psCookieKey, psCookieValue, lang: lang, currency: currency });
+      const { data } = await context.$prestashop.api.getPaymentMethods({ psCookieKey, psCookieValue, lang: lang, currency: currency });
 
       error.value.boot = null;
 
       if (data.code === 200) {
         payment.value = data.psdata;
 
-        if (cookieObject) {
-          context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
-          context.$prestashop.config.app.$cookies.set(vsfCookieValue, cookieObject.vsfPsValCookie);
-        }
         return data.psdata;
       } else {
         return {};
