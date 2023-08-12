@@ -8,7 +8,7 @@ import type { Wishlist, WishlistItem, Product } from '@vue-storefront/prestashop
 
 const params: UseWishlistFactoryParams<Wishlist, WishlistItem, Product> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  
+
   load: async (context: Context) => {
     console.log('Mocked: useWishlist.load');
     const vsfCookieKey = context.$prestashop.config.app.$config.psCustomerCookieKey;
@@ -24,13 +24,9 @@ const params: UseWishlistFactoryParams<Wishlist, WishlistItem, Product> = {
 
     const currency = context.$prestashop.config.app.$cookies.get('vsf-currency');
 
-    const { data, cookieObject } = await context.$prestashop.api.getWhishlistItems({ psCookieKey, psCookieValue, lang: lang, currency: currency });
+    const { data } = await context.$prestashop.api.getWhishlistItems({ psCookieKey, psCookieValue, lang: lang, currency: currency });
 
     if (data && data.code === 200) {
-      if (cookieObject) {
-        context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
-        context.$prestashop.config.app.$cookies.set(vsfCookieValue, cookieObject.vsfPsValCookie);
-      }
       return data;
     } else {
       // add to cart failed

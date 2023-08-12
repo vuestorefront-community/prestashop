@@ -25,22 +25,12 @@ export const useCountryList = () => {
 
       const currency = context.$prestashop.config.app.$cookies.get('vsf-currency');
 
-      const { data, cookieObject } = await context.$prestashop.api.getAvailableCountries({ lang: lang, currency: currency });
+      const { data } = await context.$prestashop.api.getAvailableCountries({ lang: lang, currency: currency });
 
       result.value = data;
       error.value.boot = null;
 
       if (data.code === 200) {
-        const vsfCookieKey = context.$prestashop.config.app.$config.psCustomerCookieKey;
-        const vsfCookieValue = context.$prestashop.config.app.$config.psCustomerCookieValue;
-
-        const psCookieKey = context.$prestashop.config.app.$cookies.get(vsfCookieKey);
-        const psCookieValue = context.$prestashop.config.app.$cookies.get(vsfCookieValue);
-
-        if (cookieObject && !psCookieKey && !psCookieValue) {
-          context.$prestashop.config.app.$cookies.set(vsfCookieKey, cookieObject.vsfPsKeyCookie);
-          context.$prestashop.config.app.$cookies.set(vsfCookieValue, cookieObject.vsfPsValCookie);
-        }
         return data;
       }
     } catch (err) {
