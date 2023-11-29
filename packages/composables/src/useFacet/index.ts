@@ -17,7 +17,7 @@ const factoryParams = {
       ? '/' + context.$prestashop.config.app.$cookies.get('vsf-locale') : '';
 
     const currency = context.$prestashop.config.app.$cookies.get('vsf-currency');
-
+    params.data = null;
     const data = await context.$prestashop.api.getCategoryProducts({ ...params, lang: lang, currency: currency });
 
     return data.psdata;
