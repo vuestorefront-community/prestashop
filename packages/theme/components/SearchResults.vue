@@ -43,6 +43,8 @@
                 :alt="productGetters.getName(product)"
                 :title="productGetters.getName(product)"
                 :link="`/p/${productGetters.getId(product)}/${productGetters.getSlug(product)}`"
+                @click.native="closeSearchResult"
+                @keyup="closeSearchResult"
               />
             </div>
           </SfMegaMenuColumn>
@@ -119,7 +121,12 @@ export default {
       }
     });
 
+    const closeSearchResult = () => {
+      isSearchOpen.value = false;
+    };
+
     return {
+      closeSearchResult,
       isSearchOpen,
       productGetters,
       products,

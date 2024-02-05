@@ -64,7 +64,6 @@
           @keydown.enter="handleSearch($event)"
           @focus="isSearchOpen = true"
           @keydown.esc="closeSearch"
-          v-click-outside="closeSearch"
         >
           <template #icon>
             <SfButton
@@ -97,8 +96,8 @@
       :term="term"
       @close="closeSearch"
       @removeSearchResults="removeSearchResults"
+      v-click-outside="closeSearch"
     />
-    <SfOverlay :visible="isSearchOpen" />
   </div>
 </template>
 
